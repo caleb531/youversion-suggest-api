@@ -56,3 +56,9 @@ export interface BibleReference {
   version: BibleVersion;
   content?: string;
 }
+
+export interface BibleOptions {
+  language: string;
+  version: number;
+  format: string;
+}
