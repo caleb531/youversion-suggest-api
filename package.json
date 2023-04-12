@@ -1,10 +1,21 @@
 {
+  "name": "youversion-suggest",
+  "title": "YouVersion Bible Suggest",
+  "description": "An API for searching the YouVersion Bible and fetching Bible content",
+  "version": "0.1.0",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "node-fetch": "^3.3.1"
+  },
   "devDependencies": {
-    "prettier": "^2.8.7",
-    "typescript": "^5.0.4",
+    "@types/cheerio": "^0.22.31",
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
-    "@typescript-eslint/parser": "^5.57.1",
-    "@typescript-eslint/eslint-plugin": "^5.57.1"
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.4"
   }
 }
