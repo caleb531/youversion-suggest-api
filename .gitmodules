@@ -1,0 +1,3 @@
+[submodule "src/data"]
+	path = src/data
+	url = https://github.com/caleb531/youversion-suggest-data.git
