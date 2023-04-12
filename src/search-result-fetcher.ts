@@ -1,10 +1,7 @@
 import cheerio from 'cheerio';
 import defaultOptions from './default-options.json';
-import { BibleReference } from './types';
+import { BibleOptions, BibleReference } from './types';
 import { baseSearchUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, getReferenceIDFromURL } from './utilities';
-
-// The options to use when searching for Bible content via keyword
-export type BibleOptions = { language: string; version: string };
 
 // Fetch the textual content of the given Bible reference; returns a promise
 export async function searchBibleForPhrase(searchText: string, options: BibleOptions) {
