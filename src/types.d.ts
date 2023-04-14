@@ -61,4 +61,7 @@ export interface BibleOptions {
   language: string;
   version: number;
   format: string;
+  bible?: BibleData;
 }
+
+export type BibleOptionsWithBibleData = Required<BibleOptions>;

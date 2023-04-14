@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import defaultOptions from './default-options.json';
 import { BibleOptions, BibleReference } from './types';
-import { baseReferenceUrl, fetchHTML } from './utilities';
+import { baseReferenceUrl, buildBibleReferenceFromSearchText, fetchHTML, getBibleData } from './utilities';
 
 // The default options to use when fetching Bible reference content via
 // fetchReferenceContent()
@@ -139,7 +139,12 @@ export function normalizeRefContent(content: string): string {
 }
 
 // Fetch the textual content of the given Bible reference; returns a promise
-export async function fetchReferenceContent(reference: BibleReference, options: BibleOptions): Promise<string> {
+export async function fetchReferenceContent(searchText: string, options: BibleOptions): Promise<string> {
+  const bible = await getBibleData(options.language);
+  const reference = buildBibleReferenceFromSearchText(searchText, {
+    ...options,
+    bible,
+  });
   const html = await fetchHTML(getChapterURL(reference));
   const content = parseContentFromHTML(reference, html);
   if (content) {

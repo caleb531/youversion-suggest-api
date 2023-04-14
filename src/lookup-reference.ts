@@ -10,7 +10,7 @@ import {
   BibleVersionId,
 } from './types';
 import {
-  buildBibleReference,
+  buildBibleReferenceFromParams,
   normalizeSearchText as coreNormalizeSearchText,
   getBibleBookMetadata,
   getBibleData,
@@ -157,7 +157,7 @@ export function getSearchResult(
   const chapter = Math.min(searchParams.chapter, book.metadata.chapters);
   const lastVerse = book.metadata.verses[chapter - 1];
 
-  return buildBibleReference({
+  return buildBibleReferenceFromParams({
     book: book,
     chapter,
     verse: searchParams.verse ? Math.min(searchParams.verse, lastVerse) : null,
@@ -173,7 +173,8 @@ export async function getSearchResults(searchText: string, options: BibleOptions
   if (!searchParams) {
     return [];
   }
-  const bible = await getBibleData(options.language);
+
+  const bible = options.bible ?? (await getBibleData(options.language));
 
   const chosenVersion = chooseBestVersion(options.version, bible, searchParams);
 

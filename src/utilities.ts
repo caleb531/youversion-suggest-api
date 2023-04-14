@@ -1,7 +1,18 @@
 import fsPromises from 'fs/promises';
 import fetch from 'node-fetch';
 import path from 'path';
-import { BibleBookMetadata, BibleData, BibleLanguage, BibleReference, JSONSerializable } from './types';
+import { getSearchResults } from './lookup-reference';
+import {
+  BibleBookMetadata,
+  BibleData,
+  BibleLanguage,
+  BibleOptionsWithBibleData,
+  BibleReference,
+  JSONSerializable,
+} from './types';
+
+// A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
+const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
 
 export function normalizeSearchText(searchText: string): string {
   searchText = searchText.toLowerCase();
@@ -57,7 +68,7 @@ export function getReferenceIDFromURL(url: string): string {
   }
 }
 
-export function buildBibleReference({
+export function buildBibleReferenceFromParams({
   book,
   chapter,
   verse,
@@ -78,27 +89,38 @@ export function buildBibleReference({
   };
 }
 
-export function buildBibleReferenceFromID(id: string, bible: BibleData): BibleReference {
-  const matches = id.match(/^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i) || [];
+export function buildBibleReferenceFromID(id: string, options: BibleOptionsWithBibleData): BibleReference {
+  const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) || [];
   const versionId = Number(matches[1]);
   const bookId = matches[2];
   const chapter = Number(matches[3]);
   const verse = Number(matches[4]) || null;
   const endVerse = Number(matches[5]) || null;
-  return buildBibleReference({
-    book: bible.books.find((book) => book.id === bookId) || {
+  return buildBibleReferenceFromParams({
+    book: options.bible.books.find((book) => book.id === bookId) || {
       id: '',
       name: '',
     },
     chapter: chapter,
     verse: verse ? verse : null,
     endVerse: endVerse ? endVerse : null,
-    version: bible.versions.find((version) => version.id === versionId) || {
+    version: options.bible.versions.find((version) => version.id === versionId) || {
       id: 0,
       name: '',
       full_name: '',
     },
   });
+}
+
+export function buildBibleReferenceFromSearchText(
+  searchText: string,
+  options: BibleOptionsWithBibleData
+): BibleReference {
+  if (BIBLE_REFERENCE_ID_PATTERN.test(searchText)) {
+    return buildBibleReferenceFromID(searchText, options);
+  } else {
+    return getSearchResults(searchText, options)[0];
+  }
 }
 
 export async function getJSONData<T extends JSONSerializable>(path: string): Promise<T> {
