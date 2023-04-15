@@ -109,12 +109,13 @@ export function chooseBestVersion(
   bible: BibleData,
   searchParams: SearchParams
 ): BibleVersion {
+  const defaultVersion = bible.versions.find((version) => version.id === bible.default_version);
   if (searchParams.version) {
-    return guessVersion(bible.versions, searchParams.version) || bible.versions[0];
+    return guessVersion(bible.versions, searchParams.version) || defaultVersion;
   } else if (preferredVersionId) {
-    return bible.versions.find((version) => version.id === preferredVersionId) || bible.versions[0];
+    return bible.versions.find((version) => version.id === preferredVersionId) || defaultVersion;
   }
-  return bible.versions[0];
+  return defaultVersion || bible.versions[0];
 }
 
 // Split the given book name into an array of substrings

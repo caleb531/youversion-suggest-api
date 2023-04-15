@@ -1,5 +1,4 @@
 {
   "language": "eng",
-  "version": 111,
   "format": "{name} ({version})\n\n{content}"
 }

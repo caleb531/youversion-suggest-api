@@ -4,7 +4,6 @@ async function main() {
   console.log(
     await fetchReferenceContent('psa.23.1', {
       language: 'eng',
-      version: 59,
     })
   );
 }
