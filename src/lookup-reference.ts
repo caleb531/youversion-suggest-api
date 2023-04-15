@@ -168,7 +168,7 @@ export function getSearchResult(
 }
 
 // Retrieve a list of all Bible references matching a given search query
-export async function getSearchResults(searchText: string, options: BibleOptions): Promise<BibleReference[]> {
+export async function searchBibleByReferenceName(searchText: string, options: BibleOptions): Promise<BibleReference[]> {
   searchText = normalizeSearchText(searchText);
   const searchParams = getSearchParams(searchText);
   if (!searchParams) {

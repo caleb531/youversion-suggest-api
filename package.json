@@ -4,6 +4,7 @@
   "description": "An API for searching the YouVersion Bible and fetching Bible content",
   "version": "0.1.0",
   "license": "MIT",
+  "main": "src/index.ts",
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "lodash-es": "^4.17.21",
