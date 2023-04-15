@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import defaultOptions from './default-options.json';
 import { getReferencesMatchingName } from './lookup-reference';
-import { BibleOptions, BibleOptionsWithBibleData, BibleReference } from './types';
+import { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
 import { baseReferenceUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, isBibleReferenceID } from './utilities';
 
 // Elements that should be surrounded by blank lines
@@ -137,7 +137,7 @@ export function normalizeRefContent(content: string): string {
 
 export async function buildBibleReferenceFromSearchText(
   searchText: string,
-  options: BibleOptionsWithBibleData
+  options: BibleLookupOptionsWithBibleData
 ): Promise<BibleReference> {
   if (isBibleReferenceID(searchText)) {
     return buildBibleReferenceFromID(searchText, options);
@@ -147,7 +147,7 @@ export async function buildBibleReferenceFromSearchText(
 }
 
 // Fetch the textual content of the given Bible reference; returns a promise
-export async function fetchReferenceContent(searchText: string, options: BibleOptions): Promise<string> {
+export async function fetchReferenceContent(searchText: string, options: BibleLookupOptions): Promise<string> {
   const bible = await getBibleData(options.language || defaultOptions.language);
   const reference = await buildBibleReferenceFromSearchText(searchText, {
     ...options,

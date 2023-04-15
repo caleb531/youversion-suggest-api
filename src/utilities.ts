@@ -5,8 +5,9 @@ import {
   BibleBookMetadata,
   BibleData,
   BibleLanguage,
-  BibleOptionsWithBibleData,
+  BibleLookupOptionsWithBibleData,
   BibleReference,
+  BibleSearchOptionsWithBibleData,
   BibleVersion,
   JSONSerializable
 } from './types';
@@ -24,10 +25,38 @@ export function normalizeSearchText(searchText: string): string {
   return searchText;
 }
 
+// Retrieve the Bible verse object given the numeric ID of that version
+export function getVersionById(bible: BibleData, versionId: number): BibleVersion | undefined {
+  return bible.versions.find((version) => {
+    return version.id === versionId;
+  });
+}
+
+// Retrieve the Bible verse object given the string abbreviation name of that
+// version
+export function getVersionByName(bible: BibleData, versionName: string): BibleVersion | undefined {
+  versionName = versionName.toLowerCase();
+  return bible.versions.find((version) => {
+    return version.name.toLowerCase() === versionName;
+  });
+}
+
+// Retrieve the Bible version object given the numeric ID (or case-insensitive
+// string abbreviation) of that version
+export function getVersion(bible: BibleData, versionIdOrName: string | number): BibleVersion | undefined {
+  if (typeof versionIdOrName === 'string') {
+    const versionName = versionIdOrName;
+    return getVersionByName(bible, versionName);
+  } else {
+    const versionId = versionIdOrName;
+    return getVersionById(bible, versionId);
+  }
+}
+
 // Retrieve the Bible version object which represents the default version for
 // the given Bible data
 export function getDefaultVersion(bible: BibleData): BibleVersion {
-  return bible.versions.find((version) => version.id === bible.default_version) || bible.versions[0];
+  return getVersionById(bible, bible.default_version) || bible.versions[0];
 }
 
 export function getReferenceID({
@@ -101,7 +130,10 @@ export function isBibleReferenceID(searchText: string): boolean {
   return BIBLE_REFERENCE_ID_PATTERN.test(searchText);
 }
 
-export function buildBibleReferenceFromID(id: string, options: BibleOptionsWithBibleData): BibleReference {
+export function buildBibleReferenceFromID(
+  id: string,
+  options: BibleLookupOptionsWithBibleData | BibleSearchOptionsWithBibleData
+): BibleReference {
   const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) || [];
   const versionId = Number(matches[1]);
   const bookId = matches[2];

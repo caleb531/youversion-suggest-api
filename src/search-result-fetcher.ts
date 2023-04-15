@@ -1,5 +1,5 @@
 import cheerio from 'cheerio';
-import { BibleOptionsWithBibleData, BibleReference } from './types';
+import { BibleReference, BibleSearchOptionsWithBibleData } from './types';
 import {
   baseSearchUrl,
   buildBibleReferenceFromID,
@@ -9,7 +9,7 @@ import {
 } from './utilities';
 
 // Fetch the textual content of the given Bible reference; returns a promise
-export async function getReferencesMatchingPhrase(searchText: string, options: BibleOptionsWithBibleData) {
+export async function getReferencesMatchingPhrase(searchText: string, options: BibleSearchOptionsWithBibleData) {
   const preferredVersionId = options.version || getDefaultVersion(options.bible);
   const html = await fetchHTML(`${baseSearchUrl}?q=${encodeURIComponent(searchText)}&version_id=${preferredVersionId}`);
   return parseContentFromHTML(html, options);
@@ -17,7 +17,7 @@ export async function getReferencesMatchingPhrase(searchText: string, options: B
 
 export async function parseContentFromHTML(
   html: string,
-  options: BibleOptionsWithBibleData
+  options: BibleSearchOptionsWithBibleData
 ): Promise<BibleReference[]> {
   const $ = cheerio.load(html);
   const $references = $("a[href*='/bible/']");

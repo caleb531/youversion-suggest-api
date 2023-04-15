@@ -18,6 +18,7 @@ export interface BibleBook {
 }
 
 export type BibleVersionId = number;
+export type BibleVersionName = string;
 
 export interface BibleVersion {
   id: BibleVersionId;
@@ -57,11 +58,20 @@ export interface BibleReference {
   content?: string;
 }
 
-export interface BibleOptions {
+export interface BibleLookupOptions {
   language?: string;
-  version?: number;
+  fallback_version?: BibleVersionId | BibleVersionName;
   format?: string;
   bible?: BibleData;
 }
 
-export type BibleOptionsWithBibleData = BibleOptions & Required<Pick<BibleOptions, 'bible'>>;
+export type BibleLookupOptionsWithBibleData = BibleLookupOptions & Required<Pick<BibleLookupOptions, 'bible'>>;
+
+export interface BibleSearchOptions {
+  language?: BibleLanguageId;
+  version?: BibleVersionId | BibleVersionName;
+  format?: string;
+  bible?: BibleData;
+}
+
+export type BibleSearchOptionsWithBibleData = BibleSearchOptions & Required<Pick<BibleSearchOptions, 'bible'>>;

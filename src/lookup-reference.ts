@@ -5,17 +5,19 @@ import {
   BibleBookId,
   BibleBookMetadata,
   BibleData,
-  BibleOptions,
+  BibleLookupOptions,
   BibleReference,
   BibleVersion,
-  BibleVersionId
+  BibleVersionId,
+  BibleVersionName
 } from './types';
 import {
   buildBibleReferenceFromParams,
   normalizeSearchText as coreNormalizeSearchText,
   getBibleBookMetadata,
   getBibleData,
-  getDefaultVersion
+  getDefaultVersion,
+  getVersion
 } from './utilities';
 
 interface BibleBookMatch extends BibleBook {
@@ -107,15 +109,15 @@ export function guessVersion(versions: BibleVersion[], versionSearchText: string
 
 // Chooses most appropriate version based on current parameters
 export function chooseBestVersion(
-  preferredVersionId: BibleVersionId | undefined,
+  fallbackVersionIdOrName: BibleVersionId | BibleVersionName | undefined,
   bible: BibleData,
   searchParams: SearchParams
 ): BibleVersion {
   const defaultVersion = getDefaultVersion(bible);
   if (searchParams.version) {
     return guessVersion(bible.versions, searchParams.version) || defaultVersion;
-  } else if (preferredVersionId) {
-    return bible.versions.find((version) => version.id === preferredVersionId) || defaultVersion;
+  } else if (fallbackVersionIdOrName) {
+    return getVersion(bible, fallbackVersionIdOrName) || defaultVersion;
   }
   return defaultVersion;
 }
@@ -170,7 +172,10 @@ export function getSearchResult(
 }
 
 // Retrieve a list of all Bible references matching a given search query
-export async function getReferencesMatchingName(searchText: string, options: BibleOptions): Promise<BibleReference[]> {
+export async function getReferencesMatchingName(
+  searchText: string,
+  options: BibleLookupOptions
+): Promise<BibleReference[]> {
   searchText = normalizeSearchText(searchText);
   const searchParams = getSearchParams(searchText);
   if (!searchParams) {
@@ -179,7 +184,7 @@ export async function getReferencesMatchingName(searchText: string, options: Bib
 
   const bible = options.bible ?? (await getBibleData(options.language || defaultOptions.language));
 
-  const chosenVersion = chooseBestVersion(options.version, bible, searchParams);
+  const chosenVersion = chooseBestVersion(options.fallback_version, bible, searchParams);
 
   return (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
     return getSearchResult(bibleBook, searchParams, chosenVersion);
@@ -189,7 +194,7 @@ export async function getReferencesMatchingName(searchText: string, options: Bib
 // Like the above getReferencesMatchingName() function, but only returns the first result
 export async function getFirstReferenceMatchingName(
   searchText: string,
-  options: BibleOptions
+  options: BibleLookupOptions
 ): Promise<BibleReference> {
   return (await getReferencesMatchingName(searchText, options))[0];
 }
