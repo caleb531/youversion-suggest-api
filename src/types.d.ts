@@ -70,7 +70,6 @@ export type BibleLookupOptionsWithBibleData = BibleLookupOptions & Required<Pick
 export interface BibleSearchOptions {
   language?: BibleLanguageId;
   version?: BibleVersionId | BibleVersionName;
-  format?: string;
   bible?: BibleData;
 }
 
