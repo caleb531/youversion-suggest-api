@@ -179,8 +179,7 @@ export async function searchBibleByReferenceName(searchText: string, options: Bi
 
   const chosenVersion = chooseBestVersion(options.version, bible, searchParams);
 
-  const results = (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
+  return (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
     return getSearchResult(bibleBook, searchParams, chosenVersion);
   });
-  return results;
 }
