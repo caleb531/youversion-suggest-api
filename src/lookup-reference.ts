@@ -1,4 +1,5 @@
 import { sortBy } from 'lodash-es';
+import defaultOptions from './default-options.json';
 import {
   BibleBook,
   BibleBookId,
@@ -105,15 +106,15 @@ export function guessVersion(versions: BibleVersion[], versionSearchText: string
 
 // Chooses most appropriate version based on current parameters
 export function chooseBestVersion(
-  preferredVersionId: BibleVersionId,
+  preferredVersionId: BibleVersionId | undefined,
   bible: BibleData,
   searchParams: SearchParams
 ): BibleVersion {
   const defaultVersion = bible.versions.find((version) => version.id === bible.default_version);
   if (searchParams.version) {
-    return guessVersion(bible.versions, searchParams.version) || defaultVersion;
+    return guessVersion(bible.versions, searchParams.version) || defaultVersion || bible.versions[0];
   } else if (preferredVersionId) {
-    return bible.versions.find((version) => version.id === preferredVersionId) || defaultVersion;
+    return bible.versions.find((version) => version.id === preferredVersionId) || defaultVersion || bible.versions[0];
   }
   return defaultVersion || bible.versions[0];
 }
@@ -175,7 +176,7 @@ export async function getReferencesMatchingName(searchText: string, options: Bib
     return [];
   }
 
-  const bible = options.bible ?? (await getBibleData(options.language));
+  const bible = options.bible ?? (await getBibleData(options.language || defaultOptions.language));
 
   const chosenVersion = chooseBestVersion(options.version, bible, searchParams);
 
