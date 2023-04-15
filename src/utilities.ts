@@ -1,7 +1,6 @@
 import fsPromises from 'fs/promises';
 import fetch from 'node-fetch';
 import path from 'path';
-import { getSearchResults } from './lookup-reference';
 import {
   BibleBookMetadata,
   BibleData,
@@ -12,7 +11,7 @@ import {
 } from './types';
 
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
-const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
+export const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
 
 export function normalizeSearchText(searchText: string): string {
   searchText = searchText.toLowerCase();
@@ -89,6 +88,12 @@ export function buildBibleReferenceFromParams({
   };
 }
 
+// Return true if the given string is in the format of a Bible Reference ID;
+// return false otherwise
+export function isBibleReferenceID(searchText: string): boolean {
+  return BIBLE_REFERENCE_ID_PATTERN.test(searchText);
+}
+
 export function buildBibleReferenceFromID(id: string, options: BibleOptionsWithBibleData): BibleReference {
   const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) || [];
   const versionId = Number(matches[1]);
@@ -112,31 +117,20 @@ export function buildBibleReferenceFromID(id: string, options: BibleOptionsWithB
   });
 }
 
-export function buildBibleReferenceFromSearchText(
-  searchText: string,
-  options: BibleOptionsWithBibleData
-): BibleReference {
-  if (BIBLE_REFERENCE_ID_PATTERN.test(searchText)) {
-    return buildBibleReferenceFromID(searchText, options);
-  } else {
-    return getSearchResults(searchText, options)[0];
-  }
-}
-
 export async function getJSONData<T extends JSONSerializable>(path: string): Promise<T> {
   return JSON.parse(String(await fsPromises.readFile(path)));
 }
 
 export async function getBibleData(language: string): Promise<BibleData> {
-  return getJSONData(path.join(__dirname, 'assets', 'data', 'bible', `bible-${language}.json`));
+  return getJSONData(path.join(__dirname, 'data', 'bible', `bible-${language}.json`));
 }
 
 export async function getBibleBookMetadata(): Promise<{ [key: string]: BibleBookMetadata }> {
-  return getJSONData(path.join(__dirname, 'assets', 'data', 'bible', `book-metadata.json`));
+  return getJSONData(path.join(__dirname, 'data', 'bible', `book-metadata.json`));
 }
 
 export async function getLanguages(): Promise<BibleLanguage[]> {
-  return getJSONData(path.join(__dirname, 'assets', 'data', 'bible', `languages.json`));
+  return getJSONData(path.join(__dirname, 'data', 'bible', `languages.json`));
 }
 
 export function fetchHTML(url: string): Promise<string> {

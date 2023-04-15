@@ -178,7 +178,8 @@ export async function getSearchResults(searchText: string, options: BibleOptions
 
   const chosenVersion = chooseBestVersion(options.version, bible, searchParams);
 
-  return (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
+  const results = (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
     return getSearchResult(bibleBook, searchParams, chosenVersion);
   });
+  return results;
 }

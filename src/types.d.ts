@@ -60,8 +60,8 @@ export interface BibleReference {
 export interface BibleOptions {
   language: string;
   version: number;
-  format: string;
+  format?: string;
   bible?: BibleData;
 }
 
-export type BibleOptionsWithBibleData = Required<BibleOptions>;
+export type BibleOptionsWithBibleData = BibleOptions & Required<Pick<BibleOptions, 'bible'>>;

@@ -1,11 +1,8 @@
 import cheerio from 'cheerio';
 import defaultOptions from './default-options.json';
-import { BibleOptions, BibleReference } from './types';
-import { baseReferenceUrl, buildBibleReferenceFromSearchText, fetchHTML, getBibleData } from './utilities';
-
-// The default options to use when fetching Bible reference content via
-// fetchReferenceContent()
-const DEFAULT_REF_CONTENT_FETCH_OPTIONS = { format: defaultOptions.format };
+import { getSearchResults } from './lookup-reference';
+import { BibleOptions, BibleOptionsWithBibleData, BibleReference } from './types';
+import { baseReferenceUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, isBibleReferenceID } from './utilities';
 
 // Elements that should be surrounded by blank lines
 export const blockElems = new Set(['b', 'p', 'm']);
@@ -138,17 +135,28 @@ export function normalizeRefContent(content: string): string {
   return content;
 }
 
+export async function buildBibleReferenceFromSearchText(
+  searchText: string,
+  options: BibleOptionsWithBibleData
+): Promise<BibleReference> {
+  if (isBibleReferenceID(searchText)) {
+    return buildBibleReferenceFromID(searchText, options);
+  } else {
+    return (await getSearchResults(searchText, options))[0];
+  }
+}
+
 // Fetch the textual content of the given Bible reference; returns a promise
 export async function fetchReferenceContent(searchText: string, options: BibleOptions): Promise<string> {
   const bible = await getBibleData(options.language);
-  const reference = buildBibleReferenceFromSearchText(searchText, {
+  const reference = await buildBibleReferenceFromSearchText(searchText, {
     ...options,
     bible,
   });
   const html = await fetchHTML(getChapterURL(reference));
   const content = parseContentFromHTML(reference, html);
   if (content) {
-    return applyReferenceFormat(reference, content, options.format);
+    return applyReferenceFormat(reference, content, options.format || defaultOptions.format);
   } else {
     throw new Error('Fetched reference content is empty');
   }
