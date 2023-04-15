@@ -142,7 +142,7 @@ export async function buildBibleReferenceFromSearchText(
   if (isBibleReferenceID(searchText)) {
     return buildBibleReferenceFromID(searchText, options);
   } else {
-    return (await getSearchResults(searchText, options))[0];
+    return (await getSearchResults(searchText, options))[0] ?? null;
   }
 }
 
@@ -153,6 +153,9 @@ export async function fetchReferenceContent(searchText: string, options: BibleOp
     ...options,
     bible,
   });
+  if (!reference) {
+    return '';
+  }
   const html = await fetchHTML(getChapterURL(reference));
   const content = parseContentFromHTML(reference, html);
   if (content) {
