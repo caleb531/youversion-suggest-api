@@ -168,7 +168,7 @@ export function getSearchResult(
 }
 
 // Retrieve a list of all Bible references matching a given search query
-export async function searchBibleByReferenceName(searchText: string, options: BibleOptions): Promise<BibleReference[]> {
+export async function getReferencesMatchingName(searchText: string, options: BibleOptions): Promise<BibleReference[]> {
   searchText = normalizeSearchText(searchText);
   const searchParams = getSearchParams(searchText);
   if (!searchParams) {
@@ -182,4 +182,12 @@ export async function searchBibleByReferenceName(searchText: string, options: Bi
   return (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
     return getSearchResult(bibleBook, searchParams, chosenVersion);
   });
+}
+
+// Like the above getReferencesMatchingName() function, but only returns the first result
+export async function getFirstReferenceMatchingName(
+  searchText: string,
+  options: BibleOptions
+): Promise<BibleReference> {
+  return (await getReferencesMatchingName(searchText, options))[0];
 }

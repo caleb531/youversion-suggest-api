@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import defaultOptions from './default-options.json';
-import { searchBibleByReferenceName } from './lookup-reference';
+import { getReferencesMatchingName } from './lookup-reference';
 import { BibleOptions, BibleOptionsWithBibleData, BibleReference } from './types';
 import { baseReferenceUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, isBibleReferenceID } from './utilities';
 
@@ -142,7 +142,7 @@ export async function buildBibleReferenceFromSearchText(
   if (isBibleReferenceID(searchText)) {
     return buildBibleReferenceFromID(searchText, options);
   } else {
-    return (await searchBibleByReferenceName(searchText, options))[0] ?? null;
+    return (await getReferencesMatchingName(searchText, options))[0] ?? null;
   }
 }
 
