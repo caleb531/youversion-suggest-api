@@ -26,8 +26,8 @@ export function normalizeSearchText(searchText: string): string {
 
 // Retrieve the Bible version object which represents the default version for
 // the given Bible data
-export function getDefaultVersion(bible: BibleData): BibleVersion | undefined {
-  return bible.versions.find((version) => version.id === bible.default_version);
+export function getDefaultVersion(bible: BibleData): BibleVersion {
+  return bible.versions.find((version) => version.id === bible.default_version) || bible.versions[0];
 }
 
 export function getReferenceID({
