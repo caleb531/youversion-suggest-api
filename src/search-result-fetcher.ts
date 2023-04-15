@@ -7,8 +7,7 @@ export async function getReferencesMatchingPhrase(searchText: string, options: B
   const preferredVersionId =
     options.version || options.bible.versions.find((version) => version.id === options.bible.default_version);
   const html = await fetchHTML(`${baseSearchUrl}?q=${encodeURIComponent(searchText)}&version_id=${preferredVersionId}`);
-  const references = parseContentFromHTML(html, options);
-  return references;
+  return parseContentFromHTML(html, options);
 }
 
 export async function parseContentFromHTML(
