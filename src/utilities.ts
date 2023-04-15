@@ -7,7 +7,7 @@ import {
   BibleLanguage,
   BibleOptionsWithBibleData,
   BibleReference,
-  JSONSerializable,
+  JSONSerializable
 } from './types';
 
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
@@ -28,7 +28,7 @@ export function getReferenceID({
   chapter,
   verse,
   endVerse,
-  version,
+  version
 }: Pick<BibleReference, 'book' | 'chapter' | 'verse' | 'endVerse' | 'version'>) {
   const bookId = book.id.toUpperCase();
   if (endVerse && verse) {
@@ -44,7 +44,7 @@ export function getReferenceName({
   book,
   chapter,
   verse,
-  endVerse,
+  endVerse
 }: Pick<BibleReference, 'book' | 'chapter' | 'verse' | 'endVerse'>) {
   if (endVerse && verse) {
     return `${book.name} ${chapter}:${verse}-${endVerse}`;
@@ -72,7 +72,7 @@ export function buildBibleReferenceFromParams({
   chapter,
   verse,
   endVerse,
-  version,
+  version
 }: Pick<BibleReference, 'book' | 'chapter' | 'verse' | 'endVerse' | 'version'>) {
   const id = getReferenceID({ book, chapter, verse, endVerse, version });
   const name = getReferenceName({ book, chapter, verse, endVerse });
@@ -84,7 +84,7 @@ export function buildBibleReferenceFromParams({
     chapter,
     verse,
     endVerse,
-    version,
+    version
   };
 }
 
@@ -104,7 +104,7 @@ export function buildBibleReferenceFromID(id: string, options: BibleOptionsWithB
   return buildBibleReferenceFromParams({
     book: options.bible.books.find((book) => book.id === bookId) || {
       id: '',
-      name: '',
+      name: ''
     },
     chapter: chapter,
     verse: verse ? verse : null,
@@ -112,8 +112,8 @@ export function buildBibleReferenceFromID(id: string, options: BibleOptionsWithB
     version: options.bible.versions.find((version) => version.id === versionId) || {
       id: 0,
       name: '',
-      full_name: '',
-    },
+      full_name: ''
+    }
   });
 }
 
@@ -136,7 +136,7 @@ export async function getLanguages(): Promise<BibleLanguage[]> {
 export function fetchHTML(url: string): Promise<string> {
   return fetch(url, {
     headers: {
-      'User-Agent': 'YouVersion Suggest',
-    },
+      'User-Agent': 'YouVersion Suggest'
+    }
   }).then((response) => response.text());
 }

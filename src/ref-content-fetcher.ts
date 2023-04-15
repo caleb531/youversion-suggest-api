@@ -151,7 +151,7 @@ export async function fetchReferenceContent(searchText: string, options: BibleOp
   const bible = await getBibleData(options.language || defaultOptions.language);
   const reference = await buildBibleReferenceFromSearchText(searchText, {
     ...options,
-    bible,
+    bible
   });
   if (!reference) {
     return '';

@@ -8,13 +8,13 @@ import {
   BibleOptions,
   BibleReference,
   BibleVersion,
-  BibleVersionId,
+  BibleVersionId
 } from './types';
 import {
   buildBibleReferenceFromParams,
   normalizeSearchText as coreNormalizeSearchText,
   getBibleBookMetadata,
-  getBibleData,
+  getBibleData
 } from './utilities';
 
 interface BibleBookMatch extends BibleBook {
@@ -76,7 +76,7 @@ export function getSearchParams(searchText: string): SearchParams | null {
     chapter: chapterMatch ? Math.max(1, parseInt(chapterMatch, 10)) : 1,
     verse: verseMatch ? Math.max(1, parseInt(verseMatch, 10)) : null,
     endVerse: endVerseMatch ? parseInt(endVerseMatch, 10) : null,
-    version: versionMatch ? normalizeSearchText(versionMatch) : null,
+    version: versionMatch ? normalizeSearchText(versionMatch) : null
   };
 }
 
@@ -143,7 +143,7 @@ export async function getMatchingBooks(allBooks: BibleBook[], searchParams: Sear
         priority: (w + 1) * 100 + b,
         // Store the metadata for the respective book (e.g. chapter
         // count) on this matching book object for convenience
-        metadata: bookMetadata[book.id],
+        metadata: bookMetadata[book.id]
       });
     }
   });
@@ -164,7 +164,7 @@ export function getSearchResult(
     chapter,
     verse: searchParams.verse ? Math.min(searchParams.verse, lastVerse) : null,
     endVerse: searchParams.endVerse ? Math.min(searchParams.endVerse, lastVerse) : null,
-    version: chosenVersion,
+    version: chosenVersion
   });
 }
 
