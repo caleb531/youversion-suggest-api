@@ -1,11 +1,16 @@
 import cheerio from 'cheerio';
 import { BibleOptionsWithBibleData, BibleReference } from './types';
-import { baseSearchUrl, buildBibleReferenceFromID, fetchHTML, getReferenceIDFromURL } from './utilities';
+import {
+  baseSearchUrl,
+  buildBibleReferenceFromID,
+  fetchHTML,
+  getDefaultVersion,
+  getReferenceIDFromURL
+} from './utilities';
 
 // Fetch the textual content of the given Bible reference; returns a promise
 export async function getReferencesMatchingPhrase(searchText: string, options: BibleOptionsWithBibleData) {
-  const preferredVersionId =
-    options.version || options.bible.versions.find((version) => version.id === options.bible.default_version);
+  const preferredVersionId = options.version || getDefaultVersion(options.bible);
   const html = await fetchHTML(`${baseSearchUrl}?q=${encodeURIComponent(searchText)}&version_id=${preferredVersionId}`);
   return parseContentFromHTML(html, options);
 }

@@ -14,7 +14,8 @@ import {
   buildBibleReferenceFromParams,
   normalizeSearchText as coreNormalizeSearchText,
   getBibleBookMetadata,
-  getBibleData
+  getBibleData,
+  getDefaultVersion
 } from './utilities';
 
 interface BibleBookMatch extends BibleBook {
@@ -110,7 +111,7 @@ export function chooseBestVersion(
   bible: BibleData,
   searchParams: SearchParams
 ): BibleVersion {
-  const defaultVersion = bible.versions.find((version) => version.id === bible.default_version);
+  const defaultVersion = getDefaultVersion(bible);
   if (searchParams.version) {
     return guessVersion(bible.versions, searchParams.version) || defaultVersion || bible.versions[0];
   } else if (preferredVersionId) {

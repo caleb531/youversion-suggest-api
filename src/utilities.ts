@@ -7,6 +7,7 @@ import {
   BibleLanguage,
   BibleOptionsWithBibleData,
   BibleReference,
+  BibleVersion,
   JSONSerializable
 } from './types';
 
@@ -21,6 +22,12 @@ export function normalizeSearchText(searchText: string): string {
   searchText = searchText.trim();
   searchText = searchText.replace(/\s+/g, ' ');
   return searchText;
+}
+
+// Retrieve the Bible version object which represents the default version for
+// the given Bible data
+export function getDefaultVersion(bible: BibleData): BibleVersion | undefined {
+  return bible.versions.find((version) => version.id === bible.default_version);
 }
 
 export function getReferenceID({
