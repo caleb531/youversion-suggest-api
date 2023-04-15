@@ -148,7 +148,7 @@ export async function buildBibleReferenceFromSearchText(
 
 // Fetch the textual content of the given Bible reference; returns a promise
 export async function fetchReferenceContent(searchText: string, options: BibleOptions): Promise<string> {
-  const bible = await getBibleData(options.language);
+  const bible = await getBibleData(options.language || defaultOptions.language);
   const reference = await buildBibleReferenceFromSearchText(searchText, {
     ...options,
     bible,

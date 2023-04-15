@@ -58,7 +58,7 @@ export interface BibleReference {
 }
 
 export interface BibleOptions {
-  language: string;
+  language?: string;
   version?: number;
   format?: string;
   bible?: BibleData;
