@@ -146,7 +146,11 @@ export async function getMatchingBooks(allBooks: BibleBook[], searchParams: Sear
       });
     }
   });
-  return sortBy(matchingBooks, (book) => book.priority);
+  // Even though TypeScript should be able to infer the type of `book` from the
+  // type of `matchingBooks` (`BibleBookMatch[]` -> `BibleBookMatch`), the
+  // rollup-plugin-dts package throws the error "Parameter 'book' implicitly has
+  // an 'any' type"
+  return sortBy(matchingBooks, (book: BibleBookMatch) => book.priority);
 }
 
 // Return a BibleReference object representing a single search result
