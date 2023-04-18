@@ -25,10 +25,6 @@ interface BibleBookMatch extends BibleBook {
   metadata: BibleBookMetadata;
 }
 
-interface SearchState {
-  results: BibleReference[];
-  isLoading: boolean;
-}
 interface SearchParams {
   book: BibleBookId;
   chapter: number;
