@@ -90,13 +90,13 @@ The call signature is exactly the same, only returning a single Bible reference
 object rather than an array of said objects.
 
 ```ts
-import { getReferencesMatchingName } from 'youversion-suggest-node';
+import { getFirstReferenceMatchingName } from 'youversion-suggest-node';
 
-const references = await getFirstReferenceMatchingName('matthew 5:4', {
+const reference = await getFirstReferenceMatchingName('matthew 5:4', {
   language: 'eng',
   fallback_version: 'nkjv'
 });
-console.log(references);
+console.log(reference);
 /*
 {
   id: '114/MAT.5.4',
