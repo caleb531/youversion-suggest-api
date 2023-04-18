@@ -1,6 +1,7 @@
 import fsPromises from 'fs/promises';
 import fetch from 'node-fetch';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import {
   BibleBookMetadata,
   BibleData,
@@ -11,6 +12,9 @@ import {
   BibleVersion,
   JSONSerializable
 } from './types';
+
+// __dirname is not available in ES modules natively, so we must define it
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
 export const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
