@@ -116,6 +116,10 @@ console.log(reference);
 */
 ```
 
+### Retrieve the Bible data for the specified language
+
+Documentation coming soon.
+
 ### Default Options
 
 Most of the search/lookup functions accept an options object. All of the parameters are optional and have the following defaults:
