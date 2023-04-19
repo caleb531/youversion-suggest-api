@@ -23,7 +23,12 @@ export default [
     plugins: [
       json(),
       copy({
-        targets: [{ src: ['src/data/*.md', 'src/data/bible'], dest: 'dist/data' }]
+        targets: [
+          {
+            src: ['src/data/*.md', 'src/data/bible'],
+            dest: 'dist/data'
+          }
+        ]
       }),
       commonjs(),
       typescript()
