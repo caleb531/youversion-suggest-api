@@ -1,4 +1,9 @@
 .editorconfig
 .gitmodules
+.prettierrc
+.vscode
 pnpm-lock.yaml
+tsconfig.json
+rollup.config.mjs
+.eslintrc.json
 src/data
