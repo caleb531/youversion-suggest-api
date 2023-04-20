@@ -177,7 +177,8 @@ returned object is structured.
 
 ### Default Options
 
-Most of the search/lookup functions accept an options object. All of the parameters are optional and have the following defaults:
+Most of the search/lookup functions above accept an options object. All of the
+parameters are optional and have the following defaults:
 
 ```ts
 {
