@@ -61,7 +61,6 @@ export interface BibleReference {
 export interface BibleLookupOptions {
   language?: string;
   fallback_version?: BibleVersionId | BibleVersionName;
-  format?: string;
   bible?: BibleData;
 }
 

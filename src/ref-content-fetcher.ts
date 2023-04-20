@@ -15,25 +15,6 @@ export function getChapterURL(reference: BibleReference): string {
   return `${baseReferenceUrl}/${version.id}/${book.id.toUpperCase()}.${chapter}`;
 }
 
-export async function applyReferenceFormat(
-  reference: BibleReference,
-  content: string,
-  referenceFormat: string
-): Promise<string> {
-  return referenceFormat
-    .replace(/{name}/gi, reference.name)
-    .replace(/{version}/gi, reference.version.name)
-    .replace(/{content}/gi, content);
-}
-
-export function isReferenceFormatValid(newFormat: string): boolean {
-  const evaluatedFormat = newFormat
-    .replace(/{name}/gi, 'John 11:35')
-    .replace(/{version}/gi, 'NIV')
-    .replace(/{content}/gi, 'Jesus wept.');
-  return !(evaluatedFormat.includes('{') || evaluatedFormat.includes('}'));
-}
-
 // Parse the given YouVersion HTML and return a string a reference content
 export function parseContentFromHTML(reference: BibleReference, html: string): string {
   const $ = cheerio.load(html);
@@ -147,19 +128,25 @@ export async function buildBibleReferenceFromSearchText(
 }
 
 // Fetch the textual content of the given Bible reference; returns a promise
-export async function fetchReferenceContent(searchText: string, options: BibleLookupOptions): Promise<string> {
+export async function fetchReferenceContent(
+  searchText: string,
+  options: BibleLookupOptions
+): Promise<BibleReference | null> {
   const bible = await getBibleData(options.language || defaultOptions.language);
   const reference = await buildBibleReferenceFromSearchText(searchText, {
     ...options,
     bible
   });
   if (!reference) {
-    return '';
+    return null;
   }
   const html = await fetchHTML(getChapterURL(reference));
   const content = parseContentFromHTML(reference, html);
   if (content) {
-    return applyReferenceFormat(reference, content, options.format || defaultOptions.format);
+    return {
+      ...reference,
+      content
+    };
   } else {
     throw new Error('Fetched reference content is empty');
   }

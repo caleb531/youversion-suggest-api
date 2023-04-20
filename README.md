@@ -46,15 +46,20 @@ partial book name).
 ```ts
 import { fetchReferenceContent } from 'youversion-suggest';
 
-const content = await fetchReferenceContent('mat 11.28-30', {
+const reference = await fetchReferenceContent('mat 11.28-30', {
   language: 'eng', // Optional
-  fallback_version: 'esv', // Optional
-  format: '{content}\n- {name} ({version})' // Optional
+  fallback_version: 'esv' // Optional
 });
-console.log(content);
+console.log(reference);
 /*
-Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light.”
-- Matthew 11:28-30 (ESV)
+Promise<{
+  book: { id: 'mat', name: 'Matthew' },
+  chapter: 11,
+  verse: 28,
+  endVerse: 30,
+  version: { id: 59, name: 'ESV', full_name: 'English Standard Version 2016' },
+  content: 'Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light.'
+}>
 */
 ```
 
@@ -195,7 +200,6 @@ parameters are optional and have the following defaults:
 {
   language: 'eng',
   version: 'niv',
-  fallback_version: 'niv',
-  format: '{name} ({version})\n\n{content}'
+  fallback_version: 'niv'
 }
 ```
