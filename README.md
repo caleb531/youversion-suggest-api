@@ -118,7 +118,37 @@ console.log(reference);
 
 ### Retrieve the Bible data for the specified language
 
-Documentation coming soon.
+The `getBibleData()` function retrieves a JSON object containing the Bible data
+for the specified language code. This Bible data includes the book names of all
+66 canonical books of the Bible, a list of the available versions/translations
+for that language, and the default version for that language.
+
+```ts
+import { getBibleData } from 'youversion-suggest-node';
+
+const bible = await getBibleData('spa');
+```
+
+Please see [`bible-eng.json`][bible-json-example] in the
+[youversion-suggest-data][yvs-data] repository for an example of how this
+returned object is structured.
+
+[bible-json-example]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/bible-eng.json
+
+### Retrieve metadata for all books in the Biblical canon
+
+This library does not include deuterocanonical Bible data, and therefore uses
+the same number of books/chapters across all languages and
+versions/translations. You can retrieve this global Bible book metadata using
+the `getBibleBookMetadata()` function. It takes no arguments, and returns a
+Promise resolving to a key-value store of the metadata.
+
+Please see [book-metadata.json][bible-book-metadata-json] in the
+[youversion-suggest-data][yvs-data] repository for an example of how this
+returned object is structured.
+
+[bible-book-metadata-json]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/book-metadata.json
+[yvs-data]: https://github.com/caleb531/youversion-suggest-data
 
 ### Default Options
 
