@@ -1,3 +1,4 @@
 .editorconfig
 .gitmodules
 pnpm-lock.yaml
+src/data
