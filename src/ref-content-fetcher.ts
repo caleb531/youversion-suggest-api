@@ -128,17 +128,14 @@ export async function buildBibleReferenceFromSearchText(
 }
 
 // Fetch the textual content of the given Bible reference; returns a promise
-export async function fetchReferenceContent(
-  searchText: string,
-  options: BibleLookupOptions
-): Promise<BibleReference | null> {
+export async function fetchReferenceContent(searchText: string, options: BibleLookupOptions): Promise<BibleReference> {
   const bible = await getBibleData(options.language || defaultOptions.language);
   const reference = await buildBibleReferenceFromSearchText(searchText, {
     ...options,
     bible
   });
   if (!reference) {
-    return null;
+    throw new Error('Reference does not exist');
   }
   const html = await fetchHTML(getChapterURL(reference));
   const content = parseContentFromHTML(reference, html);

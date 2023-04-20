@@ -63,6 +63,8 @@ Promise<{
 */
 ```
 
+If the Bible reference cannot be fetched, an error is thrown.
+
 ### Retrieve a list of all Bible references matching the given query
 
 The async `getReferencesMatchingName()` function retrieves an array of Bible
