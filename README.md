@@ -33,7 +33,7 @@ represents the name of the reference you want to retrieve (can be a full or
 partial book name).
 
 ```ts
-import { fetchReferenceContent } from 'youversion-suggest-node';
+import { fetchReferenceContent } from 'youversion-suggest';
 
 const content = await fetchReferenceContent('mat 11.28-30', {
   language: 'eng', // Optional
@@ -56,7 +56,7 @@ references. If you want the textual content as well, you must fetch it yourself
 by calling the above `fetchReferenceContent`.
 
 ```ts
-import { getReferencesMatchingName } from 'youversion-suggest-node';
+import { getReferencesMatchingName } from 'youversion-suggest';
 
 const references = await getReferencesMatchingName('a 1:1', {
   language: 'eng'
@@ -96,7 +96,7 @@ The call signature is exactly the same, only returning a single Bible reference
 object rather than an array of said objects.
 
 ```ts
-import { getFirstReferenceMatchingName } from 'youversion-suggest-node';
+import { getFirstReferenceMatchingName } from 'youversion-suggest';
 
 const reference = await getFirstReferenceMatchingName('matthew 5:4', {
   language: 'eng',
@@ -131,7 +131,7 @@ versions/translations for that language, and the default version for that
 language.
 
 ```ts
-import { getBibleData } from 'youversion-suggest-node';
+import { getBibleData } from 'youversion-suggest';
 
 const bible = await getBibleData('eng');
 console.log(bible.books.find((book) => book.id === 'mat')?.name);
@@ -157,7 +157,7 @@ the async `getBibleBookMetadata()` function. It takes no arguments, and returns
 a key-value store of the metadata.
 
 ```ts
-import { getBibleBookMetadata } from 'youversion-suggest-node';
+import { getBibleBookMetadata } from 'youversion-suggest';
 
 const bookMetadata = await getBibleBookMetadata('spa');
 console.log(bookMetadata.psa.canon);
