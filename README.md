@@ -3,8 +3,11 @@
 _Copyright 2023 Caleb Evans_  
 _Released under the MIT license_
 
-This npm package allow you to search for and fetch Bible content from
+This NodeJS package allow you to search for and fetch Bible content from
 YouVersion. It is still under development, so things may break at any time.
+
+This package is designed to run in a Node runtime, so it cannot be used in the
+browser or in, for example, a Cloudflare Worker context.
 
 ## Disclaimer
 
@@ -24,6 +27,14 @@ Please also keep in mind that most of the functions below are asynchronous and
 return promises instead of the direct values. These promise-returning functions
 are identified below as being 'async'; you can also follow each example and look
 for the use of the `await` syntax.
+
+### Installation
+
+Using npm or your preferred package manager:
+
+```sh
+npm install youversion-suggest
+```
 
 ### Fetch content for a Bible reference matching the given query
 
