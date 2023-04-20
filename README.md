@@ -20,11 +20,17 @@ reference can be one of three things:
 - A verse (e.g. "Psalm 23:1")
 - A range of verses (e.g. "Matthew 11:28-30")
 
+Please also keep in mind that most of the functions below are asynchronous and
+return promises instead of the direct values. These promise-returning functions
+are identified below as being 'async'; you can also follow each example and look
+for the use of the `await` syntax.
+
 ### Fetch content for a Bible reference matching the given query
 
-Fetches the textual content of a Bible chapter, verse, or range of verses. The
-first argument is a query which represents the name of the reference you want to
-retrieve (can be a full or partial book name).
+The async `fetchReferenceContent()` function the textual content of a Bible
+chapter, verse, or range of verses. The first argument is a query which
+represents the name of the reference you want to retrieve (can be a full or
+partial book name).
 
 ```ts
 import { fetchReferenceContent } from 'youversion-suggest-node';
@@ -43,7 +49,7 @@ Come to me, all who labor and are heavy laden, and I will give you rest. Take my
 
 ### Retrieve a list of all Bible references matching the given query
 
-The `getReferencesMatchingName()` function retrieves an array of Bible
+The async `getReferencesMatchingName()` function retrieves an array of Bible
 references whose names match the given query. Please note that these Bible
 reference objects do not contain the textual content of the respective
 references. If you want the textual content as well, you must fetch it yourself
@@ -84,7 +90,7 @@ console.log(references);
 
 ### Retrieve the first Bible reference matching the given query
 
-The `getFirstReferenceMatchingName()` function is a convenience function which
+The async `getFirstReferenceMatchingName()` function is a convenience function which
 effectively returns the first result of the above `getReferencesMatchingName`.
 The call signature is exactly the same, only returning a single Bible reference
 object rather than an array of said objects.
@@ -118,15 +124,22 @@ console.log(reference);
 
 ### Retrieve the Bible data for the specified language
 
-The `getBibleData()` function retrieves a JSON object containing the Bible data
-for the specified language code. This Bible data includes the book names of all
-66 canonical books of the Bible, a list of the available versions/translations
-for that language, and the default version for that language.
+The async `getBibleData()` function retrieves a JSON object containing the Bible
+data for the specified language code. This Bible data includes the book names of
+all 66 canonical books of the Bible, a list of the available
+versions/translations for that language, and the default version for that
+language.
 
 ```ts
 import { getBibleData } from 'youversion-suggest-node';
 
-const bible = await getBibleData('spa');
+const bible = await getBibleData('eng');
+console.log(bible.books.find((book) => book.id === 'mat')?.name);
+// "Matthew"
+console.log(bible.versions.find((book) => version.name === 'NLT')?.full_name);
+// "New Living Translation"
+console.log(bible.default_version);
+// 111
 ```
 
 Please see [`bible-eng.json`][bible-json-example] in the
@@ -140,8 +153,20 @@ returned object is structured.
 This library does not include deuterocanonical Bible data, and therefore uses
 the same number of books/chapters across all languages and
 versions/translations. You can retrieve this global Bible book metadata using
-the `getBibleBookMetadata()` function. It takes no arguments, and returns a
-Promise resolving to a key-value store of the metadata.
+the async `getBibleBookMetadata()` function. It takes no arguments, and returns
+a key-value store of the metadata.
+
+```ts
+import { getBibleBookMetadata } from 'youversion-suggest-node';
+
+const bookMetadata = await getBibleBookMetadata('spa');
+console.log(bookMetadata.psa.canon);
+// "ot"
+console.log(bookMetadata.psa.chapters);
+// 150
+console.log(bookMetadata.psa.verses[118]); // Psalm 119
+// 176
+```
 
 Please see [book-metadata.json][bible-book-metadata-json] in the
 [youversion-suggest-data][yvs-data] repository for an example of how this
