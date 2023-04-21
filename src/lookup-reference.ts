@@ -184,7 +184,7 @@ export async function getReferencesMatchingName(
 
   const bible = options.bible ?? (await getBibleData(options.language || defaultOptions.language));
 
-  const chosenVersion = chooseBestVersion(options.fallback_version, bible, searchParams);
+  const chosenVersion = chooseBestVersion(options.fallbackVersion, bible, searchParams);
 
   return (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
     return getSearchResult(bibleBook, searchParams, chosenVersion);

@@ -60,7 +60,7 @@ export interface BibleReference {
 
 export interface BibleLookupOptions {
   language?: string;
-  fallback_version?: BibleVersionId | BibleVersionName;
+  fallbackVersion?: BibleVersionId | BibleVersionName;
   bible?: BibleData;
 }
 

@@ -48,7 +48,7 @@ import { fetchReferenceContent } from 'youversion-suggest';
 
 const reference = await fetchReferenceContent('mat 11.28-30', {
   language: 'eng', // Optional
-  fallback_version: 'esv' // Optional
+  fallbackVersion: 'esv' // Optional
 });
 console.log(reference);
 /*
@@ -118,7 +118,7 @@ import { getFirstReferenceMatchingName } from 'youversion-suggest';
 
 const reference = await getFirstReferenceMatchingName('matthew 5:4', {
   language: 'eng',
-  fallback_version: 'nkjv'
+  fallbackVersion: 'nkjv'
 });
 console.log(reference);
 /*
@@ -202,6 +202,6 @@ parameters are optional and have the following defaults:
 {
   language: 'eng',
   version: 'niv',
-  fallback_version: 'niv'
+  fallbackVersion: 'niv'
 }
 ```
