@@ -1,5 +1,4 @@
 import { sortBy } from 'lodash-es';
-import defaultOptions from './default-options.json';
 import {
   BibleBook,
   BibleBookId,
@@ -182,7 +181,7 @@ export async function getReferencesMatchingName(
     return [];
   }
 
-  const bible = options.bible ?? (await getBibleData(options.language || defaultOptions.language));
+  const bible = options.bible ?? (await getBibleData(options.language));
 
   const chosenVersion = chooseBestVersion(options.fallbackVersion, bible, searchParams);
 
