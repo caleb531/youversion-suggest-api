@@ -63,7 +63,24 @@ console.log(reference);
 */
 ```
 
-If the Bible reference cannot be fetched, an error is thrown.
+You can then use this returned object to format the verse content however you'd like. For example:
+
+```ts
+import { fetchReferenceContent } from 'youversion-suggest';
+
+const reference = await fetchReferenceContent('mat 11.28-30', {
+  language: 'eng', // Optional
+  fallbackVersion: 'esv' // Optional
+});
+console.log(`${reference.name} (${reference.version.name})\n\n"${reference.content}"`);
+/*
+Matthew 11:28-30 (ESV)
+
+"Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light."
+*/
+```
+
+Finally, if the Bible reference cannot be fetched, an error is thrown.
 
 ### Retrieve a list of all Bible references matching the given query
 
