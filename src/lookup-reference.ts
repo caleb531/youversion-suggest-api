@@ -173,7 +173,7 @@ export function getSearchResult(
 // Retrieve a list of all Bible references matching a given search query
 export async function getReferencesMatchingName(
   searchText: string,
-  options: BibleLookupOptions
+  options: BibleLookupOptions = {}
 ): Promise<BibleReference[]> {
   searchText = normalizeSearchText(searchText);
   const searchParams = getSearchParams(searchText);
@@ -193,7 +193,7 @@ export async function getReferencesMatchingName(
 // Like the above getReferencesMatchingName() function, but only returns the first result
 export async function getFirstReferenceMatchingName(
   searchText: string,
-  options: BibleLookupOptions
+  options: BibleLookupOptions = {}
 ): Promise<BibleReference> {
   return (await getReferencesMatchingName(searchText, options))[0];
 }
