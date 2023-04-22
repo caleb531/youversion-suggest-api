@@ -165,7 +165,10 @@ export function getSearchResult(
     book: book,
     chapter,
     verse: searchParams.verse ? Math.min(searchParams.verse, lastVerse) : null,
-    endVerse: searchParams.endVerse ? Math.min(searchParams.endVerse, lastVerse) : null,
+    endVerse:
+      searchParams.verse && searchParams.endVerse && searchParams.endVerse > searchParams.verse
+        ? Math.min(searchParams.endVerse, lastVerse)
+        : null,
     version: chosenVersion
   });
 }
