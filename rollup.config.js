@@ -10,11 +10,6 @@ export default [
     external: ['lodash-es', 'cheerio', 'fs/promises', 'node-fetch', 'path', 'url'],
     output: [
       {
-        file: 'dist/index.cjs.js',
-        format: 'cjs',
-        sourcemap: true
-      },
-      {
         file: 'dist/index.es.js',
         format: 'es',
         sourcemap: true
@@ -35,9 +30,9 @@ export default [
     ]
   },
   // We need to compile the type declaration file as a separate input/output
-  // entry because otherwise (if we combine the dts() plugin with the CJS/ES
-  // compilation), the dts() plugin will overwrite the contents of our CJS and
-  // ES bundles with the contents of the definitions file (even if we define a
+  // entry because otherwise (if we combine the dts() plugin with the ESM
+  // compilation), the dts() plugin will overwrite the contents of our ESM
+  // bundle with the contents of the definitions file (even if we define a
   // separte output path)
   {
     input: 'src/index.ts',

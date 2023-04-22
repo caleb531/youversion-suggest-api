@@ -7,7 +7,8 @@ This NodeJS package allow you to search for and fetch Bible content from
 YouVersion. It is still under development, so things may break at any time.
 
 This package is designed to run in a Node runtime, so it cannot be used in the
-browser or in, for example, a Cloudflare Worker context.
+browser or in, for example, a Cloudflare Worker context. It is also ESM-only;
+there is no CommonJS bundle available.
 
 ## Disclaimer
 
