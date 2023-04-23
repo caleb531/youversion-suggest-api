@@ -82,7 +82,7 @@ export function getSearchParams(searchText: string): SearchParams | null {
 export function guessVersion(versions: BibleVersion[], versionSearchText: string): BibleVersion | null {
   // Chop off character from version query until matching version can be found
   // (if a matching version even exists)
-  for (let i = versionSearchText.length; i >= 0; i -= 1) {
+  for (let i = versionSearchText.length; i > 0; i -= 1) {
     for (const version of versions) {
       const normalizedVersionName = normalizeSearchText(version.name);
       if (normalizedVersionName === versionSearchText.slice(0, i)) {
@@ -91,7 +91,7 @@ export function guessVersion(versions: BibleVersion[], versionSearchText: string
     }
   }
   // Give partial matches lower precedence over exact matches
-  for (let i = versionSearchText.length; i >= 0; i -= 1) {
+  for (let i = versionSearchText.length; i > 0; i -= 1) {
     for (const version of versions) {
       const normalizedVersionName = normalizeSearchText(version.name);
       if (normalizedVersionName.startsWith(versionSearchText.slice(0, i))) {
