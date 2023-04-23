@@ -161,14 +161,14 @@ export function getSearchResult(
   const chapter = Math.min(searchParams.chapter, book.metadata.chapters);
   const lastVerse = book.metadata.verses[chapter - 1];
 
+  const verse = searchParams.verse ? Math.min(searchParams.verse, lastVerse) : null;
+  const endVerse = verse && searchParams.endVerse ? Math.min(searchParams.endVerse, lastVerse) : null;
+
   return buildBibleReferenceFromParams({
     book: book,
     chapter,
-    verse: searchParams.verse ? Math.min(searchParams.verse, lastVerse) : null,
-    endVerse:
-      searchParams.verse && searchParams.endVerse && searchParams.endVerse > searchParams.verse
-        ? Math.min(searchParams.endVerse, lastVerse)
-        : null,
+    verse,
+    endVerse: verse && endVerse && endVerse > verse ? endVerse : null,
     version: chosenVersion
   });
 }
