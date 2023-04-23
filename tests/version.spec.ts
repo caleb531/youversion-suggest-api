@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getReferencesMatchingName } from '../src';
 
-describe('getReferencesMatchingName', () => {
+describe('getReferencesMatchingName version logic', () => {
   it('should match versions ending in number by partial name', async () => {
     const references = await getReferencesMatchingName('lucas 4:8 rvr1', {
       language: 'spa',

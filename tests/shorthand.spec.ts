@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getReferencesMatchingName } from '../src';
 
-describe('getReferencesMatchingName', () => {
+describe('getReferencesMatchingName shorthand syntax logic', () => {
   it('should recognize shorthand book syntax', async () => {
     const references = await getReferencesMatchingName('1co');
     expect(references[0].name).to.equal('1 Corinthians 1');

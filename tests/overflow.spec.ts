@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getReferencesMatchingName } from '../src';
 
-describe('getReferencesMatchingName', () => {
+describe('getReferencesMatchingName overflow cases', () => {
   it('should constrain specified chapter to last chapter if too high', async () => {
     const references = await getReferencesMatchingName('a 25:2');
     expect(references[0].name).to.equal('Amos 9:2');
