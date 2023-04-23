@@ -105,11 +105,15 @@ export function guessVersion(versions: BibleVersion[], versionSearchText: string
 }
 
 // Chooses most appropriate version based on current parameters
-export function chooseBestVersion(
-  fallbackVersionIdOrName: BibleVersionId | BibleVersionName | undefined,
-  bible: BibleData,
-  searchParams: SearchParams
-): BibleVersion {
+export function chooseBestVersion({
+  fallbackVersionIdOrName,
+  bible,
+  searchParams
+}: {
+  fallbackVersionIdOrName: BibleVersionId | BibleVersionName | undefined;
+  bible: BibleData;
+  searchParams: SearchParams;
+}): BibleVersion {
   const defaultVersion = getDefaultVersion(bible);
   if (searchParams.version) {
     return guessVersion(bible.versions, searchParams.version) || defaultVersion;
@@ -188,7 +192,11 @@ export async function getReferencesMatchingName(
 
   const bible = options.bible ?? (await getBibleData(options.language));
 
-  const chosenVersion = chooseBestVersion(options.fallbackVersion, bible, searchParams);
+  const chosenVersion = chooseBestVersion({
+    fallbackVersionIdOrName: options.fallbackVersion,
+    bible,
+    searchParams
+  });
 
   return (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
     return getSearchResult(bibleBook, searchParams, chosenVersion);
