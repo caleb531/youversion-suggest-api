@@ -21,6 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
 
 export function normalizeSearchText(searchText: string): string {
+  searchText = searchText.normalize('NFC');
   searchText = searchText.toLowerCase();
   // Remove all non-alphanumeric characters
   searchText = searchText.replace(/[\W_]/gi, ' ');

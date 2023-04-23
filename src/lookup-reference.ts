@@ -43,15 +43,17 @@ export function normalizeSearchText(searchText: string): string {
 }
 
 export function getReferenceMatches(searchText: string): (string | undefined)[] | null {
-  const bookRegex = /(\d?(?:[^\W\d_]|\s)+|\d)\s?/;
-  const chapterRegex = /(\d+)\s?/;
-  const verseRegex = /(\d+)\s?/;
-  const endVerseRegex = /(\d+)?\s?/;
-  const versionRegex = /([^\W\d_](?:[^\W\d_]\d*|\s)*)?.*?/;
+  // \P{L} matches all characters which are not considered words in Unicode
+  // (source: <https://stackoverflow.com/a/52205643/560642>)
+  const bookRegex = /(\d?(?:[^\P{L}\d_]|\s)+|\d)\s?/u;
+  const chapterRegex = /(\d+)\s?/u;
+  const verseRegex = /(\d+)\s?/u;
+  const endVerseRegex = /(\d+)?\s?/u;
+  const versionRegex = /([^\P{L}\d_](?:[^\P{L}\d_]\d*|\s)*)?.*?/u;
   return searchText.match(
     new RegExp(
       `^${bookRegex.source}(?:${chapterRegex.source}(?:${verseRegex.source}${endVerseRegex.source})?${versionRegex.source})?$`,
-      'i'
+      'iu'
     )
   );
 }
