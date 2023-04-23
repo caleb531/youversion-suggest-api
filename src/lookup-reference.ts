@@ -195,7 +195,8 @@ export async function getReferencesMatchingName(
   });
 }
 
-// Like the above getReferencesMatchingName() function, but only returns the first result
+// Like the above getReferencesMatchingName() function, but only returns the
+// first result
 export async function getFirstReferenceMatchingName(
   searchText: string,
   options: BibleLookupOptions = {}
