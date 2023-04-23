@@ -30,16 +30,14 @@ describe('getReferencesMatchingName edge cases', () => {
     expect(references).to.have.length(1);
   });
 
-  // TODO: fix this test
-
-  // it('should recognize accented Unicode characters', async () => {
-  //   const references = await getReferencesMatchingName('é 3', {
-  //     language: 'spa',
-  //     fallbackVersion: 128
-  //   });
-  //   expect(references[0].name).to.equal('Éxodo 3');
-  //   expect(references).to.have.length(1);
-  // });
+  it('should recognize accented Unicode characters', async () => {
+    const references = await getReferencesMatchingName('é 3', {
+      language: 'spa',
+      fallbackVersion: 128
+    });
+    expect(references[0].name).to.equal('Éxodo 3');
+    expect(references).to.have.length(1);
+  });
 
   it('should normalize Unicode characters', async () => {
     const references = await getReferencesMatchingName('e\u0301');

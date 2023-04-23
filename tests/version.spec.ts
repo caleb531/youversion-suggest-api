@@ -12,17 +12,15 @@ describe('getReferencesMatchingName version logic', () => {
     expect(references).to.have.length(1);
   });
 
-  // TODO: fix this failing test
-
-  // it('should match versions containing non-ASCII characters', async () => {
-  //   const references = await getReferencesMatchingName('路加 4:8 cunp-上', {
-  //     language: 'zho_tw',
-  //     fallbackVersion: 46
-  //   });
-  //   expect(references[0].name).to.equal('路加福音 4:8');
-  //   expect(references[0].version.name).to.equal('CUNP-上帝');
-  //   expect(references).to.have.length(1);
-  // });
+  it('should match versions containing non-ASCII characters', async () => {
+    const references = await getReferencesMatchingName('路加 4:8 cunp-上', {
+      language: 'zho_tw',
+      fallbackVersion: 46
+    });
+    expect(references[0].name).to.equal('路加福音 4:8');
+    expect(references[0].version.name).to.equal('CUNP-上帝');
+    expect(references).to.have.length(1);
+  });
 
   it('should match versions irrespective of case', async () => {
     const query = 'e 4:8 esv';

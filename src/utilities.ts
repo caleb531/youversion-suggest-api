@@ -23,8 +23,10 @@ export const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+
 export function normalizeSearchText(searchText: string): string {
   searchText = searchText.normalize('NFC');
   searchText = searchText.toLowerCase();
-  // Remove all non-alphanumeric characters
-  searchText = searchText.replace(/[\W_]/gi, ' ');
+  // Remove all non-alphanumeric characters; \p{L} matches all characters which
+  // are considered words in Unicode (source:
+  // <https://stackoverflow.com/a/52205643/560642>)
+  searchText = searchText.replace(/[^\p{L}\d]/giu, ' ');
   // Remove extra whitespace
   searchText = searchText.trim();
   searchText = searchText.replace(/\s+/g, ' ');

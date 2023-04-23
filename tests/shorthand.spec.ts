@@ -21,15 +21,12 @@ describe('getReferencesMatchingName shorthand syntax logic', () => {
     expect(references).to.have.length(1);
   });
 
-  // TODO: fix this failing test; there seems to be an issue going on with the
-  // handling of non-ASCII characters
-
-  // it('should allow shorthand Unicode versions', async () => {
-  //   const references = await getReferencesMatchingName('創世記1:3次經', {
-  //     language: 'zho_tw',
-  //     fallbackVersion: 46
-  //   });
-  //   expect(references[0].name).to.equal('創世記 1:3');
-  //   expect(references).to.have.length(1);
-  // });
+  it('should allow shorthand Unicode versions', async () => {
+    const references = await getReferencesMatchingName('創世記1:3次經', {
+      language: 'zho_tw',
+      fallbackVersion: 46
+    });
+    expect(references[0].name).to.equal('創世記 1:3');
+    expect(references).to.have.length(1);
+  });
 });
