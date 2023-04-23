@@ -19,11 +19,6 @@ import {
   getVersion
 } from './utilities';
 
-interface BibleBookMatch extends BibleBook {
-  priority: number;
-  metadata: BibleBookMetadata;
-}
-
 interface SearchParams {
   book: BibleBookId;
   chapter: number;
@@ -129,9 +124,9 @@ export function splitBookNameIntoParts(bookName: string): string[] {
   return bookWords.map((_word, w) => bookWords.slice(w).join(' '));
 }
 
-export async function getMatchingBooks(allBooks: BibleBook[], searchParams: SearchParams): Promise<BibleBookMatch[]> {
-  const matchingBooks: BibleBookMatch[] = [];
-  const bookMetadata = await getBibleBookMetadata();
+export async function getMatchingBooks(allBooks: BibleBook[], searchParams: SearchParams): Promise<BibleBook[]> {
+  const matchingBooks: BibleBook[] = [];
+  const bookPriorityMap: Record<BibleBookId, number> = {};
 
   allBooks.forEach((book, b) => {
     const bookNameWords = splitBookNameIntoParts(book.name);
@@ -139,33 +134,34 @@ export async function getMatchingBooks(allBooks: BibleBook[], searchParams: Sear
       return bookNameWord.startsWith(searchParams.book);
     });
     if (w !== -1) {
-      matchingBooks.push({
-        ...book,
-        // Give more priority to book names that are matched sooner
-        // (e.g. if the query matched the first word of a book name,
-        // as opposed to the second or third word)
-        priority: (w + 1) * 100 + b,
-        // Store the metadata for the respective book (e.g. chapter
-        // count) on this matching book object for convenience
-        metadata: bookMetadata[book.id]
-      });
+      matchingBooks.push(book);
+      // Give more priority to book names that are matched sooner
+      // (e.g. if the query matched the first word of a book name,
+      // as opposed to the second or third word)
+      bookPriorityMap[book.id] = (w + 1) * 100 + b;
     }
   });
   // Even though TypeScript should be able to infer the type of `book` from the
-  // type of `matchingBooks` (`BibleBookMatch[]` -> `BibleBookMatch`), the
+  // type of `matchingBooks` (`BibleBook[]` -> `BibleBook`), the
   // rollup-plugin-dts package throws the error "Parameter 'book' implicitly has
   // an 'any' type"
-  return sortBy(matchingBooks, (book: BibleBookMatch) => book.priority);
+  return sortBy(matchingBooks, (book: BibleBook) => bookPriorityMap[book.id]);
 }
 
 // Return a BibleReference object representing a single search result
-export function getSearchResult(
-  book: BibleBookMatch,
-  searchParams: SearchParams,
-  chosenVersion: BibleVersion
-): BibleReference {
-  const chapter = Math.min(searchParams.chapter, book.metadata.chapters);
-  const lastVerse = book.metadata.verses[chapter - 1];
+export function getSearchResult({
+  book,
+  bookMetadata,
+  searchParams,
+  chosenVersion
+}: {
+  book: BibleBook;
+  bookMetadata: BibleBookMetadata;
+  searchParams: SearchParams;
+  chosenVersion: BibleVersion;
+}): BibleReference {
+  const chapter = Math.min(searchParams.chapter, bookMetadata.chapters);
+  const lastVerse = bookMetadata.verses[chapter - 1];
 
   const verse = searchParams.verse ? Math.min(searchParams.verse, lastVerse) : null;
   const endVerse = verse && searchParams.endVerse ? Math.min(searchParams.endVerse, lastVerse) : null;
@@ -191,6 +187,7 @@ export async function getReferencesMatchingName(
   }
 
   const bible = options.bible ?? (await getBibleData(options.language));
+  const bookMetadata = await getBibleBookMetadata();
 
   const chosenVersion = chooseBestVersion({
     fallbackVersionIdOrName: options.fallbackVersion,
@@ -198,8 +195,13 @@ export async function getReferencesMatchingName(
     searchParams
   });
 
-  return (await getMatchingBooks(bible.books, searchParams)).map((bibleBook) => {
-    return getSearchResult(bibleBook, searchParams, chosenVersion);
+  return (await getMatchingBooks(bible.books, searchParams)).map((book) => {
+    return getSearchResult({
+      book,
+      bookMetadata: bookMetadata[book.id],
+      searchParams,
+      chosenVersion
+    });
   });
 }
 
