@@ -15,6 +15,13 @@ there is no CommonJS bundle available.
 **This project is not affiliated with YouVersion, and all Bible content is
 copyright of the respective publishers.**
 
+## Attribution
+
+As a courtesy to YouVersion, we kindly ask that you add some kind of attribution
+to your application which acknowledges YouVersion as the source of the Bible
+content, along with some disclaimer that all Bible content is copyright of the
+respective publishers.
+
 ## Usage
 
 This API thinks of Bible content in terms of Bible "references". A Bible
