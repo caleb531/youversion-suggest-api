@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getReferencesMatchingName } from '../src';
+import { getReferencesMatchingName } from '../../src';
 
 describe('getReferencesMatchingName book logic', () => {
   it('should match books by partial name', async () => {

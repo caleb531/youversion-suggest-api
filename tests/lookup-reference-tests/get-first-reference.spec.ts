@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getFirstReferenceMatchingName } from '../src';
+import { getFirstReferenceMatchingName } from '../../src';
 
 describe('getFirstReferenceMatchingName book logic', () => {
   it('should match reference without options', async () => {

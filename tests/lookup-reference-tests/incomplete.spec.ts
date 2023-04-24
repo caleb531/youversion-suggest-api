@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getReferencesMatchingName } from '../src';
+import { getReferencesMatchingName } from '../../src';
 
 describe('getReferencesMatchingName handling of incomplete queries', () => {
   it('should treat incomplete verse reference as chapter reference', async () => {
