@@ -113,7 +113,7 @@ console.log(references);
     id: '111/AMO.1.1',
     name: 'Amos 1:1',
     url: 'https://www.bible.com/bible/111/AMO.1.1',
-    book: { id: 'amo', name: 'Amos', priority: 129, metadata: [Object] },
+    book: { id: 'amo', name: 'Amos' },
     chapter: 1,
     verse: 1,
     endVerse: null,
@@ -123,7 +123,7 @@ console.log(references);
     id: '111/ACT.1.1',
     name: 'Acts 1:1',
     url: 'https://www.bible.com/bible/111/ACT.1.1',
-    book: { id: 'act', name: 'Acts', priority: 143, metadata: [Object] },
+    book: { id: 'act', name: 'Acts' },
     chapter: 1,
     verse: 1,
     endVerse: null,
@@ -155,9 +155,7 @@ console.log(reference);
   url: 'https://www.bible.com/bible/114/MAT.5.4',
   book: {
     id: 'mat',
-    name: 'Matthew',
-    priority: 139,
-    metadata: { canon: 'nt', chapters: 28, verses: [Array] }
+    name: 'Matthew'
   },
   chapter: 5,
   verse: 4,
