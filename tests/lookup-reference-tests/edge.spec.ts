@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getReferencesMatchingName } from '../../src';
 
-describe('getReferencesMatchingName edge cases', () => {
+describe('reference lookup edge cases', () => {
   it('should not match empty input', async () => {
     const references = await getReferencesMatchingName('');
     expect(references).to.have.length(0);

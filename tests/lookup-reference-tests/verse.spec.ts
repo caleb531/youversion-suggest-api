@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getReferencesMatchingName } from '../../src';
 
-describe('getReferencesMatchingName verse logic', () => {
+describe('reference lookup verse logic', () => {
   it('should match verses', async () => {
     const references = await getReferencesMatchingName('luke 4:8');
     expect(references[0]).to.have.property('name', 'Luke 4:8');

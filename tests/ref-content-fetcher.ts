@@ -8,7 +8,7 @@ import { fetchReferenceContent } from '../src';
 // __dirname is not available in ES modules natively, so we must define it
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-describe('fetchReferenceContent', () => {
+describe('reference content fetcher', () => {
   before(async () => {
     nock('https://www.bible.com')
       .persist()

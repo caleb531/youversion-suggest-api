@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getReferencesMatchingName } from '../../src';
 
-describe('getReferencesMatchingName book logic', () => {
+describe('reference lookup book logic', () => {
   it('should match books by partial name', async () => {
     const references = await getReferencesMatchingName('luk');
     expect(references[0]).to.have.property('name', 'Luke 1');

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getReferencesMatchingName } from '../../src';
 
-describe('getReferencesMatchingName handling of incomplete queries', () => {
+describe('reference lookup handling of incomplete queries', () => {
   it('should treat incomplete verse reference as chapter reference', async () => {
     const references = await getReferencesMatchingName('Psalms 19:');
     expect(references[0]).to.have.property('name', 'Psalms 19');
