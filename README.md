@@ -4,8 +4,7 @@ _Copyright 2023 Caleb Evans_
 _Released under the MIT license_
 
 [![tests](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml)
-
-<!-- [![Coverage Status](https://coveralls.io/repos/github/caleb531/youversion-suggest-node/badge.svg?branch=develop)](https://coveralls.io/github/caleb531/youversion-suggest-node?branch=develop) -->
+[![Coverage Status](https://coveralls.io/repos/github/caleb531/youversion-suggest-node/badge.svg?branch=main)](https://coveralls.io/github/caleb531/youversion-suggest-node?branch=main)
 
 This NodeJS package allow you to search for and fetch Bible content from
 YouVersion. It is still under development, so things may break at any time.
