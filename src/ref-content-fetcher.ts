@@ -74,9 +74,10 @@ export function getSpacingAfterSection(_reference: BibleReference, $: cheerio.Ro
 // Retrieve all reference content within the given section
 export function getSectionContent(reference: BibleReference, $: cheerio.Root, $section: cheerio.Cheerio): string[] {
   const sectionContentParts = [getSpacingBeforeSection(reference, $, $section)];
-  const $verses = $section.children("[class*='verse']");
+  const $verses = $section.find("[class*='verse']");
   $verses.each((v, verse) => {
     const $verse = $(verse);
+    console.log($verse.attr('class'));
     if (isVerseWithinRange(reference, $, $verse)) {
       sectionContentParts.push(...$verse.find("[class*='content']").text());
     }
