@@ -11,7 +11,7 @@
   "scripts": {
     "build": "rollup -c",
     "prepare": "rollup -c",
-    "test": "mocha --require tsx --recursive 'tests/**/*.ts'",
+    "test": "mocha --require tsx --recursive 'tests/**/*.spec.ts'",
     "coverage": "nyc pnpm -s test"
   },
   "dependencies": {
