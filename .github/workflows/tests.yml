@@ -38,4 +38,9 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm build
-          pnpm test
+          pnpm coverage
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

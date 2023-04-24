@@ -8,3 +8,5 @@
 
 # Build directory
 dist
+.nyc_output
+coverage
