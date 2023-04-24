@@ -2,11 +2,7 @@ import { expect } from 'chai';
 import fsPromises from 'fs/promises';
 import nock from 'nock';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { getReferencesMatchingPhrase } from '../src';
-
-// __dirname is not available in ES modules natively, so we must define it
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('search result fetcher', () => {
   before(async () => {
