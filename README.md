@@ -168,6 +168,42 @@ console.log(reference);
 */
 ```
 
+### Retrieve a list of all Bible references matching the given phrase
+
+The async `getReferencesMatchingPhrase` function allows you to perform a
+freeform search of Bible content matching a particular phrase (e.g. "without
+faith" or "son of man"). The return value is an array of Bible references, with
+the `content` property of each being the full contents of that particular verse.
+
+```ts
+import { getReferencesMatchingPhrase } from 'youversion-suggest';
+
+const references = await getReferencesMatchingPhrase('without faith', {
+  language: 'eng',
+  version: 'nkjv'
+});
+console.log(references);
+/*
+[
+  {
+    id: '59/HEB.11.6',
+    name: 'Hebrews 11:6',
+    url: 'https://www.bible.com/bible/59/HEB.11.6',
+    book: { id: 'heb', name: 'Hebrews' },
+    chapter: 11,
+    verse: 6,
+    endVerse: null,
+    version: { full_name: 'English Standard Version 2016', id: 59, name: 'ESV' },
+    content: 'And without faith it is impossible to please him, for whoever would draw near to God  must believe that he exists and  that he rewards those who seek him.'
+  },
+  // 20 more results...
+]
+*/
+```
+
+The logic behind the search algorithm is black-boxed and internal to YouVersion,
+so this package is unable to change it.
+
 ### Retrieve the Bible data for the specified language
 
 The async `getBibleData()` function retrieves a JSON object containing the Bible
