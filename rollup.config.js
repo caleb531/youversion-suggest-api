@@ -7,7 +7,7 @@ import dts from 'rollup-plugin-dts';
 export default [
   {
     input: 'src/index.ts',
-    external: ['lodash-es', 'cheerio', 'fs/promises', 'node-fetch', 'path', 'url'],
+    external: ['cheerio', 'fs/promises', 'node-fetch', 'path', 'url'],
     output: [
       {
         file: 'dist/index.es.js',

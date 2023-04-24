@@ -1,4 +1,3 @@
-import { sortBy } from 'lodash-es';
 import {
   BibleBook,
   BibleBookId,
@@ -141,11 +140,9 @@ export async function getMatchingBooks(allBooks: BibleBook[], searchParams: Sear
       bookPriorityMap[book.id] = (w + 1) * 100 + b;
     }
   });
-  // Even though TypeScript should be able to infer the type of `book` from the
-  // type of `matchingBooks` (`BibleBook[]` -> `BibleBook`), the
-  // rollup-plugin-dts package throws the error "Parameter 'book' implicitly has
-  // an 'any' type"
-  return sortBy(matchingBooks, (book: BibleBook) => bookPriorityMap[book.id]);
+  return matchingBooks.slice(0).sort((bookA, bookB) => {
+    return bookPriorityMap[bookA.id] - bookPriorityMap[bookB.id];
+  });
 }
 
 // Return a BibleReference object representing a single search result
