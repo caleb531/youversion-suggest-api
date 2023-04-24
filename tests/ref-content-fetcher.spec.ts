@@ -12,7 +12,7 @@ describe('reference content fetcher', () => {
   before(async () => {
     nock('https://www.bible.com')
       .persist()
-      .get(/bible/)
+      .get(/^\/bible/)
       .reply(200, await fsPromises.readFile(path.join(__dirname, 'html', 'psa.23.html')));
   });
 
