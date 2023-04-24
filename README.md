@@ -254,8 +254,37 @@ Please see [book-metadata.json][bible-book-metadata-json] in the
 [youversion-suggest-data][yvs-data] repository for an example of how this
 returned object is structured.
 
-[bible-book-metadata-json]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/book-metadata.json
-[yvs-data]: https://github.com/caleb531/youversion-suggest-data
+### Retrieve list of all supported languages
+
+The async `getLanguages()` function returns a list of all languages that this
+package currently supports. Each language object has two properties: `id` (the
+IETF language tag of the language) and `name` (the name of the language as
+written in said language).
+
+```ts
+import { getLanguages } from 'youversion-suggest';
+
+const languages = await getLanguages();
+console.log(languages);
+/*
+[
+  // ...
+  {
+    "id": "bul",
+    "name": "български"
+  },
+  {
+    "id": "deu",
+    "name": "Deutsch"
+  },
+  {
+    "id": "eng",
+    "name": "English"
+  },
+  // ...
+]
+*/
+```
 
 ### Default Options
 
@@ -273,3 +302,6 @@ parameters are optional and have the following defaults:
 The `version` and `fallbackVersion` properties are case-insensitive (e.g. both
 `'ESV'` and '`esv'` are accepted). You can also use the numeric ID of the
 version for exactness (e.g. `59`, for ESV).
+
+[yvs-data]: https://github.com/caleb531/youversion-suggest-data
+[bible-book-metadata-json]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/book-metadata.json
