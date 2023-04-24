@@ -60,14 +60,14 @@ export function getSearchParams(searchText: string): SearchParams | null {
     return null;
   }
 
-  const bookMatch = referenceMatch[1]?.trimEnd();
+  const bookMatch = String(referenceMatch[1]).trimEnd();
   const chapterMatch = referenceMatch[2];
   const verseMatch = referenceMatch[3];
   const endVerseMatch = referenceMatch[4];
   const versionMatch = referenceMatch[5];
 
   return {
-    book: bookMatch || '',
+    book: bookMatch,
     chapter: chapterMatch ? Math.max(1, parseInt(chapterMatch, 10)) : 1,
     verse: verseMatch ? Math.max(1, parseInt(verseMatch, 10)) : null,
     endVerse: endVerseMatch ? parseInt(endVerseMatch, 10) : null,

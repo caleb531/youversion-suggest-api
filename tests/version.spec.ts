@@ -75,6 +75,16 @@ describe('getReferencesMatchingName version logic', () => {
     expect(references).to.have.length(1);
   });
 
+  it('should use default version for nonexistent fallback versions', async () => {
+    const references = await getReferencesMatchingName('hosea 6:3', {
+      language: 'eng',
+      fallbackVersion: -123
+    });
+    expect(references[0]).to.have.property('name', 'Hosea 6:3');
+    expect(references[0].version).to.have.property('name', 'NIV');
+    expect(references).to.have.length(1);
+  });
+
   it('should use correct ID for versions', async () => {
     const references = await getReferencesMatchingName('malachi 3:2 esv');
     expect(references[0]).to.have.property('id', '59/MAL.3.2');
