@@ -4,7 +4,7 @@ import { getReferencesMatchingName } from '../src';
 describe('getReferencesMatchingName book logic', () => {
   it('should match books by partial name', async () => {
     const references = await getReferencesMatchingName('luk');
-    expect(references[0].name).to.equal('Luke 1');
+    expect(references[0]).to.have.property('name', 'Luke 1');
     expect(references).to.have.length(1);
   });
 
@@ -20,15 +20,15 @@ describe('getReferencesMatchingName book logic', () => {
 
   it('should match books by ambiguous partial name', async () => {
     const references = await getReferencesMatchingName('r');
-    expect(references[0].name).to.equal('Ruth 1');
-    expect(references[1].name).to.equal('Romans 1');
-    expect(references[2].name).to.equal('Revelation 1');
+    expect(references[0]).to.have.property('name', 'Ruth 1');
+    expect(references[1]).to.have.property('name', 'Romans 1');
+    expect(references[2]).to.have.property('name', 'Revelation 1');
     expect(references).to.have.length(3);
   });
 
   it('should match numbered books by partial numbered name', async () => {
     const references = await getReferencesMatchingName('1 cor');
-    expect(references[0].name).to.equal('1 Corinthians 1');
+    expect(references[0]).to.have.property('name', '1 Corinthians 1');
     expect(references).to.have.length(1);
   });
 
@@ -39,11 +39,11 @@ describe('getReferencesMatchingName book logic', () => {
 
   it('should match numbered and non-numbered books by partial name', async () => {
     const references = await getReferencesMatchingName('c');
-    expect(references[0].name).to.equal('Colossians 1');
-    expect(references[1].name).to.equal('1 Chronicles 1');
-    expect(references[2].name).to.equal('2 Chronicles 1');
-    expect(references[3].name).to.equal('1 Corinthians 1');
-    expect(references[4].name).to.equal('2 Corinthians 1');
+    expect(references[0]).to.have.property('name', 'Colossians 1');
+    expect(references[1]).to.have.property('name', '1 Chronicles 1');
+    expect(references[2]).to.have.property('name', '2 Chronicles 1');
+    expect(references[3]).to.have.property('name', '1 Corinthians 1');
+    expect(references[4]).to.have.property('name', '2 Corinthians 1');
     expect(references).to.have.length(5);
   });
 
@@ -52,13 +52,13 @@ describe('getReferencesMatchingName book logic', () => {
       language: 'fin',
       fallbackVersion: 330
     });
-    expect(references[0].name).to.equal('Laulujen laulu 1');
+    expect(references[0]).to.have.property('name', 'Laulujen laulu 1');
     expect(references).to.have.length(1);
   });
 
   it('should use correct ID for books', async () => {
     const references = await getReferencesMatchingName('philippians');
-    expect(references[0].id).to.equal('111/PHP.1');
+    expect(references[0]).to.have.property('id', '111/PHP.1');
     expect(references).to.have.length(1);
   });
 

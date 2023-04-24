@@ -7,8 +7,8 @@ describe('getReferencesMatchingName version logic', () => {
       language: 'spa',
       fallbackVersion: 128
     });
-    expect(references[0].name).to.equal('Lucas 4:8');
-    expect(references[0].version.name).to.equal('RVR1960');
+    expect(references[0]).to.have.property('name', 'Lucas 4:8');
+    expect(references[0].version).to.have.property('name', 'RVR1960');
     expect(references).to.have.length(1);
   });
 
@@ -17,8 +17,8 @@ describe('getReferencesMatchingName version logic', () => {
       language: 'zho_tw',
       fallbackVersion: 46
     });
-    expect(references[0].name).to.equal('路加福音 4:8');
-    expect(references[0].version.name).to.equal('CUNP-上帝');
+    expect(references[0]).to.have.property('name', '路加福音 4:8');
+    expect(references[0].version).to.have.property('name', 'CUNP-上帝');
     expect(references).to.have.length(1);
   });
 
@@ -34,44 +34,44 @@ describe('getReferencesMatchingName version logic', () => {
 
   it('should match versions irrespective of surrounding whitespace', async () => {
     const references = await getReferencesMatchingName('1 peter 5:7    esv');
-    expect(references[0].name).to.equal('1 Peter 5:7');
-    expect(references[0].version.name).to.equal('ESV');
+    expect(references[0]).to.have.property('name', '1 Peter 5:7');
+    expect(references[0].version).to.have.property('name', 'ESV');
     expect(references).to.have.length(1);
   });
 
   it('should match versions by partial name', async () => {
     const references = await getReferencesMatchingName('luke 4:8 es');
-    expect(references[0].name).to.equal('Luke 4:8');
-    expect(references[0].version.name).to.equal('ESV');
+    expect(references[0]).to.have.property('name', 'Luke 4:8');
+    expect(references[0].version).to.have.property('name', 'ESV');
     expect(references).to.have.length(1);
   });
 
   it('should match versions by ambiguous partial name', async () => {
     const references = await getReferencesMatchingName('luke 4:8 c');
-    expect(references[0].name).to.equal('Luke 4:8');
-    expect(references[0].version.name).to.equal('CEB');
+    expect(references[0]).to.have.property('name', 'Luke 4:8');
+    expect(references[0].version).to.have.property('name', 'CEB');
     expect(references).to.have.length(1);
   });
 
   it('should try to find closest match for nonexistent versions', async () => {
     const references = await getReferencesMatchingName('hosea 6:3 nlab');
-    expect(references[0].name).to.equal('Hosea 6:3');
-    expect(references[0].version.name).to.equal('NLT');
+    expect(references[0]).to.have.property('name', 'Hosea 6:3');
+    expect(references[0].version).to.have.property('name', 'NLT');
     expect(references).to.have.length(1);
   });
 
   it('should match versions by exact name', async () => {
     const references = await getReferencesMatchingName('hosea 6:3 amp');
     // Should NOT match AMPC
-    expect(references[0].name).to.equal('Hosea 6:3');
-    expect(references[0].version.name).to.equal('AMP');
+    expect(references[0]).to.have.property('name', 'Hosea 6:3');
+    expect(references[0].version).to.have.property('name', 'AMP');
     expect(references).to.have.length(1);
   });
 
   it('should use default version for nonexistent versions with no matches', async () => {
     const references = await getReferencesMatchingName('hosea 6:3 xyz');
-    expect(references[0].name).to.equal('Hosea 6:3');
-    expect(references[0].version.name).to.equal('NIV');
+    expect(references[0]).to.have.property('name', 'Hosea 6:3');
+    expect(references[0].version).to.have.property('name', 'NIV');
     expect(references).to.have.length(1);
   });
 
