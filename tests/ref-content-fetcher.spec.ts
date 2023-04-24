@@ -6,6 +6,7 @@ import { fetchReferenceContent } from '../src';
 
 describe('reference content fetcher', () => {
   before(async () => {
+    nock.disableNetConnect();
     nock('https://www.bible.com')
       .persist()
       .get(/^\/bible/)
@@ -14,7 +15,7 @@ describe('reference content fetcher', () => {
 
   after(() => {
     nock.cleanAll();
-    nock.disableNetConnect();
+    nock.enableNetConnect();
   });
 
   it('should copy reference content for chapter', async () => {

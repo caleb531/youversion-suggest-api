@@ -6,6 +6,7 @@ import { getReferencesMatchingPhrase } from '../src';
 
 describe('search result fetcher', () => {
   before(async () => {
+    nock.disableNetConnect();
     nock('https://www.bible.com')
       .persist()
       .get(/^\/search/)
@@ -14,7 +15,7 @@ describe('search result fetcher', () => {
 
   after(() => {
     nock.cleanAll();
-    nock.disableNetConnect();
+    nock.enableNetConnect();
   });
 
   it('should correctly parse reference names from HTML', async () => {
