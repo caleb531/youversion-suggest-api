@@ -234,3 +234,7 @@ parameters are optional and have the following defaults:
   fallbackVersion: 'niv'
 }
 ```
+
+The `version` and `fallbackVersion` properties are case-insensitive (e.g. both
+`'ESV'` and '`esv'` are accepted). You can also use the numeric ID of the
+version for exactness (e.g. `59`, for ESV).
