@@ -77,7 +77,6 @@ export function getSectionContent(reference: BibleReference, $: cheerio.Root, $s
   const $verses = $section.find("[class*='verse']");
   $verses.each((v, verse) => {
     const $verse = $(verse);
-    console.log($verse.attr('class'));
     if (isVerseWithinRange(reference, $, $verse)) {
       sectionContentParts.push(...$verse.find("[class*='content']").text());
     }
