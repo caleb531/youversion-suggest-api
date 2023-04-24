@@ -33,8 +33,6 @@ jobs:
       - name: Build & publish to npm
         # Adding --no-git-checks solves a weird ERR_PNPM_GIT_UNKNOWN_BRANCH
         # error
-        run: |
-          pnpm build
-          pnpm publish --no-git-checks
+        run: pnpm publish --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
