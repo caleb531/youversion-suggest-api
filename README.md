@@ -61,6 +61,8 @@ const reference = await fetchReferenceContent('mat 11.28-30', {
 console.log(reference);
 /*
 {
+  id: '59/MAT.11.28-30'
+  name: 'Matthew 11:28-30'
   book: { id: 'mat', name: 'Matthew' },
   chapter: 11,
   verse: 28,
