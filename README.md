@@ -107,7 +107,7 @@ by calling the above `fetchReferenceContent`.
 import { getReferencesMatchingName } from 'youversion-suggest';
 
 const references = await getReferencesMatchingName('a 1:1', {
-  language: 'eng'
+  language: 'eng' // Optional
 });
 console.log(references);
 /*
@@ -147,8 +147,8 @@ object rather than an array of said objects.
 import { getFirstReferenceMatchingName } from 'youversion-suggest';
 
 const reference = await getFirstReferenceMatchingName('matthew 5:4', {
-  language: 'eng',
-  fallbackVersion: 'nkjv'
+  language: 'eng', // Optional
+  fallbackVersion: 'nkjv' // Optional
 });
 console.log(reference);
 /*
@@ -179,8 +179,8 @@ the `content` property of each being the full contents of that particular verse.
 import { getReferencesMatchingPhrase } from 'youversion-suggest';
 
 const references = await getReferencesMatchingPhrase('without faith', {
-  language: 'eng',
-  version: 'nkjv'
+  language: 'eng', // Optional
+  version: 'nkjv' // Optional
 });
 console.log(references);
 /*
@@ -211,6 +211,8 @@ data for the specified language code. This Bible data includes the book names of
 all 66 canonical books of the Bible, a list of the available
 versions/translations for that language, and the default version for that
 language.
+
+If you call this function without arguments, the default language is `'eng'`.
 
 ```ts
 import { getBibleData } from 'youversion-suggest';
