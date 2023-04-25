@@ -104,10 +104,6 @@ are looking for (e.g. `1jo 1:9`, `mat 11.28-30`, `Genesis 1:1`). If the query is
 ambiguous, the resulting array will contain multiple references (e.g. `ma 1:1`
 matches Malachi 1:1, Mark 1:1, and Matthew 1:1).
 
-Please note that these returned Bible reference objects do not contain the
-textual content of the respective references. If you want the textual content as
-well, you must fetch it yourself by calling the above `fetchReferenceContent`.
-
 ```ts
 import { getReferencesMatchingName } from 'youversion-suggest';
 
@@ -140,6 +136,10 @@ console.log(references);
 ]
 */
 ```
+
+Please note that these returned Bible reference objects do not contain the
+textual content of the respective references. If you want the textual content as
+well, you must fetch it yourself by calling the above `fetchReferenceContent`.
 
 ### Retrieve the first Bible reference matching the given query
 
