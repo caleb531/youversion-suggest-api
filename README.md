@@ -243,7 +243,7 @@ a key-value store of the metadata.
 ```ts
 import { getBibleBookMetadata } from 'youversion-suggest';
 
-const bookMetadata = await getBibleBookMetadata('spa');
+const bookMetadata = await getBibleBookMetadata();
 console.log(bookMetadata.psa.canon);
 // "ot"
 console.log(bookMetadata.psa.chapters);
