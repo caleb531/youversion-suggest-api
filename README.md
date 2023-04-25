@@ -6,12 +6,14 @@ _Released under the MIT license_
 [![tests](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/caleb531/youversion-suggest-node/badge.svg?branch=main)](https://coveralls.io/github/caleb531/youversion-suggest-node?branch=main)
 
-This NodeJS package allow you to search for and fetch Bible content from
-YouVersion. It is still under development, so things may break at any time.
+This NodeJS library allow you to search for and fetch Bible content from
+[YouVersion][youversion]. The package just hit 1.0, so the API is now stable.
 
-This package is designed to run in a Node runtime, so it cannot be used in the
-browser or in, for example, a Cloudflare Worker context. It is also ESM-only;
-there is no CommonJS bundle available.
+This library is designed to run in a Node runtime, so it cannot be used in the
+browser or (for example) a Cloudflare Worker context. It is also ESM-only; there
+is no CommonJS bundle available.
+
+[youversion]: https://www.bible.com/
 
 ## Disclaimer
 
