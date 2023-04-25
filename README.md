@@ -243,7 +243,10 @@ This library does not include deuterocanonical Bible data, and therefore uses
 the same number of books/chapters across all languages and
 versions/translations. You can retrieve this global Bible book metadata using
 the async `getBibleBookMetadata()` function. It takes no arguments, and returns
-a key-value store of the metadata.
+a key-value store of the metadata; each key is the USFM identifier of a Bible
+book (see the [USFM documentation][usfm-docs] for a full list).
+
+[usfm-docs]: https://ubsicap.github.io/usfm/identification/books.html
 
 ```ts
 import { getBibleBookMetadata } from 'youversion-suggest';
