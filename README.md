@@ -98,10 +98,15 @@ Finally, if the Bible reference cannot be fetched, an error is thrown.
 ### Retrieve a list of all Bible references matching the given query
 
 The async `getReferencesMatchingName()` function retrieves an array of Bible
-references whose names match the given query. Please note that these Bible
-reference objects do not contain the textual content of the respective
-references. If you want the textual content as well, you must fetch it yourself
-by calling the above `fetchReferenceContent`.
+references whose names match the given query. This query is a case-insensitive
+string pattern (not a regex) representing the name of the Bible reference you
+are looking for (e.g. `1jo 1:9`, `mat 11.28-30`, `Genesis 1:1`). If the query is
+ambiguous, the resulting array will contain multiple references (e.g. `ma 1:1`
+matches Malachi 1:1, Mark 1:1, and Matthew 1:1).
+
+Please note that these returned Bible reference objects do not contain the
+textual content of the respective references. If you want the textual content as
+well, you must fetch it yourself by calling the above `fetchReferenceContent`.
 
 ```ts
 import { getReferencesMatchingName } from 'youversion-suggest';
