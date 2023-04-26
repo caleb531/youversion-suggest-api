@@ -13,6 +13,9 @@ This library is designed to run in a Node runtime, so it cannot be used in the
 browser or (for example) a Cloudflare Worker context. It is also ESM-only; there
 is no CommonJS bundle available.
 
+The API is fully typed, so you can easily drop this into your TypeScript
+project.
+
 [youversion]: https://www.bible.com/
 
 ## Disclaimer
