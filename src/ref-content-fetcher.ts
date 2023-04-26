@@ -89,12 +89,9 @@ export function getElementContent(
   const contentParts = [getSpacingBeforeElement(reference, $, $element, options)];
   $element.children().each((c, child) => {
     const $child = $(child);
-    if (!classMatchesOneOf($child.prop('class'), new Set([...blockElems, ...breakElems, 'verse', 'label']))) {
-      return;
-    }
     if (classMatchesOneOf($child.prop('class'), ['verse'])) {
       contentParts.push(...getVerseContent(reference, $, $child, options));
-    } else {
+    } else if (classMatchesOneOf($child.prop('class'), new Set([...blockElems, ...breakElems]))) {
       contentParts.push(...getElementContent(reference, $, $child, options));
     }
   });
