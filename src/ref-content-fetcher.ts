@@ -3,6 +3,13 @@ import { getFirstReferenceMatchingName } from './lookup-reference';
 import { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
 import { baseReferenceUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, isBibleReferenceID } from './utilities';
 
+// Additional options to fetchReferenceContent() which control what is included
+// in reference content
+export interface BibleFetchOptions extends BibleLookupOptions {
+  includeVerseNumbers?: boolean;
+  includeLineBreaks?: boolean;
+}
+
 // Elements that should be surrounded by blank lines
 export const blockElems = new Set(['b', 'p', 'm']);
 // Elements that should trigger a single line break
@@ -15,30 +22,26 @@ export function getChapterURL(reference: BibleReference): string {
 }
 
 // Parse the given YouVersion HTML and return a string a reference content
-export function parseContentFromHTML(reference: BibleReference, html: string): string {
+export function parseContentFromHTML(reference: BibleReference, html: string, options: BibleFetchOptions): string {
   const $ = cheerio.load(html);
   const $chapter = $("[class*='chapter']");
-  const contentParts: string[] = [];
-  // Loop over sections indicating paragraphs / breaks in the text
-  $chapter.children().each((s, section) => {
-    const $section = $(section);
-    contentParts.push(...getSectionContent(reference, $, $section));
-  });
+  const contentParts = getElementContent(reference, $, $chapter, options);
   return normalizeRefContent(contentParts.join(''));
 }
 
 // Determine the appropriate amount of spacing (e.g. line/paragraph breaks) to
 // insert before the given section of content
-export function getSpacingBeforeSection(
+export function getSpacingBeforeElement(
   _reference: BibleReference,
   $: cheerio.Root,
-  $section: cheerio.Cheerio
+  $element: cheerio.Cheerio,
+  options: BibleFetchOptions
 ): string {
-  const sectionType = $section.prop('class');
-  if (classMatchesOneOf(sectionType, blockElems)) {
-    return '\n\n';
-  } else if (classMatchesOneOf(sectionType, breakElems)) {
-    return '\n';
+  const elementType = $element.prop('class');
+  if (classMatchesOneOf(elementType, blockElems)) {
+    return options.includeLineBreaks ? '\n\n' : ' ';
+  } else if (classMatchesOneOf(elementType, breakElems)) {
+    return options.includeLineBreaks ? '\n' : ' ';
   } else {
     return '';
   }
@@ -48,7 +51,7 @@ export function getSpacingBeforeSection(
 // the supplied elements set; matching is done literally and on word boundaries
 // (e.g. so the class "ChapterContent_q1__ZQPnV" matches if "q1" is in the
 // elements set)
-export function classMatchesOneOf(className: string, elemsSet: Set<string>): boolean {
+export function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boolean {
   const elemsUnion = Array.from(elemsSet).join('|');
   return new RegExp(`\\b(${elemsUnion})\\b`).test(
     // The normal regex word boundary (\b) considers underscores as part of the
@@ -62,44 +65,80 @@ export function classMatchesOneOf(className: string, elemsSet: Set<string>): boo
 }
 
 // Determine the spacing to insert after the given section of content
-export function getSpacingAfterSection(_reference: BibleReference, $: cheerio.Root, $section: cheerio.Cheerio): string {
-  const sectionType = $section.prop('class');
-  if (classMatchesOneOf(sectionType, blockElems)) {
-    return '\n\n';
+export function getSpacingAfterElement(
+  _reference: BibleReference,
+  $: cheerio.Root,
+  $element: cheerio.Cheerio,
+  options: BibleFetchOptions
+): string {
+  const elementType = $element.prop('class');
+  if (classMatchesOneOf(elementType, blockElems)) {
+    return options.includeLineBreaks ? '\n\n' : ' ';
   } else {
     return '';
   }
 }
 
-// Retrieve all reference content within the given section
-export function getSectionContent(reference: BibleReference, $: cheerio.Root, $section: cheerio.Cheerio): string[] {
-  const sectionContentParts = [getSpacingBeforeSection(reference, $, $section)];
-  const $verses = $section.find("[class*='verse']");
-  $verses.each((v, verse) => {
-    const $verse = $(verse);
-    if (isVerseWithinRange(reference, $, $verse)) {
-      sectionContentParts.push(...$verse.find("[class*='content']").text());
+// Recursively retrieve all reference content within the given element
+export function getElementContent(
+  reference: BibleReference,
+  $: cheerio.Root,
+  $element: cheerio.Cheerio,
+  options: BibleFetchOptions
+): string[] {
+  const contentParts = [getSpacingBeforeElement(reference, $, $element, options)];
+  $element.children().each((c, child) => {
+    const $child = $(child);
+    if (!classMatchesOneOf($child.prop('class'), new Set([...blockElems, ...breakElems, 'verse', 'label']))) {
+      return;
+    }
+    if (classMatchesOneOf($child.prop('class'), ['verse'])) {
+      contentParts.push(...getVerseContent(reference, $, $child, options));
+    } else {
+      contentParts.push(...getElementContent(reference, $, $child, options));
     }
   });
-  sectionContentParts.push(getSpacingAfterSection(reference, $, $section));
-  return sectionContentParts;
+  contentParts.push(getSpacingAfterElement(reference, $, $element, options));
+  return contentParts;
+}
+
+// Retrieve the contents for the given verse (including the verse number label,
+// if enabled)
+export function getVerseContent(
+  reference: BibleReference,
+  $: cheerio.Root,
+  $verse: cheerio.Cheerio,
+  options: BibleFetchOptions
+): string[] {
+  const contentParts = [];
+  if (!isVerseWithinRange(reference, $, $verse)) {
+    return [];
+  }
+  if (options.includeVerseNumbers) {
+    contentParts.push(' ', $verse.children("[class*='label']").text(), ' ');
+  }
+  contentParts.push(' ', $verse.children("[class*='content']").text(), ' ');
+  return contentParts;
 }
 
 // Return true if the given verse element is within the designated verse range
 export function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: cheerio.Cheerio): boolean {
-  const verseNum = getVerseNumberFromClass(reference, $, $verse);
-  if (reference.verse && reference.endVerse) {
-    return verseNum >= reference.verse && verseNum <= reference.endVerse;
-  } else if (reference.verse) {
-    return verseNum === reference.verse;
-  } else {
+  // If reference represents an entire chapter, then all verses are within range
+  if (!reference.verse) {
     return true;
   }
-}
-
-// Parse the verse number from the given verse element's HTML class
-export function getVerseNumberFromClass(_reference: BibleReference, $: cheerio.Root, $verse: cheerio.Cheerio): number {
-  return Number($verse.prop('class').match(/v(\d+)/i)[1]);
+  const startVerse = reference.verse;
+  const endVerse = reference.endVerse ?? startVerse;
+  // Get all verse numbers that this verse represents (e.g. for versions such as
+  // MSG that consolidate multiple verses into one (e.g. "7-9"))
+  const verseNums: number[] = $verse
+    .prop('class')
+    .split(' ')
+    .filter((className: string) => className.startsWith('v'))
+    .map((className: string) => Number(className.slice(1)));
+  return verseNums.some((verseNum) => {
+    return verseNum >= startVerse && verseNum <= endVerse;
+  });
 }
 
 // Strip superfluous whitespace from throughout reference content
@@ -129,7 +168,7 @@ export async function buildBibleReferenceFromSearchText(
 // Fetch the textual content of the given Bible reference; returns a promise
 export async function fetchReferenceContent(
   searchText: string,
-  options: BibleLookupOptions = {}
+  options: BibleFetchOptions = {}
 ): Promise<BibleReference> {
   const bible = await getBibleData(options.language);
   const reference = await buildBibleReferenceFromSearchText(searchText, {
@@ -140,7 +179,10 @@ export async function fetchReferenceContent(
     throw new Error('Reference does not exist');
   }
   const html = await fetchHTML(getChapterURL(reference));
-  const content = parseContentFromHTML(reference, html);
+  const content = parseContentFromHTML(reference, html, {
+    includeVerseNumbers: options.includeVerseNumbers ?? false,
+    includeLineBreaks: options.includeLineBreaks ?? true
+  });
   if (content) {
     return {
       ...reference,

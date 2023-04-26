@@ -77,4 +77,87 @@ describe('reference content fetcher', () => {
     expect(reference.content).to.match(/adipiscing elit./, 'should respect content consisting of spaces');
     expect(reference.content).to.match(/consectetur adipiscing/, 'should collapse consecutive spaces');
   });
+
+  it('should add line breaks where appropriate', async () => {
+    const reference = await fetchReferenceContent('111/psa.23');
+    expect(reference.content).to.match(/amet,\nconsectetur/, 'should add newline before each p block');
+    expect(reference.content).to.match(/erat.\n\n\S/, 'should add newline after each p block');
+    expect(reference.content).to.match(/orci,\ndapibus/, 'should add newline between each qc block');
+    expect(reference.content).to.match(/nec\nfermentum/, 'should add newline between each q block');
+    expect(reference.content).to.match(/elit.\n\nUt/, 'should add newlines around each li1 block');
+    expect(reference.content).to.match(/leo,\n\nhendrerit/, 'should add two newlines for each b block');
+  });
+
+  it('should strip line breaks where appropriate', async () => {
+    const reference = await fetchReferenceContent('111/psa.23', {
+      includeVerseNumbers: false,
+      includeLineBreaks: false
+    });
+    expect(reference.content).to.match(/amet, consectetur/, 'should not add newline before each p block');
+    expect(reference.content).to.match(/erat. \S/, 'should not add newline after each p block');
+    expect(reference.content).to.match(/orci, dapibus/, 'should not add newline between each qc block');
+    expect(reference.content).to.match(/nec fermentum/, 'should not add newline between each q block');
+    expect(reference.content).to.match(/elit. Ut/, 'should not add newlines around each li1 block');
+    expect(reference.content).to.match(/leo, hendrerit/, 'should not add two newlines for each b block');
+  });
+
+  it('should display verse numbers correctly when stripping line breaks', async () => {
+    const reference = await fetchReferenceContent('111/psa.23', {
+      includeVerseNumbers: true,
+      includeLineBreaks: false
+    });
+    expect(reference.content).to.match(/\b1 » “Lorem ipsum”/, 'should display number for verse 1');
+    expect(reference.content).to.match(/elit. 2 Ut/, 'should display number for verse 2');
+    expect(reference.content).to.match(/erat. 3 › Nunc/, 'should display number for verse 3');
+    expect(reference.content).to.match(/leo, 4 hendrerit/, 'should display number for verse 4');
+    expect(reference.content).to.match(/leo, 4 hendrerit/, 'should display number for verse 4');
+    expect(reference.content).to.match(/nec 5 fermentum/, 'should display number for verse 5');
+    expect(reference.content).to.match(/orci, 7-9 dapibus/, 'should display number for verses 7-9');
+    expect(reference.content).to.match(/augue in, 10 dictum/, 'should display number for verse 10');
+  });
+
+  it('should display verse numbers correctly with line breaks', async () => {
+    const reference = await fetchReferenceContent('111/psa.23', {
+      includeVerseNumbers: true,
+      includeLineBreaks: true
+    });
+    expect(reference.content).to.match(/5 fermentum/);
+    expect(reference.content).not.to.match(/#/);
+  });
+
+  it('should handle verse range labels (used by versions like the MSG)', async () => {
+    const reference = await fetchReferenceContent('111/psa.23.7-9', {
+      includeVerseNumbers: true,
+      includeLineBreaks: true
+    });
+    expect(reference.content).to.match(/7-9 dapibus et augue in,/);
+    expect(reference.content).not.to.match(/#/);
+  });
+
+  it('should handle range labels when verse at start of range is given', async () => {
+    const reference = await fetchReferenceContent('111/psa.23.7', {
+      includeVerseNumbers: true,
+      includeLineBreaks: true
+    });
+    expect(reference.content).to.match(/7-9 dapibus et augue in,/);
+    expect(reference.content).not.to.match(/#/);
+  });
+
+  it('should handle range labels when verse at end of range is given', async () => {
+    const reference = await fetchReferenceContent('111/psa.23.9', {
+      includeVerseNumbers: true,
+      includeLineBreaks: true
+    });
+    expect(reference.content).to.match(/7-9 dapibus et augue in,/);
+    expect(reference.content).not.to.match(/#/);
+  });
+
+  it('should handle range labels when verse in middle of range is given', async () => {
+    const reference = await fetchReferenceContent('111/psa.23.8', {
+      includeVerseNumbers: true,
+      includeLineBreaks: true
+    });
+    expect(reference.content).to.match(/7-9 dapibus et augue in,/);
+    expect(reference.content).not.to.match(/#/);
+  });
 });
