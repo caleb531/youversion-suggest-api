@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "target": "esnext",
+    "lib": ["esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
     "esModuleInterop": true,
-    "target": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "outDir": "dist",
-    "strict": true
-  },
-  "lib": ["esnext"]
+    "isolatedModules": true,
+    "strict": true,
+    "strictFunctionTypes": false
+  }
 }

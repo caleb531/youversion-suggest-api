@@ -5,6 +5,7 @@
 
 # misc
 .DS_Store
+*.tsbuildinfo
 
 # Build directory
 dist
