@@ -2,7 +2,6 @@ import fsPromises from 'fs/promises';
 import fetch from 'node-fetch';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import defaultOptions from './default-options.json';
 import {
   BibleBookMetadata,
   BibleData,
@@ -184,7 +183,7 @@ export async function getJSONData<T extends JSONSerializable>(path: string): Pro
   return JSON.parse(String(await fsPromises.readFile(path)));
 }
 
-export async function getBibleData(language: string = defaultOptions.language): Promise<BibleData> {
+export async function getBibleData(language = 'eng'): Promise<BibleData> {
   return getJSONData(path.join(getBibleDataDir(), `bible-${language}.json`));
 }
 
