@@ -44,6 +44,12 @@ describe('reference content fetcher', () => {
     expect(reference.name).to.equal('Psalms 23');
   });
 
+  it('should fetch reference content by query', async () => {
+    const reference = await fetchReferenceContent('ps 23 esv');
+    expect(reference.name).to.equal('Psalms 23');
+    expect(reference.version.name).to.equal('ESV');
+  });
+
   it('should provide reference name in returned object', async () => {
     const reference = await fetchReferenceContent('59/psa.23');
     expect(reference.name).to.equal('Psalms 23');
