@@ -87,11 +87,12 @@ export function getElementContent(
   options: BibleFetchOptions
 ): string[] {
   const contentParts = [getSpacingBeforeElement(reference, $, $element, options)];
+  const blockOrBreakElems = new Set([...blockElems, ...breakElems]);
   $element.children().each((c, child) => {
     const $child = $(child);
     if (classMatchesOneOf($child.prop('class'), ['verse'])) {
       contentParts.push(...getVerseContent(reference, $, $child, options));
-    } else if (classMatchesOneOf($child.prop('class'), new Set([...blockElems, ...breakElems]))) {
+    } else if (classMatchesOneOf($child.prop('class'), blockOrBreakElems)) {
       contentParts.push(...getElementContent(reference, $, $child, options));
     }
   });
