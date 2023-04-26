@@ -9,14 +9,6 @@ import {
   getReferenceIDFromURL
 } from './utilities';
 
-// Fetch the textual content of the given Bible reference; returns a promise
-export async function getReferencesMatchingPhrase(searchText: string, options: BibleSearchOptions = {}) {
-  const bible = options.bible ?? (await getBibleData(options.language));
-  const preferredVersionId = options.version || getDefaultVersion(bible);
-  const html = await fetchHTML(`${baseSearchUrl}?q=${encodeURIComponent(searchText)}&version_id=${preferredVersionId}`);
-  return parseContentFromHTML(html, { bible });
-}
-
 export async function parseContentFromHTML(
   html: string,
   options: BibleSearchOptionsWithBibleData
@@ -34,4 +26,12 @@ export async function parseContentFromHTML(
     }
   });
   return results;
+}
+
+// Fetch the textual content of the given Bible reference; returns a promise
+export async function getReferencesMatchingPhrase(searchText: string, options: BibleSearchOptions = {}) {
+  const bible = options.bible ?? (await getBibleData(options.language));
+  const preferredVersionId = options.version || getDefaultVersion(bible);
+  const html = await fetchHTML(`${baseSearchUrl}?q=${encodeURIComponent(searchText)}&version_id=${preferredVersionId}`);
+  return parseContentFromHTML(html, { bible });
 }
