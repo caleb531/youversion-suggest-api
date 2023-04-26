@@ -39,6 +39,11 @@ describe('reference content fetcher', () => {
     expect(reference.content).not.to.match(/fermentum/);
   });
 
+  it('should be case-insensitive for reference IDs', async () => {
+    const reference = await fetchReferenceContent('59/PsA.23');
+    expect(reference.name).to.equal('Psalms 23');
+  });
+
   it('should provide reference name in returned object', async () => {
     const reference = await fetchReferenceContent('59/psa.23');
     expect(reference.name).to.equal('Psalms 23');

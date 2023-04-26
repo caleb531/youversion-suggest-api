@@ -144,7 +144,7 @@ export function buildBibleReferenceFromID(
 ): BibleReference {
   const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) || [];
   const versionId = Number(matches[1]);
-  const bookId = matches[2];
+  const bookId = matches[2].toLowerCase();
   const chapter = Number(matches[3]);
   const verse = Number(matches[4]) || null;
   const endVerse = Number(matches[5]) || null;
