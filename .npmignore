@@ -4,7 +4,7 @@
 .vscode
 pnpm-lock.yaml
 tsconfig.json
-rollup.config.mjs
+*.config.js
 .eslintrc.json
 src/data
 tests
