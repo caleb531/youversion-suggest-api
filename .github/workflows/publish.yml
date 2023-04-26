@@ -15,6 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          # This is critical to have in the publish step, because otherwise the
+          # Bible data will not be included in the published npm tarball
           submodules: recursive
 
       - name: Install pnpm
