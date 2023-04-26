@@ -317,3 +317,39 @@ version for exactness (e.g. `59`, for ESV).
 
 [yvs-data]: https://github.com/caleb531/youversion-suggest-data
 [bible-book-metadata-json]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/book-metadata.json
+
+### Set base directory of Bible data
+
+All Bible data is read asynchronously using the Node `fs` module, and therefore
+it may not necessarily be bundled with your application depending on your build
+process. Therefore, it may be necessary to explicitly tell youversion-suggest
+where to find your Bible data (provided you've copied the Bible data to this
+location).
+
+An excellent example is when building a Raycast extension, which requires that
+all static assets be located inside an `assets/` directory. Configuring youversion-suggest to use this directory can be done in two steps:
+
+#### 1. Copy Bible data directory to the base directory
+
+You first need to copy `node_modules/youversion-suggest/dist/data` to the base directory for static assets.
+
+```sh
+cp -R node_modules/youversion-suggest/dist/data assets
+```
+
+You can see an example of this in the [package.json][yvs-raycast-package-json]
+file for [youversion-suggest-raycast][yvs-raycast].
+
+[yvs-raycast-package-json]: https://github.com/caleb531/youversion-suggest-raycast/blob/main/package.json#L51
+[yvs-raycast]: https://github.com/caleb531/youversion-suggest-raycast
+
+#### 2. Innstruct youversion-suggest to use this new path
+
+```ts
+import { setBibleDataDirBase } from 'youversion-suggest';
+
+setBibleDataDirBase(path.join(__dirname, 'assets'));
+```
+
+Note: You probably don't need to do any of this if the library is successfully
+retrieving Bible data for you.

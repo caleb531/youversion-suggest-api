@@ -14,8 +14,24 @@ import {
   JSONSerializable
 } from './types';
 
-// __dirname is not available in ES modules natively, so we must define it
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// __dirname is not available in ES modules natively, so we must define it if it
+// does not already exist (and it may already be defined if the application
+// consuming this package is CommonJS)
+let BIBLE_DATA_BASE_DIR: string =
+  typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
+// Some applications consuming this library may need the static Bible data in a
+// different location; to support this scenario, you can use the
+// setBibleDataDirBase() function; the supplied argument should be the path to
+// whichever directory contains the YVS data/ directory as an immediate child
+export function setBibleDataDirBase(newDirPath: string): void {
+  BIBLE_DATA_BASE_DIR = newDirPath;
+}
+// Retrieve the path to the innermost directory containing the JSON files of
+// Bible data
+export function getBibleDataDir(): string {
+  return path.join(BIBLE_DATA_BASE_DIR, 'data', 'bible');
+}
 
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
 export const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
@@ -169,15 +185,15 @@ export async function getJSONData<T extends JSONSerializable>(path: string): Pro
 }
 
 export async function getBibleData(language: string = defaultOptions.language): Promise<BibleData> {
-  return getJSONData(path.join(__dirname, 'data', 'bible', `bible-${language}.json`));
+  return getJSONData(path.join(getBibleDataDir(), `bible-${language}.json`));
 }
 
 export async function getBibleBookMetadata(): Promise<{ [key: string]: BibleBookMetadata }> {
-  return getJSONData(path.join(__dirname, 'data', 'bible', `book-metadata.json`));
+  return getJSONData(path.join(getBibleDataDir(), 'book-metadata.json'));
 }
 
 export async function getLanguages(): Promise<BibleLanguage[]> {
-  return getJSONData(path.join(__dirname, 'data', 'bible', `languages.json`));
+  return getJSONData(path.join(getBibleDataDir(), 'languages.json'));
 }
 
 export function fetchHTML(url: string): Promise<string> {
