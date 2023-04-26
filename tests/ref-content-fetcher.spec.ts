@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import fsPromises from 'fs/promises';
 import nock from 'nock';
 import path from 'path';
@@ -48,6 +48,16 @@ describe('reference content fetcher', () => {
     const reference = await fetchReferenceContent('ps 23 esv');
     expect(reference.name).to.equal('Psalms 23');
     expect(reference.version.name).to.equal('ESV');
+  });
+
+  it('should throw error for nonexistent reference', async () => {
+    try {
+      await fetchReferenceContent('xyz 23 esv');
+    } catch (error) {
+      expect(error).to.be.instanceOf(Error);
+      return;
+    }
+    assert.fail('Error is never thrown for nonexistent reference');
   });
 
   it('should provide reference name in returned object', async () => {
