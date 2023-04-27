@@ -20,7 +20,7 @@ export default [
       copy({
         targets: [
           {
-            src: ['src/data/*.md', 'src/data/bible'],
+            src: ['src/data/{*.md,bible}'],
             dest: 'dist/data'
           }
         ]
