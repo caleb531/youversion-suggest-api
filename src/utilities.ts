@@ -171,7 +171,7 @@ export function buildBibleReferenceFromID(
     chapter: chapter,
     verse: verse ? verse : null,
     endVerse: endVerse ? endVerse : null,
-    version: options.bible.versions.find((version) => version.id === versionId) || {
+    version: getVersionById(options.bible, versionId) || {
       id: 0,
       name: '',
       full_name: ''
