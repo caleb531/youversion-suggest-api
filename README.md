@@ -64,7 +64,9 @@ import { fetchReferenceContent } from 'youversion-suggest';
 
 const reference = await fetchReferenceContent('mat 11.28-30', {
   language: 'eng', // Optional
-  fallbackVersion: 'esv' // Optional
+  fallbackVersion: 'esv' // Optional,
+  includeVerseNumbers: true // Optional (default: false)
+  includeLineBreaks: false // Optional (default: true)
 });
 console.log(reference);
 /*
