@@ -5,7 +5,7 @@ export type JSONSerializable =
   | boolean
   | Array<JSONSerializable>
   | object
-  | { [key: string]: JSONSerializable }
+  | Record<string, JSONSerializable>
   | null;
 
 // Types for JSON Bible data

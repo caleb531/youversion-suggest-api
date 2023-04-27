@@ -187,7 +187,7 @@ export async function getBibleData(language = 'eng'): Promise<BibleData> {
   return getJSONData(path.join(getBibleDataDir(), `bible-${language}.json`));
 }
 
-export async function getBibleBookMetadata(): Promise<{ [key: string]: BibleBookMetadata }> {
+export async function getBibleBookMetadata(): Promise<Record<string, BibleBookMetadata>> {
   return getJSONData(path.join(getBibleDataDir(), 'book-metadata.json'));
 }
 
