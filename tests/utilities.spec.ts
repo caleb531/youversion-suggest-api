@@ -6,6 +6,7 @@ describe('utilities', () => {
     setBibleDataDirBase('src');
     expect(await getBibleData()).to.not.be.undefined;
   });
+
   it('should error when incorrect base directory is set', async () => {
     try {
       setBibleDataDirBase('src/data');
@@ -18,6 +19,7 @@ describe('utilities', () => {
     }
     assert.fail('Error is never thrown for incorrect base directory');
   });
+
   it('should retrieve list of all languages', async () => {
     const languages = await getLanguages();
     expect(
