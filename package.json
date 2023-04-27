@@ -2,7 +2,7 @@
   "name": "youversion-suggest",
   "title": "YouVersion Bible Suggest",
   "description": "An API for searching the YouVersion Bible and fetching Bible content",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.es.js",
