@@ -50,6 +50,16 @@ describe('reference content fetcher', () => {
     expect(reference.version.name).to.equal('ESV');
   });
 
+  it('should throw error for empty content', async () => {
+    try {
+      await fetchReferenceContent('59/psa.23.11');
+    } catch (error) {
+      expect(error).to.be.instanceOf(Error);
+      return;
+    }
+    assert.fail('Error is never thrown for empty content');
+  });
+
   it('should throw error for nonexistent reference', async () => {
     try {
       await fetchReferenceContent('xyz 23 esv');
