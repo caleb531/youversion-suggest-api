@@ -12,7 +12,8 @@
     "build": "rollup -c",
     "prepare": "rollup -c",
     "test": "mocha --require tsx --recursive 'tests/**/*.spec.ts'",
-    "coverage": "nyc pnpm -s test"
+    "coverage": "nyc pnpm -s test",
+    "lint": "tsc --noEmit; eslint 'src/**/*.ts' 'tests/**/*.ts'"
   },
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
