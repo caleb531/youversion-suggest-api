@@ -1,4 +1,4 @@
-import {
+import type {
   BibleBook,
   BibleBookId,
   BibleBookMetadata,

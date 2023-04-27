@@ -1,5 +1,5 @@
 import cheerio from 'cheerio';
-import { BibleReference, BibleSearchOptions, BibleSearchOptionsWithBibleData } from './types';
+import type { BibleReference, BibleSearchOptions, BibleSearchOptionsWithBibleData } from './types';
 import {
   baseSearchUrl,
   buildBibleReferenceFromID,

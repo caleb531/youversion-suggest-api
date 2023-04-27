@@ -2,7 +2,7 @@ import fsPromises from 'fs/promises';
 import fetch from 'node-fetch';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import {
+import type {
   BibleBookMetadata,
   BibleData,
   BibleLanguage,

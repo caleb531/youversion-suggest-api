@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import { getFirstReferenceMatchingName } from './lookup-reference';
-import { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
+import type { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
 import { baseReferenceUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, isBibleReferenceID } from './utilities';
 
 // Additional options to fetchReferenceContent() which control what is included
