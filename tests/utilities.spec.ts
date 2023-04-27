@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { getBibleData, getLanguages, setBibleDataDirBase } from '../src';
 
 describe('utilities', () => {
@@ -12,9 +12,11 @@ describe('utilities', () => {
       await getBibleData();
     } catch (error) {
       expect(error).to.be.instanceOf(Error);
+      return;
     } finally {
       setBibleDataDirBase('src');
     }
+    assert.fail('Error is never thrown for incorrect base directory');
   });
   it('should retrieve list of all languages', async () => {
     const languages = await getLanguages();
