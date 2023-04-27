@@ -33,7 +33,7 @@ export function getBibleDataDir(): string {
 }
 
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
-export const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
+const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
 
 export function normalizeSearchText(searchText: string): string {
   searchText = searchText.normalize('NFC');
@@ -179,7 +179,7 @@ export function buildBibleReferenceFromID(
   });
 }
 
-export async function getJSONData<T extends JSONSerializable>(path: string): Promise<T> {
+async function getJSONData<T extends JSONSerializable>(path: string): Promise<T> {
   return JSON.parse(String(await fsPromises.readFile(path)));
 }
 

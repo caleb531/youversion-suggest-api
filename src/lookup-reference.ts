@@ -28,7 +28,7 @@ interface SearchParams {
 
 // Normalize the search text by removing extraneous characters and collapsing
 // whitespace
-export function normalizeSearchText(searchText: string): string {
+function normalizeSearchText(searchText: string): string {
   searchText = coreNormalizeSearchText(searchText);
   searchText = searchText.replace(/(\d)(?=[a-z])/gi, '$1 ');
   searchText = searchText.replace(/\s+/g, ' ');
@@ -36,7 +36,7 @@ export function normalizeSearchText(searchText: string): string {
   return searchText;
 }
 
-export function getReferenceMatches(searchText: string): (string | undefined)[] | null {
+function getReferenceMatches(searchText: string): (string | undefined)[] | null {
   // \P{L} matches all characters which are not considered words in Unicode
   // (source: <https://stackoverflow.com/a/52205643/560642>)
   const bookRegex = /(\d?(?:[^\P{L}\d_]|\s)+|\d)\s?/u;
@@ -53,7 +53,7 @@ export function getReferenceMatches(searchText: string): (string | undefined)[] 
 }
 
 // Parse out the search text into its parts (which we are calling 'parameters')
-export function getSearchParams(searchText: string): SearchParams | null {
+function getSearchParams(searchText: string): SearchParams | null {
   const referenceMatch = getReferenceMatches(searchText);
   if (!referenceMatch) {
     return null;
@@ -75,7 +75,7 @@ export function getSearchParams(searchText: string): SearchParams | null {
 }
 
 // Finds a version which best matches the given version query
-export function guessVersion(versions: BibleVersion[], versionSearchText: string): BibleVersion | null {
+function guessVersion(versions: BibleVersion[], versionSearchText: string): BibleVersion | null {
   // Chop off character from version query until matching version can be found
   // (if a matching version even exists)
   for (let i = versionSearchText.length; i > 0; i -= 1) {
@@ -99,7 +99,7 @@ export function guessVersion(versions: BibleVersion[], versionSearchText: string
 }
 
 // Chooses most appropriate version based on current parameters
-export function chooseBestVersion({
+function chooseBestVersion({
   fallbackVersionIdOrName,
   bible,
   searchParams
@@ -118,12 +118,12 @@ export function chooseBestVersion({
 }
 
 // Split the given book name into an array of substrings
-export function splitBookNameIntoParts(bookName: string): string[] {
+function splitBookNameIntoParts(bookName: string): string[] {
   const bookWords = normalizeSearchText(bookName).split(' ');
   return bookWords.map((_word, w) => bookWords.slice(w).join(' '));
 }
 
-export async function getMatchingBooks(allBooks: BibleBook[], searchParams: SearchParams): Promise<BibleBook[]> {
+async function getMatchingBooks(allBooks: BibleBook[], searchParams: SearchParams): Promise<BibleBook[]> {
   const matchingBooks: BibleBook[] = [];
   const bookPriorityMap: Record<BibleBookId, number> = {};
 
@@ -146,7 +146,7 @@ export async function getMatchingBooks(allBooks: BibleBook[], searchParams: Sear
 }
 
 // Return a BibleReference object representing a single search result
-export function getSearchResult({
+function getSearchResult({
   book,
   bookMetadata,
   searchParams,

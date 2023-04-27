@@ -11,15 +11,15 @@ export interface BibleFetchOptions extends BibleLookupOptions {
 }
 
 // Elements that should be surrounded by blank lines
-export const blockElems = new Set(['b', 'p', 'm']);
+const blockElems = new Set(['b', 'p', 'm']);
 // Elements that should trigger a single line break
-export const breakElems = new Set(['li1', 'q1', 'q2', 'qc']);
+const breakElems = new Set(['li1', 'q1', 'q2', 'qc']);
 
 // Return true if the given class name matches one of the patterns defined in
 // the supplied elements set; matching is done literally and on word boundaries
 // (e.g. so the class "ChapterContent_q1__ZQPnV" matches if "q1" is in the
 // elements set)
-export function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boolean {
+function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boolean {
   const elemsUnion = Array.from(elemsSet).join('|');
   return new RegExp(`\\b(${elemsUnion})\\b`).test(
     // The normal regex word boundary (\b) considers underscores as part of the
@@ -34,7 +34,7 @@ export function classMatchesOneOf(className: string, elemsSet: Iterable<string>)
 
 // Determine the appropriate amount of spacing (e.g. line/paragraph breaks) to
 // insert before the given section of content
-export function getSpacingBeforeElement(
+function getSpacingBeforeElement(
   _reference: BibleReference,
   $: cheerio.Root,
   $element: cheerio.Cheerio,
@@ -51,7 +51,7 @@ export function getSpacingBeforeElement(
 }
 
 // Return true if the given verse element is within the designated verse range
-export function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: cheerio.Cheerio): boolean {
+function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: cheerio.Cheerio): boolean {
   // If reference represents an entire chapter, then all verses are within range
   if (!reference.verse) {
     return true;
@@ -72,7 +72,7 @@ export function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $
 
 // Retrieve the contents for the given verse (including the verse number label,
 // if enabled)
-export function getVerseContent(
+function getVerseContent(
   reference: BibleReference,
   $: cheerio.Root,
   $verse: cheerio.Cheerio,
@@ -88,7 +88,7 @@ export function getVerseContent(
 }
 
 // Determine the spacing to insert after the given section of content
-export function getSpacingAfterElement(
+function getSpacingAfterElement(
   _reference: BibleReference,
   $: cheerio.Root,
   $element: cheerio.Cheerio,
@@ -103,7 +103,7 @@ export function getSpacingAfterElement(
 }
 
 // Recursively retrieve all reference content within the given element
-export function getElementContent(
+function getElementContent(
   reference: BibleReference,
   $: cheerio.Root,
   $element: cheerio.Cheerio,
@@ -129,7 +129,7 @@ export function getElementContent(
 }
 
 // Strip superfluous whitespace from throughout reference content
-export function normalizeRefContent(content: string): string {
+function normalizeRefContent(content: string): string {
   // Strip leading/trailing whitespace for entire reference
   content = content.trim();
   // Collapse consecutive spaces into a single space
@@ -142,7 +142,7 @@ export function normalizeRefContent(content: string): string {
 }
 
 // Parse the given YouVersion HTML and return a string a reference content
-export function parseContentFromHTML(reference: BibleReference, html: string, options: BibleFetchOptions): string {
+function parseContentFromHTML(reference: BibleReference, html: string, options: BibleFetchOptions): string {
   const $ = cheerio.load(html);
   const $chapter = $("[class*='chapter']");
   const content = getElementContent(reference, $, $chapter, options);
@@ -150,12 +150,12 @@ export function parseContentFromHTML(reference: BibleReference, html: string, op
 }
 
 // Retrieve the URL to the Bible chapter
-export function getChapterURL(reference: BibleReference): string {
+function getChapterURL(reference: BibleReference): string {
   const { version, book, chapter } = reference;
   return `${baseReferenceUrl}/${version.id}/${book.id.toUpperCase()}.${chapter}`;
 }
 
-export async function buildBibleReferenceFromSearchText(
+async function buildBibleReferenceFromSearchText(
   searchText: string,
   options: BibleLookupOptionsWithBibleData
 ): Promise<BibleReference> {

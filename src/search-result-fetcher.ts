@@ -9,10 +9,7 @@ import {
   getReferenceIDFromURL
 } from './utilities';
 
-export async function parseContentFromHTML(
-  html: string,
-  options: BibleSearchOptionsWithBibleData
-): Promise<BibleReference[]> {
+async function parseContentFromHTML(html: string, options: BibleSearchOptionsWithBibleData): Promise<BibleReference[]> {
   const $ = cheerio.load(html);
   const $references = $("a[href*='/bible/']");
 
