@@ -77,16 +77,14 @@ export function getVerseContent(
   $: cheerio.Root,
   $verse: cheerio.Cheerio,
   options: BibleFetchOptions
-): string[] {
-  const contentParts = [];
+): string {
   if (!isVerseWithinRange(reference, $, $verse)) {
-    return [];
+    return '';
   }
-  if (options.includeVerseNumbers) {
-    contentParts.push(' ', $verse.children("[class*='label']").text(), ' ');
-  }
-  contentParts.push(' ', $verse.children("[class*='content']").text(), ' ');
-  return contentParts;
+  return [
+    options.includeVerseNumbers ? ` ${$verse.children("[class*='label']").text()} ` : '',
+    ` ${$verse.children("[class*='content']").text()} `
+  ].join('');
 }
 
 // Determine the spacing to insert after the given section of content
@@ -110,19 +108,24 @@ export function getElementContent(
   $: cheerio.Root,
   $element: cheerio.Cheerio,
   options: BibleFetchOptions
-): string[] {
-  const contentParts = [getSpacingBeforeElement(reference, $, $element, options)];
+): string {
   const blockOrBreakElems = new Set([...blockElems, ...breakElems]);
-  $element.children().each((c, child) => {
-    const $child = $(child);
-    if (classMatchesOneOf($child.prop('class'), ['verse'])) {
-      contentParts.push(...getVerseContent(reference, $, $child, options));
-    } else if (classMatchesOneOf($child.prop('class'), blockOrBreakElems)) {
-      contentParts.push(...getElementContent(reference, $, $child, options));
-    }
-  });
-  contentParts.push(getSpacingAfterElement(reference, $, $element, options));
-  return contentParts;
+  return [
+    getSpacingBeforeElement(reference, $, $element, options),
+    Array.from($element.children())
+      .map((child) => {
+        const $child = $(child);
+        if (classMatchesOneOf($child.prop('class'), ['verse'])) {
+          return getVerseContent(reference, $, $child, options);
+        } else if (classMatchesOneOf($child.prop('class'), blockOrBreakElems)) {
+          return getElementContent(reference, $, $child, options);
+        } else {
+          return '';
+        }
+      })
+      .join(''),
+    getSpacingAfterElement(reference, $, $element, options)
+  ].join('');
 }
 
 // Strip superfluous whitespace from throughout reference content
@@ -142,8 +145,8 @@ export function normalizeRefContent(content: string): string {
 export function parseContentFromHTML(reference: BibleReference, html: string, options: BibleFetchOptions): string {
   const $ = cheerio.load(html);
   const $chapter = $("[class*='chapter']");
-  const contentParts = getElementContent(reference, $, $chapter, options);
-  return normalizeRefContent(contentParts.join(''));
+  const content = getElementContent(reference, $, $chapter, options);
+  return normalizeRefContent(content);
 }
 
 // Retrieve the URL to the Bible chapter
