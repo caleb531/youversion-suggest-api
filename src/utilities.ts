@@ -195,10 +195,11 @@ export async function getLanguages(): Promise<BibleLanguage[]> {
   return getJSONData(path.join(getBibleDataDir(), 'languages.json'));
 }
 
-export function fetchHTML(url: string): Promise<string> {
-  return fetch(url, {
+export async function fetchHTML(url: string): Promise<string> {
+  const response = await fetch(url, {
     headers: {
       'User-Agent': 'YouVersion Suggest'
     }
-  }).then((response) => response.text());
+  });
+  return response.text();
 }
