@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getFirstReferenceMatchingName } from '../../src';
 
-describe('getFirstReferenceMatchingName book logic', () => {
+describe('getFirstReferenceMatchingName', () => {
   it('should match reference without options', async () => {
     const reference = await getFirstReferenceMatchingName('mat 11.28-30');
     expect(reference).to.have.property('name', 'Matthew 11:28-30');
