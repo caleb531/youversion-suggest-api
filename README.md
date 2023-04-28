@@ -63,8 +63,8 @@ partial book name).
 import { fetchReferenceContent } from 'youversion-suggest';
 
 const reference = await fetchReferenceContent('mat 11.28-30', {
-  language: 'eng', // Optional
-  fallbackVersion: 'esv' // Optional,
+  language: 'eng', // Optional (default: 'eng')
+  fallbackVersion: 'esv' // Optional (default: 'niv'),
   includeVerseNumbers: true // Optional (default: false)
   includeLineBreaks: false // Optional (default: true)
 });
