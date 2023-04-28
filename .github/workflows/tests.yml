@@ -24,24 +24,24 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install PNPM
+      - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: latest
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Test Suite
+      - name: Run tests & generate coverage report
         run: pnpm coverage
 
-      - name: Coveralls
+      - name: Run Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
