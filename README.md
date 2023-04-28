@@ -100,7 +100,15 @@ Matthew 11:28-30 (ESV)
 */
 ```
 
-Finally, if the Bible reference cannot be fetched, an error is thrown.
+#### Error cases
+
+- If the Bible reference cannot be fetched because the reference is
+  nonexistent, a `BibleReferenceNotFoundError` is thrown
+- If the Bible reference cannot be fetched because the content could not be
+  parsed, a `BibleReferenceEmptyContentError` error is thrown.
+
+Both of the above error classes inherit from `BibleReferenceError`, and all
+three classes are available for import.
 
 ### Retrieve a list of all Bible references matching the given query
 

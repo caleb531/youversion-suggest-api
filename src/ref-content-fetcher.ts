@@ -1,4 +1,5 @@
 import cheerio from 'cheerio';
+import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError } from './errors';
 import { getFirstReferenceMatchingName } from './lookup-reference';
 import type { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
 import { baseReferenceUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, isBibleReferenceID } from './utilities';
@@ -177,7 +178,7 @@ export async function fetchReferenceContent(
     bible
   });
   if (!reference) {
-    throw new Error('Reference does not exist');
+    throw new BibleReferenceNotFoundError('Reference does not exist');
   }
   const html = await fetchHTML(getChapterURL(reference));
   const content = parseContentFromHTML(reference, html, {
@@ -190,6 +191,6 @@ export async function fetchReferenceContent(
       content
     };
   } else {
-    throw new Error('Fetched reference content is empty');
+    throw new BibleReferenceEmptyContentError('Fetched reference content is empty');
   }
 }
