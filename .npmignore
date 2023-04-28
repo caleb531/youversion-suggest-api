@@ -2,6 +2,7 @@
 .gitmodules
 .prettierrc
 .vscode
+.github
 pnpm-lock.yaml
 tsconfig.json
 *.config.js
