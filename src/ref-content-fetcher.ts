@@ -83,7 +83,7 @@ function getVerseContent(
   }
   return [
     options.includeVerseNumbers ? ` ${$verse.children("[class*='label']").text()} ` : '',
-    ` ${$verse.children("[class*='content']").text()} `
+    ` ${$verse.find("[class*='content']").text()} `
   ].join('');
 }
 
