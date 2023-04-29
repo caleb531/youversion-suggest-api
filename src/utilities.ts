@@ -81,7 +81,7 @@ export function getVersion(bible: BibleData, versionIdOrName: string | number): 
 // Retrieve the Bible version object which represents the default version for
 // the given Bible data
 export function getDefaultVersion(bible: BibleData): BibleVersion {
-  return getVersionById(bible, bible.default_version) || bible.versions[0];
+  return getVersionById(bible, bible.default_version) ?? bible.versions[0];
 }
 
 export function getReferenceID({
@@ -159,21 +159,21 @@ export function buildBibleReferenceFromID(
   id: string,
   options: BibleLookupOptionsWithBibleData | BibleSearchOptionsWithBibleData
 ): BibleReference {
-  const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) || [];
+  const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) ?? [];
   const versionId = Number(matches[1]);
   const bookId = matches[2].toLowerCase();
   const chapter = Number(matches[3]);
   const verse = Number(matches[4]) || null;
   const endVerse = Number(matches[5]) || null;
   return buildBibleReferenceFromParams({
-    book: options.bible.books.find((book) => book.id === bookId) || {
+    book: options.bible.books.find((book) => book.id === bookId) ?? {
       id: '',
       name: ''
     },
     chapter: chapter,
     verse: verse ? verse : null,
     endVerse: endVerse ? endVerse : null,
-    version: getVersionById(options.bible, versionId) || {
+    version: getVersionById(options.bible, versionId) ?? {
       id: 0,
       name: '',
       full_name: ''

@@ -112,9 +112,9 @@ function chooseBestVersion({
 }): BibleVersion {
   const defaultVersion = getDefaultVersion(bible);
   if (searchParams.version) {
-    return guessVersion(bible.versions, searchParams.version) || defaultVersion;
+    return guessVersion(bible.versions, searchParams.version) ?? defaultVersion;
   } else if (fallbackVersionIdOrName) {
-    return getVersion(bible, fallbackVersionIdOrName) || defaultVersion;
+    return getVersion(bible, fallbackVersionIdOrName) ?? defaultVersion;
   }
   return defaultVersion;
 }
