@@ -12,7 +12,7 @@
     "build": "rollup -c",
     "prepare": "rollup -c",
     "test": "mocha --require tsx --recursive 'tests/**/*.spec.ts'",
-    "coverage": "nyc pnpm -s test",
+    "coverage": "c8 pnpm -s test",
     "lint": "tsc --noEmit; eslint 'src/**/*.ts' 'tests/**/*.ts'"
   },
   "dependencies": {
@@ -29,12 +29,12 @@
     "@types/node": "^18.16.1",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
+    "c8": "^7.13.0",
     "chai": "^4.3.7",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "mocha": "^10.2.0",
     "nock": "^13.3.1",
-    "nyc": "^15.1.0",
     "prettier": "^2.8.8",
     "rollup": "^3.21.0",
     "rollup-plugin-copy": "^3.4.0",

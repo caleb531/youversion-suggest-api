@@ -1,0 +1,3 @@
+{
+  "reporter": ["clover", "json", "lcov", "html", "text", "text-summary"]
+}
