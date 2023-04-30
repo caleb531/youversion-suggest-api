@@ -4,6 +4,9 @@
   "description": "An API for searching the YouVersion Bible and fetching Bible content",
   "version": "1.2.1",
   "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "type": "module",
   "main": "dist/index.es.js",
   "module": "dist/index.es.js",
