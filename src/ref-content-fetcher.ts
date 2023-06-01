@@ -53,6 +53,21 @@ function getSpacingBeforeElement(
   }
 }
 
+// Return an array of verse numbers assigned to a given verse (there can be
+// multiple verse numbers in the case of versions like The Message / MSG)
+function getVerseNumsFromVerse($verse: cheerio.Cheerio): number[] {
+  const usfmStr = $verse.attr('data-usfm');
+  if (usfmStr) {
+    return (
+      Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
+        return Number(verseNumMatch[3]);
+      }) ?? []
+    );
+  } else {
+    return [];
+  }
+}
+
 // Return true if the given verse element is within the designated verse range
 function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: cheerio.Cheerio): boolean {
   // If reference represents an entire chapter, then all verses are within range
@@ -63,11 +78,7 @@ function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: 
   const endVerse = reference.endVerse ?? startVerse;
   // Get all verse numbers that this verse represents (e.g. for versions such as
   // MSG that consolidate multiple verses into one (e.g. "7-9"))
-  const verseNums: number[] = $verse
-    .prop('class')
-    .split(' ')
-    .filter((className: string) => className.startsWith('v'))
-    .map((className: string) => Number(className.slice(1)));
+  const verseNums = getVerseNumsFromVerse($verse);
   return verseNums.some((verseNum) => {
     return verseNum >= startVerse && verseNum <= endVerse;
   });
