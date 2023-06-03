@@ -1,9 +1,8 @@
 /* c8 ignore next (fixes a strange bug where c8 flags the first line of this file as a partial branch */
 
-import fsPromises from 'fs/promises';
 import fetch from 'node-fetch';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import bookMetadata from './data/bible/book-metadata.json';
+import languages from './data/bible/languages.json';
 import type {
   BibleBookMetadata,
   BibleData,
@@ -11,28 +10,8 @@ import type {
   BibleLookupOptionsWithBibleData,
   BibleReference,
   BibleSearchOptionsWithBibleData,
-  BibleVersion,
-  JSONSerializable
+  BibleVersion
 } from './types';
-
-// __dirname is not available in ES modules natively, so we must define it if it
-// does not already exist (and it may already be defined if the application
-// consuming this package is CommonJS)
-let BIBLE_DATA_BASE_DIR: string =
-  typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
-
-// Some applications consuming this library may need the static Bible data in a
-// different location; to support this scenario, you can use the
-// setBibleDataDirBase() function; the supplied argument should be the path to
-// whichever directory contains the YVS data/ directory as an immediate child
-export function setBibleDataDirBase(newDirPath: string): void {
-  BIBLE_DATA_BASE_DIR = newDirPath;
-}
-// Retrieve the path to the innermost directory containing the JSON files of
-// Bible data
-export function getBibleDataDir(): string {
-  return path.join(BIBLE_DATA_BASE_DIR, 'data', 'bible');
-}
 
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
 const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
@@ -181,20 +160,16 @@ export function buildBibleReferenceFromID(
   });
 }
 
-async function getJSONData<T extends JSONSerializable>(path: string): Promise<T> {
-  return JSON.parse(String(await fsPromises.readFile(path)));
-}
-
 export async function getBibleData(language = 'eng'): Promise<BibleData> {
-  return getJSONData(path.join(getBibleDataDir(), `bible-${language}.json`));
+  return import(`./data/bible/bible-${language}.json`);
 }
 
 export async function getBibleBookMetadata(): Promise<Record<string, BibleBookMetadata>> {
-  return getJSONData(path.join(getBibleDataDir(), 'book-metadata.json'));
+  return bookMetadata;
 }
 
 export async function getLanguages(): Promise<BibleLanguage[]> {
-  return getJSONData(path.join(getBibleDataDir(), 'languages.json'));
+  return languages;
 }
 
 export async function fetchHTML(url: string): Promise<string> {

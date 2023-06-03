@@ -1,8 +1,8 @@
-import copy from 'rollup-plugin-copy';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
+import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 
 export default [
   // We need to compile the type declaration file as a separate input/output
@@ -27,23 +27,11 @@ export default [
     external: ['cheerio', 'fs/promises', 'node-fetch', 'path', 'url'],
     output: [
       {
-        file: 'dist/index.js',
+        dir: 'dist',
         format: 'es',
         sourcemap: true
       }
     ],
-    plugins: [
-      json(),
-      copy({
-        targets: [
-          {
-            src: ['src/data/{*.md,bible}'],
-            dest: 'dist/data'
-          }
-        ]
-      }),
-      commonjs(),
-      typescript()
-    ]
+    plugins: [json(), commonjs(), typescript(), dynamicImportVars()]
   }
 ];
