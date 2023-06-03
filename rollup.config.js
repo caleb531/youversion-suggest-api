@@ -18,10 +18,6 @@ export default [
       {
         file: 'dist/index.d.ts',
         format: 'es'
-      },
-      {
-        file: 'dist/index.d.ts',
-        format: 'es'
       }
     ],
     plugins: [dts()]
