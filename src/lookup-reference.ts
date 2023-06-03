@@ -1,5 +1,3 @@
-/* c8 ignore next (fixes a strange bug where c8 flags the first line of this file as a partial branch */
-
 import type {
   BibleBook,
   BibleBookId,

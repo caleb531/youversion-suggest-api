@@ -1,3 +1,4 @@
 {
-  "reporter": ["clover", "json", "lcov", "html", "text", "text-summary"]
+  "reporter": ["clover", "json", "lcov", "html", "text", "text-summary"],
+  "include": ["dist/index.js"]
 }
