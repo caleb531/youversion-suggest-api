@@ -7,7 +7,7 @@ _Released under the MIT license_
 [![Coverage Status](https://coveralls.io/repos/github/caleb531/youversion-suggest-node/badge.svg?branch=main)](https://coveralls.io/github/caleb531/youversion-suggest-node?branch=main)
 
 This NodeJS library allow you to search for and fetch Bible content from
-[YouVersion][youversion]. The package just hit 1.0, so the API is now stable.
+[YouVersion][youversion].
 
 This library is designed to run in a Node runtime, so it cannot be used in the
 browser or (for example) a Cloudflare Worker context. It is also ESM-only; there
