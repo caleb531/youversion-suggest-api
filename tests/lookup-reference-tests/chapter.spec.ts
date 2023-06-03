@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getReferencesMatchingName } from '../../src';
+import { getReferencesMatchingName } from '../../dist';
 
 describe('reference lookup chapter logic', () => {
   it('should match chapters', async () => {

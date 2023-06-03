@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getReferencesMatchingName } from '../../src';
+import { getReferencesMatchingName } from '../../dist';
 
 describe('reference lookup version logic', () => {
   it('should match versions ending in number by partial name', async () => {

@@ -2,7 +2,7 @@ import { assert, expect } from 'chai';
 import fsPromises from 'fs/promises';
 import nock from 'nock';
 import path from 'path';
-import { fetchReferenceContent } from '../src';
+import { fetchReferenceContent } from '../dist';
 
 describe('reference content fetcher', () => {
   before(async () => {

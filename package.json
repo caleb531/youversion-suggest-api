@@ -8,13 +8,13 @@
     "node": ">=14.0.0"
   },
   "type": "module",
-  "main": "dist/index.es.js",
-  "module": "dist/index.es.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
     "prepare": "rollup -c",
-    "test": "mocha --require tsx --recursive 'tests/**/*.spec.ts'",
+    "test": "pnpm -s build && mocha --require tsx --recursive 'tests/**/*.spec.ts'",
     "coverage": "c8 pnpm -s test",
     "lint": "tsc --noEmit; eslint 'src/**/*.ts' 'tests/**/*.ts'"
   },

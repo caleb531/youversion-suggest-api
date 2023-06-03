@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import fsPromises from 'fs/promises';
 import nock from 'nock';
 import path from 'path';
-import { getReferencesMatchingPhrase } from '../src';
+import { getReferencesMatchingPhrase } from '../dist';
 
 describe('search result fetcher', () => {
   before(async () => {

@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import { getBibleData, getLanguages, setBibleDataDirBase } from '../src';
+import { getBibleData, getLanguages, setBibleDataDirBase } from '../dist';
 
 describe('utilities', () => {
   it('should set base directory for Bible data directory', async () => {
