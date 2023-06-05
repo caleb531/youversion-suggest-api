@@ -24,7 +24,7 @@ export default [
   },
   {
     input: 'src/index.ts',
-    external: ['cheerio', 'fs/promises', 'node-fetch', 'path', 'url'],
+    external: ['cheerio', 'node-fetch', 'path', 'url'],
     output: [
       {
         dir: 'dist',
