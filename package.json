@@ -14,7 +14,7 @@
   "scripts": {
     "build": "rollup -c",
     "prepare": "rollup -c",
-    "test": "pnpm -s build && mocha --require source-map-support/register --require tsx --recursive 'tests/**/*.spec.ts'",
+    "test": "pnpm -s build && ava --loader=tsx 'tests/**/*.spec.ts'",
     "coverage": "c8 pnpm -s test",
     "lint": "tsc --noEmit; eslint 'src/**/*.ts' 'tests/**/*.ts'"
   },
@@ -33,6 +33,7 @@
     "@types/node": "^18.16.1",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
+    "ava": "^5.3.0",
     "c8": "^7.13.0",
     "chai": "^4.3.7",
     "eslint": "^8.39.0",

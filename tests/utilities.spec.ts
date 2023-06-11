@@ -1,14 +1,13 @@
-import { expect } from 'chai';
+import test from 'ava';
 import { getLanguages } from '../dist';
 
-describe('utilities', () => {
-  it('should retrieve list of all languages', async () => {
-    const languages = await getLanguages();
-    expect(
-      languages.find((language) => {
-        return language.id === 'eng';
-      })
-    ).to.have.property('name', 'English');
-    expect(languages).to.have.length(27);
-  });
+test('should retrieve list of all languages', async (t) => {
+  const languages = await getLanguages();
+  t.is(
+    languages.find((language) => {
+      return language.id === 'eng';
+    })?.name,
+    'English'
+  );
+  t.is(languages.length, 27);
 });
