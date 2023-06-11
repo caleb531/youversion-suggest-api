@@ -14,7 +14,7 @@
   "scripts": {
     "build": "rollup -c",
     "prepare": "rollup -c",
-    "test": "pnpm -s build && ava --loader=tsx",
+    "test": "pnpm -s build && ava",
     "coverage": "c8 pnpm -s test",
     "lint": "tsc --noEmit; eslint 'src/**/*.ts' 'tests/**/*.ts'"
   },
