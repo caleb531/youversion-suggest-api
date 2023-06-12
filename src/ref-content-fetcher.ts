@@ -56,11 +56,9 @@ function getSpacingBeforeElement(
 function getVerseNumsFromVerse($verse: cheerio.Cheerio): number[] {
   const usfmStr = $verse.attr('data-usfm');
   if (usfmStr) {
-    return (
-      Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
-        return Number(verseNumMatch[3]);
-      }) ?? []
-    );
+    return Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
+      return Number(verseNumMatch[3]);
+    });
   } else {
     return [];
   }
