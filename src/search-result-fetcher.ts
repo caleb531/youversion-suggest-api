@@ -6,7 +6,8 @@ import {
   fetchHTML,
   getBibleData,
   getDefaultVersion,
-  getReferenceIDFromURL
+  getReferenceIDFromURL,
+  isTruthy
 } from './utilities';
 
 async function parseContentFromHTML(html: string, options: BibleSearchOptionsWithBibleData): Promise<BibleReference[]> {
@@ -17,13 +18,14 @@ async function parseContentFromHTML(html: string, options: BibleSearchOptionsWit
     .map((referenceElem) => {
       const $reference = $(referenceElem);
       const referenceId = getReferenceIDFromURL($reference.prop('href'));
-      const reference = buildBibleReferenceFromID(referenceId, options);
-      return {
-        ...reference,
-        content: $reference.parent().next('p').text().trim()
-      };
+      return referenceId
+        ? {
+            ...buildBibleReferenceFromID(referenceId, options),
+            content: $reference.parent().next('p').text().trim()
+          }
+        : null;
     })
-    .filter(Boolean);
+    .filter(isTruthy);
 }
 
 // Fetch the textual content of the given Bible reference; returns a promise
