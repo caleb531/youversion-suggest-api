@@ -60,6 +60,9 @@ Bible chapter, verse, or range of verses. The first argument is a query which
 represents the name of the reference you want to retrieve (can be a full or
 partial book name).
 
+The returned object represents the Bible reference, and contains a `content`
+property which is likely what you want to make use of.
+
 ```ts
 import { fetchReferenceContent } from 'youversion-suggest';
 
@@ -100,6 +103,10 @@ Matthew 11:28-30 (ESV)
 "Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light."
 */
 ```
+
+**Note:** The `fetchReferenceContent()` function actually makes a `fetch()`
+request to YouVersion, so it incurs some network latency, and it may possibly
+break at any time (due to YouVersion HTML changes).
 
 #### Error cases
 
