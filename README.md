@@ -155,7 +155,8 @@ console.log(references);
 
 Please note that these returned Bible reference objects do not contain the
 textual content of the respective references. If you want the textual content as
-well, you must fetch it yourself by calling the above `fetchReferenceContent`.
+well, you must fetch it yourself by calling the aforementioned
+`fetchReferenceContent()`.
 
 ### Retrieve the first Bible reference matching the given query
 
