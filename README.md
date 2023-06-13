@@ -47,7 +47,7 @@ for the use of the `await` syntax.
 
 ### Installation
 
-Using npm or your preferred package manager:
+Using npm (or your preferred package manager):
 
 ```sh
 npm install youversion-suggest
