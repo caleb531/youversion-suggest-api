@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import bookMetadata from './data/bible/book-metadata.json';
 import languages from './data/bible/languages.json';
+import { BibleReferenceNotFoundError } from './errors';
 import type {
   BibleBookMetadata,
   BibleData,
@@ -139,22 +140,23 @@ export function buildBibleReferenceFromID(
   const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) ?? [];
   const versionId = Number(matches[1]);
   const bookId = matches[2].toLowerCase();
+  const book = options.bible.books.find((book) => book.id === bookId);
+  if (!book) {
+    throw new BibleReferenceNotFoundError(`${bookId} is not a valid book ID`);
+  }
   const chapter = Number(matches[3]);
   const verse = Number(matches[4]) || null;
   const endVerse = Number(matches[5]) || null;
+  const version = getVersionById(options.bible, versionId);
+  if (!version) {
+    throw new BibleReferenceNotFoundError(`${versionId} is not a valid version ID`);
+  }
   return buildBibleReferenceFromParams({
-    book: options.bible.books.find((book) => book.id === bookId) ?? {
-      id: '',
-      name: ''
-    },
+    book,
     chapter: chapter,
     verse: verse ? verse : null,
     endVerse: endVerse ? endVerse : null,
-    version: getVersionById(options.bible, versionId) ?? {
-      id: 0,
-      name: '',
-      full_name: ''
-    }
+    version
   });
 }
 

@@ -3,7 +3,7 @@ import fsPromises from 'fs/promises';
 import nock from 'nock';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { fetchReferenceContent } from '../dist';
+import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError, fetchReferenceContent } from '../dist';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -53,23 +53,39 @@ test('should fetch reference content by query', async (t) => {
 });
 
 test('should throw error for empty content', async (t) => {
-  try {
-    await fetchReferenceContent('59/psa.23.11');
-  } catch (error) {
-    t.true(error instanceof Error, 'Error object is not an instance of Error');
-    return;
-  }
-  t.fail('Error is never thrown for empty content');
+  await t.throwsAsync(
+    async () => {
+      await fetchReferenceContent('59/psa.23.11');
+    },
+    { instanceOf: BibleReferenceEmptyContentError }
+  );
 });
 
-test('should throw error for nonexistent reference', async (t) => {
-  try {
-    await fetchReferenceContent('xyz 23 esv');
-  } catch (error) {
-    t.true(error instanceof Error, 'Error object is not an instance of Error');
-    return;
-  }
-  t.fail('Error is never thrown for nonexistent reference');
+test('should throw error for query matching nonexistent reference', async (t) => {
+  await t.throwsAsync(
+    async () => {
+      await fetchReferenceContent('xyz 23 esv');
+    },
+    { instanceOf: BibleReferenceNotFoundError }
+  );
+});
+
+test('should throw error for nonexistent book ID', async (t) => {
+  await t.throwsAsync(
+    async () => {
+      await fetchReferenceContent('111/xyz.23.6');
+    },
+    { instanceOf: BibleReferenceNotFoundError }
+  );
+});
+
+test('should throw error for nonexistent version ID', async (t) => {
+  await t.throwsAsync(
+    async () => {
+      await fetchReferenceContent('0/psa.23.6');
+    },
+    { instanceOf: BibleReferenceNotFoundError }
+  );
 });
 
 test('should provide reference name in returned object', async (t) => {
