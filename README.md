@@ -167,10 +167,10 @@ well, you must fetch it yourself by calling the aforementioned
 
 ### Retrieve the first Bible reference matching the given query
 
-The async `getFirstReferenceMatchingName()` function is a convenience function which
-effectively returns the first result of the above `getReferencesMatchingName`.
-The call signature is exactly the same, only returning a single Bible reference
-object rather than an array of said objects.
+The async `getFirstReferenceMatchingName()` function is a convenience function
+which effectively returns the first result of the above
+`getReferencesMatchingName`. The call signature is exactly the same, only
+returning a single Bible reference object rather than an array of said objects.
 
 ```ts
 import { getFirstReferenceMatchingName } from 'youversion-suggest';
