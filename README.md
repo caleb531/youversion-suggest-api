@@ -55,8 +55,8 @@ npm install youversion-suggest
 
 ### Fetch content for a Bible reference matching the given query
 
-The async `fetchReferenceContent()` function the textual content of a Bible
-chapter, verse, or range of verses. The first argument is a query which
+The async `fetchReferenceContent()` function fetches the textual content of a
+Bible chapter, verse, or range of verses. The first argument is a query which
 represents the name of the reference you want to retrieve (can be a full or
 partial book name).
 
