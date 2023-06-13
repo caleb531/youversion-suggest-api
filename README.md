@@ -68,7 +68,7 @@ import { fetchReferenceContent } from 'youversion-suggest';
 
 const reference = await fetchReferenceContent('mat 11.28-30', {
   language: 'eng', // Optional (default: 'eng')
-  fallbackVersion: 'esv' // Optional (default: 'niv'),
+  fallbackVersion: 'esv' // Optional (default: 'niv')
   includeVerseNumbers: true // Optional (default: false)
   includeLineBreaks: false // Optional (default: true)
 });
@@ -93,8 +93,8 @@ You can then use this returned object to format the verse content however you'd 
 import { fetchReferenceContent } from 'youversion-suggest';
 
 const reference = await fetchReferenceContent('mat 11.28-30', {
-  language: 'eng', // Optional
-  fallbackVersion: 'esv' // Optional
+  language: 'eng', // Optional (default: 'eng')
+  fallbackVersion: 'esv' // Optional (default: 'niv')
 });
 console.log(`${reference.name} (${reference.version.name})\n\n"${reference.content}"`);
 /*
@@ -131,7 +131,7 @@ matches Malachi 1:1, Mark 1:1, and Matthew 1:1).
 import { getReferencesMatchingName } from 'youversion-suggest';
 
 const references = await getReferencesMatchingName('a 1:1', {
-  language: 'eng' // Optional
+  language: 'eng' // Optional (default: 'eng')
 });
 console.log(references);
 /*
@@ -176,8 +176,8 @@ returning a single Bible reference object rather than an array of said objects.
 import { getFirstReferenceMatchingName } from 'youversion-suggest';
 
 const reference = await getFirstReferenceMatchingName('matthew 5:4', {
-  language: 'eng', // Optional
-  fallbackVersion: 'nkjv' // Optional
+  language: 'eng', // Optional (default: 'eng')
+  fallbackVersion: 'nkjv' // Optional (default: 'niv')
 });
 console.log(reference);
 /*
@@ -208,8 +208,8 @@ the `content` property of each being the full contents of that particular verse.
 import { getReferencesMatchingPhrase } from 'youversion-suggest';
 
 const references = await getReferencesMatchingPhrase('without faith', {
-  language: 'eng', // Optional
-  version: 'nkjv' // Optional
+  language: 'eng', // Optional (default: 'eng')
+  version: 'nkjv' // Optional (default: 'niv')
 });
 console.log(references);
 /*
