@@ -326,9 +326,9 @@ parameters are optional and have the following defaults:
 }
 ```
 
-The `version` and `fallbackVersion` properties are case-insensitive (e.g. both
-`'ESV'` and '`esv'` are accepted). You can also use the numeric ID of the
-version for exactness (e.g. `59`, for ESV).
+The values passed to the `version` and `fallbackVersion` options are
+case-insensitive (e.g. both `'ESV'` and '`esv'` are accepted). You can also use
+the numeric ID of the version for exactness (e.g. `59`, for ESV).
 
 [yvs-data]: https://github.com/caleb531/youversion-suggest-data
 [bible-book-metadata-json]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/book-metadata.json
