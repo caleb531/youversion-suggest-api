@@ -1,8 +1,8 @@
 import test from 'ava';
 import fsPromises from 'fs/promises';
 import nock from 'nock';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { getReferencesMatchingPhrase } from '../dist';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
