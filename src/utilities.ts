@@ -59,6 +59,11 @@ export function getVersion(bible: BibleData, versionIdOrName: string | number): 
 // Retrieve the Bible version object which represents the default version for
 // the given Bible data
 export function getDefaultVersion(bible: BibleData): BibleVersion {
+  // The consistency checks part of the youversion-suggest-data test suite
+  // guarantee that every Bible data file has the default version present among
+  // the available versions; therefore, because this check will never return
+  // false, we can safely ignore the partial branch
+  /* c8 ignore next */
   return getVersionById(bible, bible.default_version) ?? bible.versions[0];
 }
 
@@ -137,6 +142,11 @@ export function buildBibleReferenceFromID(
   id: string,
   options: BibleLookupOptionsWithBibleData | BibleSearchOptionsWithBibleData
 ): BibleReference {
+  // Every call to buildBibleReferenceFromID() in this codebase in wrapped by an
+  // isBibleReferenceID() check, and because these functions use the same regex,
+  // this guarantees that the below matches array will always be non-empty;
+  // therefore, the partial branch can safely be ignored
+  /* c8 ignore next */
   const matches = id.match(BIBLE_REFERENCE_ID_PATTERN) ?? [];
   const versionId = Number(matches[1]);
   const bookId = matches[2].toLowerCase();
