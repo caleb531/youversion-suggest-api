@@ -1,8 +1,8 @@
 import commonjs from '@rollup/plugin-commonjs';
+import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
-import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 
 export default [
   // We need to compile the type declaration file as a separate input/output
