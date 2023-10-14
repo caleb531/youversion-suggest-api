@@ -11,7 +11,7 @@ export default [
   // bundle with the contents of the definitions file (even if we define a
   // separte output path); it's also important that the types are compiled
   // first, so that TypeScript doesn't complain when building the subsequent
-  // library bindle
+  // library bundle
   {
     input: 'src/index.ts',
     output: [
