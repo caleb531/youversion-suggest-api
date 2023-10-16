@@ -1,4 +1,5 @@
 import test from 'ava';
+import fetchMock from 'fetch-mock';
 import fsPromises from 'fs/promises';
 import nock from 'nock';
 import path from 'node:path';
@@ -8,14 +9,17 @@ import { getReferencesMatchingPhrase } from '../dist';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test.before(async () => {
+  const html = await fsPromises.readFile(path.join(__dirname, 'html', 'search.html'), 'utf8');
   nock.disableNetConnect();
   nock('https://www.bible.com')
     .persist()
     .get(/^\/search/)
-    .reply(200, await fsPromises.readFile(path.join(__dirname, 'html', 'search.html')));
+    .reply(200, html);
+  fetchMock.mock(/\/search/, html);
 });
 
 test.after(() => {
+  fetchMock.resetBehavior();
   nock.cleanAll();
   nock.enableNetConnect();
 });

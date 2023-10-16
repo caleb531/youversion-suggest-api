@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import bookMetadata from './data/bible/book-metadata.json';
 import languages from './data/bible/languages.json';
 import { BibleReferenceNotFoundError } from './errors';
@@ -182,7 +181,25 @@ export async function getLanguages(): Promise<BibleLanguage[]> {
   return languages;
 }
 
+// To support JavaScript environments with/without native fetch support, the
+// library first checks if native fetch() is available, and if not, falls back
+// to the node-fetch library; this implies that if native fetch is not
+// available, the library can only be used in a Node context (since node-fetch
+// can only run in a Node context)
+export async function getFetch(): Promise<typeof fetch> {
+  if (typeof globalThis !== 'undefined' && globalThis.fetch) {
+    return globalThis.fetch;
+  } else {
+    // node-fetch is effectively standards-compliant with the Fetch API, so from
+    // a type level, we can safely treat it like native fetch() (and this is
+    // preferable because cannot statically import node-fetch or any of its
+    // included types)
+    return (await import('node-fetch')).default as unknown as typeof fetch;
+  }
+}
+
 export async function fetchHTML(url: string): Promise<string> {
+  const fetch = await getFetch();
   const response = await fetch(url, {
     headers: {
       'User-Agent': 'YouVersion Suggest'
