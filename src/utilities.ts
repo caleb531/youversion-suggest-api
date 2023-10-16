@@ -14,6 +14,10 @@ import type {
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
 const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
 
+// Cache the resolved instance of fetch() (whether native fetch or node-fetch)
+// so that if node-fetch is used, it is not imported more than once
+let _fetchInstance: typeof fetch;
+
 export function normalizeSearchText(searchText: string): string {
   searchText = searchText.normalize('NFC');
   searchText = searchText.toLowerCase();
@@ -187,14 +191,18 @@ export async function getLanguages(): Promise<BibleLanguage[]> {
 // available, the library can only be used in a Node context (since node-fetch
 // can only run in a Node context)
 export async function getFetch(): Promise<typeof fetch> {
-  if (typeof globalThis !== 'undefined' && globalThis.fetch) {
-    return globalThis.fetch;
+  if (_fetchInstance) {
+    return _fetchInstance;
+  } else if (typeof globalThis !== 'undefined' && globalThis.fetch) {
+    _fetchInstance = globalThis.fetch;
+    return _fetchInstance;
   } else {
     // node-fetch is effectively standards-compliant with the Fetch API, so from
     // a type level, we can safely treat it like native fetch() (and this is
     // preferable because cannot statically import node-fetch or any of its
     // included types)
-    return (await import('node-fetch')).default as unknown as typeof fetch;
+    _fetchInstance = (await import('node-fetch')).default as unknown as typeof fetch;
+    return _fetchInstance;
   }
 }
 
