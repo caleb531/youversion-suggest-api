@@ -183,3 +183,18 @@ test('should handle range labels when verse in middle of range is given', async 
   t.regex(String(reference.content), /7-9 dapibus et augue in,/);
   t.notRegex(String(reference.content), /#/);
 });
+
+test('should fall back to node-fetch if native fetch() is unavailable', async (t) => {
+  const originalFetch = globalThis.fetch;
+  try {
+    Object.defineProperty(globalThis, 'fetch', {
+      writable: true,
+      value: undefined
+    });
+    const reference = await fetchReferenceContent('ps 23 esv');
+    t.is(reference.name, 'Psalms 23');
+    t.is(reference.version.name, 'ESV');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
