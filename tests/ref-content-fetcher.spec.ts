@@ -11,7 +11,7 @@ test.before(async () => {
   mockFetch(await fs.promises.readFile(path.join(__dirname, 'html', 'psa.23.html'), 'utf8'));
 });
 
-test.after(() => {
+test.after.always(() => {
   resetFetch();
 });
 
