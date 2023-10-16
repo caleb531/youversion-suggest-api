@@ -1,27 +1,18 @@
 import test from 'ava';
-import fetchMock from 'fetch-mock';
-import fsPromises from 'fs/promises';
-import nock from 'nock';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError, fetchReferenceContent } from '../dist';
+import { mockFetch, resetFetch } from './testUtilities';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test.before(async () => {
-  const html = await fsPromises.readFile(path.join(__dirname, 'html', 'psa.23.html'), 'utf8');
-  nock.disableNetConnect();
-  nock('https://www.bible.com')
-    .persist()
-    .get(/^\/bible/)
-    .reply(200, html);
-  fetchMock.mock(/\/bible/, html);
+  mockFetch(await fs.promises.readFile(path.join(__dirname, 'html', 'psa.23.html'), 'utf8'));
 });
 
 test.after(() => {
-  fetchMock.resetBehavior();
-  nock.cleanAll();
-  nock.enableNetConnect();
+  resetFetch();
 });
 
 test('should copy reference content for chapter', async (t) => {
