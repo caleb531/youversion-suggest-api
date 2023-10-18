@@ -1,4 +1,5 @@
 import cheerio from 'cheerio';
+import { DOMParser } from 'xmldom-qsa';
 import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError } from './errors';
 import { getFirstReferenceMatchingName } from './lookup-reference';
 import type { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
@@ -38,10 +39,10 @@ function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boole
 function getSpacingBeforeElement(
   _reference: BibleReference,
   $: cheerio.Root,
-  $element: cheerio.Cheerio,
+  element: Element,
   options: BibleFetchOptions
 ): string {
-  const elementType = $element.prop('class');
+  const elementType = element.className;
   if (classMatchesOneOf(elementType, blockElems)) {
     return options.includeLineBreaks ? '\n\n' : ' ';
   } else if (classMatchesOneOf(elementType, breakElems)) {
@@ -53,8 +54,8 @@ function getSpacingBeforeElement(
 
 // Return an array of verse numbers assigned to a given verse (there can be
 // multiple verse numbers in the case of versions like The Message / MSG)
-function getVerseNumsFromVerse($verse: cheerio.Cheerio): number[] {
-  const usfmStr = $verse.attr('data-usfm');
+function getVerseNumsFromVerse($verse: Element): number[] {
+  const usfmStr = $verse.getAttribute('data-usfm');
   if (usfmStr) {
     return Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
       return Number(verseNumMatch[3]);
@@ -65,7 +66,7 @@ function getVerseNumsFromVerse($verse: cheerio.Cheerio): number[] {
 }
 
 // Return true if the given verse element is within the designated verse range
-function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: cheerio.Cheerio): boolean {
+function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: Element): boolean {
   // If reference represents an entire chapter, then all verses are within range
   if (!reference.verse) {
     return true;
@@ -85,15 +86,21 @@ function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: 
 function getVerseContent(
   reference: BibleReference,
   $: cheerio.Root,
-  $verse: cheerio.Cheerio,
+  verse: Element,
   options: BibleFetchOptions
 ): string {
-  if (!isVerseWithinRange(reference, $, $verse)) {
+  if (!isVerseWithinRange(reference, $, verse)) {
     return '';
   }
   return [
-    options.includeVerseNumbers ? ` ${$verse.children("[class*='label']").text()} ` : '',
-    ` ${$verse.find("[class*='content']").text()} `
+    options.includeVerseNumbers
+      ? ` ${Array.from(verse.querySelectorAll("[class*='label']")).reduce((text, element) => {
+          return text + element.textContent;
+        }, '')} `
+      : '',
+    ` ${Array.from(verse.querySelectorAll("[class*='content']")).reduce((text, element) => {
+      return text + element.textContent;
+    }, '')} `
   ].join('');
 }
 
@@ -101,10 +108,10 @@ function getVerseContent(
 function getSpacingAfterElement(
   _reference: BibleReference,
   $: cheerio.Root,
-  $element: cheerio.Cheerio,
+  element: Element,
   options: BibleFetchOptions
 ): string {
-  const elementType = $element.prop('class');
+  const elementType = element.className;
   if (classMatchesOneOf(elementType, blockElems)) {
     return options.includeLineBreaks ? '\n\n' : ' ';
   } else {
@@ -116,25 +123,24 @@ function getSpacingAfterElement(
 function getElementContent(
   reference: BibleReference,
   $: cheerio.Root,
-  $element: cheerio.Cheerio,
+  element: Element,
   options: BibleFetchOptions
 ): string {
   const blockOrBreakElems = new Set([...blockElems, ...breakElems]);
   return [
-    getSpacingBeforeElement(reference, $, $element, options),
-    Array.from($element.children())
+    getSpacingBeforeElement(reference, $, element, options),
+    Array.from(element.children)
       .map((child) => {
-        const $child = $(child);
-        if (classMatchesOneOf($child.prop('class'), ['verse'])) {
-          return getVerseContent(reference, $, $child, options);
-        } else if (classMatchesOneOf($child.prop('class'), blockOrBreakElems)) {
-          return getElementContent(reference, $, $child, options);
+        if (classMatchesOneOf(child.className, ['verse'])) {
+          return getVerseContent(reference, $, child, options);
+        } else if (classMatchesOneOf(child.className, blockOrBreakElems)) {
+          return getElementContent(reference, $, child, options);
         } else {
           return '';
         }
       })
       .join(''),
-    getSpacingAfterElement(reference, $, $element, options)
+    getSpacingAfterElement(reference, $, element, options)
   ].join('');
 }
 
@@ -153,9 +159,10 @@ function normalizeRefContent(content: string): string {
 
 // Parse the given YouVersion HTML and return a string a reference content
 function parseContentFromHTML(reference: BibleReference, html: string, options: BibleFetchOptions): string {
-  const $ = cheerio.load(html);
-  const $chapter = $("[class*='chapter']");
-  const content = getElementContent(reference, $, $chapter, options);
+  const root = new DOMParser().parseFromString(html);
+  const $ = cheerio.load(html); /* TODO: remove this; we are keeping it for now during the refactor */
+  const chapter = root.querySelector("[class*='chapter']");
+  const content = chapter ? getElementContent(reference, $, chapter, options) : '';
   return normalizeRefContent(content);
 }
 

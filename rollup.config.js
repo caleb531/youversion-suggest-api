@@ -1,6 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 import json from '@rollup/plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 
@@ -32,6 +33,6 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [json(), commonjs(), typescript(), dynamicImportVars()]
+    plugins: [json(), commonjs(), resolve(), typescript(), dynamicImportVars()]
   }
 ];
