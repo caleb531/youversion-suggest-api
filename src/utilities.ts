@@ -1,3 +1,4 @@
+import { ChildNode } from 'domhandler';
 import parse from 'html-dom-parser';
 import bookMetadata from './data/bible/book-metadata.json';
 import languages from './data/bible/languages.json';
@@ -221,11 +222,20 @@ export async function fetchHTML(url: string): Promise<string> {
 // could represent an element, text node, comment, etc. (these types are defined
 // in the domhandler package; right-click the `parse` function and choose "Go to
 // Definition" for more details)
-type ParsedHTMLNode = ReturnType<typeof parse>[number];
+export type ParsedHTMLNode = ReturnType<typeof parse>[number] | ChildNode;
 
-export function walkTree(root: ParsedHTMLNode, callback: (node: ParsedHTMLNode) => boolean): ParsedHTMLNode[] {
+// Walk the tree of and return an array of all nodes for which the given
+// callback function returns a truthy value
+export function findMatchingNodes(
+  root: ParsedHTMLNode,
+  callback: (node: ParsedHTMLNode) => boolean | undefined
+): ParsedHTMLNode[] {
   const matchingNodes: ParsedHTMLNode[] = [];
   const stack: ParsedHTMLNode[] = [root];
+
+  if (!('children' in root)) {
+    return matchingNodes;
+  }
 
   while (stack.length > 0) {
     const node = stack.pop();
@@ -254,6 +264,98 @@ export function walkTree(root: ParsedHTMLNode, callback: (node: ParsedHTMLNode) 
   }
 
   return matchingNodes;
+}
+// Like the above findMatchingNode() function, except it only looks for the
+// first node which satisfies the callback, and then short-circuits by returning
+// immediately and forgoing any additional traversal of the tree (which is why
+// we are not calling findMatchingNodes)
+export function findFirstMatchingNode(
+  root: ParsedHTMLNode,
+  callback: (node: ParsedHTMLNode) => boolean | undefined
+): ParsedHTMLNode | null {
+  const stack: ParsedHTMLNode[] = [root];
+
+  if (!('children' in root)) {
+    return null;
+  }
+
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node) {
+      continue;
+    }
+
+    if (callback(node)) {
+      // As soon as we find a node which satisfies the callback, return
+      // immediately
+      return node;
+    }
+
+    if (!('children' in node)) {
+      continue;
+    }
+    // Children are added to the stack in reverse order so that the leftmost
+    // child is visited first
+    for (let i = node.children.length - 1; i >= 0; i--) {
+      const child = node.children[i];
+      if ('name' in child) {
+        stack.push(child);
+      }
+    }
+  }
+
+  return null;
+}
+
+// Because the ParsedHTMLElement type is a union type, where not all members of
+// the union have a 'children' property, we would normally need to jump through
+// some hoops in TypeScript to access the 'children' property; instead, we are
+// using this helper function to consolidate that logic so that we can simplify
+// the rest of code
+export function getElementChildren(node: ParsedHTMLNode): ChildNode[] {
+  if ('children' in node) {
+    return node.children;
+  } else {
+    return [];
+  }
+}
+
+// Because the ParsedHTMLElement type is a union type, where not all members of
+// the union have a 'attribs' property, we would normally need to jump through
+// some hoops in TypeScript to access the 'attribs' property; instead, we are
+// using this helper function to consolidate that logic so that we can simplify
+// the rest of code
+export function getElementAttr(node: ParsedHTMLNode, attrName: string): string | undefined {
+  if ('attribs' in node) {
+    return node.attribs[attrName];
+  } else {
+    return undefined;
+  }
+}
+// A variant of getElementAttr() that retrieves only the class string for the
+// given node (if it exists); this was added because retrieving the class name
+// for an element is quite common in this codebase
+export function getElementClass(node: ParsedHTMLNode): string {
+  return getElementAttr(node, 'class') || '';
+}
+
+// Recursively retrieve the text contents for the given node by concatenating
+// together the textual contents of all text node children (unless the given
+// node is a text node itself, then simply return that content)
+export function getElementTextContent(node: ParsedHTMLNode): string {
+  if ('data' in node) {
+    return node.data;
+  } else if ('children' in node) {
+    const initialParts: string[] = [];
+    return node.children
+      .reduce((parts, node) => {
+        parts.push(getElementTextContent(node));
+        return parts;
+      }, initialParts)
+      .join('');
+  } else {
+    return '';
+  }
 }
 
 // See

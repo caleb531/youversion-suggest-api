@@ -2,7 +2,20 @@ import parse from 'html-dom-parser';
 import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError } from './errors';
 import { getFirstReferenceMatchingName } from './lookup-reference';
 import type { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
-import { baseReferenceUrl, buildBibleReferenceFromID, fetchHTML, getBibleData, isBibleReferenceID } from './utilities';
+import {
+  ParsedHTMLNode,
+  baseReferenceUrl,
+  buildBibleReferenceFromID,
+  fetchHTML,
+  findFirstMatchingNode,
+  findMatchingNodes,
+  getBibleData,
+  getElementAttr,
+  getElementChildren,
+  getElementClass,
+  getElementTextContent,
+  isBibleReferenceID
+} from './utilities';
 
 // Additional options to fetchReferenceContent() which control what is included
 // in reference content
@@ -35,8 +48,12 @@ function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boole
 
 // Determine the appropriate amount of spacing (e.g. line/paragraph breaks) to
 // insert before the given section of content
-function getSpacingBeforeElement(_reference: BibleReference, element: Element, options: BibleFetchOptions): string {
-  const elementType = element.getAttribute('class') || '';
+function getSpacingBeforeElement(
+  _reference: BibleReference,
+  element: ParsedHTMLNode,
+  options: BibleFetchOptions
+): string {
+  const elementType = getElementClass(element);
   if (classMatchesOneOf(elementType, blockElems)) {
     return options.includeLineBreaks ? '\n\n' : ' ';
   } else if (classMatchesOneOf(elementType, breakElems)) {
@@ -48,8 +65,8 @@ function getSpacingBeforeElement(_reference: BibleReference, element: Element, o
 
 // Return an array of verse numbers assigned to a given verse (there can be
 // multiple verse numbers in the case of versions like The Message / MSG)
-function getVerseNumsFromVerse(verse: Element): number[] {
-  const usfmStr = verse.getAttribute('data-usfm');
+function getVerseNumsFromVerse(verse: ParsedHTMLNode): number[] {
+  const usfmStr = getElementAttr(verse, 'data-usfm');
   if (usfmStr) {
     return Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
       return Number(verseNumMatch[3]);
@@ -60,7 +77,7 @@ function getVerseNumsFromVerse(verse: Element): number[] {
 }
 
 // Return true if the given verse element is within the designated verse range
-function isVerseWithinRange(reference: BibleReference, $verse: Element): boolean {
+function isVerseWithinRange(reference: BibleReference, $verse: ParsedHTMLNode): boolean {
   // If reference represents an entire chapter, then all verses are within range
   if (!reference.verse) {
     return true;
@@ -77,26 +94,29 @@ function isVerseWithinRange(reference: BibleReference, $verse: Element): boolean
 
 // Retrieve the contents for the given verse (including the verse number label,
 // if enabled)
-function getVerseContent(reference: BibleReference, verse: Element, options: BibleFetchOptions): string {
+function getVerseContent(reference: BibleReference, verse: ParsedHTMLNode, options: BibleFetchOptions): string {
   if (!isVerseWithinRange(reference, verse)) {
     return '';
   }
   return [
     options.includeVerseNumbers
-      ? ` ${Array.from(verse.querySelectorAll("[class*='label']")).reduce((text, element) => {
-          console.log('heeeeeeeeeeeeeeeeey');
-          return text + element.textContent;
-        }, '')} `
+      ? ` ${findMatchingNodes(verse, (node) => getElementClass(node)?.includes('label'))
+          .map((node) => getElementTextContent(node))
+          .join('')} `
       : '',
-    ` ${Array.from(verse.querySelectorAll("[class*='content']")).reduce((text, element) => {
-      return text + element.textContent;
-    }, '')} `
+    ` ${findMatchingNodes(verse, (node) => getElementClass(node).includes('content'))
+      .map((node) => getElementTextContent(node))
+      .join('')} `
   ].join('');
 }
 
 // Determine the spacing to insert after the given section of content
-function getSpacingAfterElement(_reference: BibleReference, element: Element, options: BibleFetchOptions): string {
-  const elementType = element.getAttribute('class') || '';
+function getSpacingAfterElement(
+  _reference: BibleReference,
+  element: ParsedHTMLNode,
+  options: BibleFetchOptions
+): string {
+  const elementType = getElementClass(element);
   if (classMatchesOneOf(elementType, blockElems)) {
     return options.includeLineBreaks ? '\n\n' : ' ';
   } else {
@@ -105,15 +125,15 @@ function getSpacingAfterElement(_reference: BibleReference, element: Element, op
 }
 
 // Recursively retrieve all reference content within the given element
-function getElementContent(reference: BibleReference, element: Element, options: BibleFetchOptions): string {
+function getElementContent(reference: BibleReference, element: ParsedHTMLNode, options: BibleFetchOptions): string {
   const blockOrBreakElems = new Set([...blockElems, ...breakElems]);
   return [
     getSpacingBeforeElement(reference, element, options),
-    Array.from(element.children)
+    Array.from(getElementChildren(element))
       .map((child) => {
-        if (classMatchesOneOf(child.getAttribute('class') || '', ['verse'])) {
+        if (classMatchesOneOf(getElementClass(child), ['verse'])) {
           return getVerseContent(reference, child, options);
-        } else if (classMatchesOneOf(child.getAttribute('class') || '', blockOrBreakElems)) {
+        } else if (classMatchesOneOf(getElementClass(child), blockOrBreakElems)) {
           return getElementContent(reference, child, options);
         } else {
           return '';
@@ -139,8 +159,11 @@ function normalizeRefContent(content: string): string {
 
 // Parse the given YouVersion HTML and return a string a reference content
 function parseContentFromHTML(reference: BibleReference, html: string, options: BibleFetchOptions): string {
-  const root = parse(html);
-  const chapter = root.querySelector("[class*='chapter']");
+  const [root] = parse(html);
+  const chapter = findFirstMatchingNode(root, (node) => {
+    return getElementClass(node).includes('chapter');
+  });
+  // const chapter = root.querySelector("[class*='chapter']");
   const content = chapter ? getElementContent(reference, chapter, options) : '';
   return normalizeRefContent(content);
 }
