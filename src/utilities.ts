@@ -1,3 +1,4 @@
+import parse from 'html-dom-parser';
 import bookMetadata from './data/bible/book-metadata.json';
 import languages from './data/bible/languages.json';
 import { BibleReferenceNotFoundError } from './errors';
@@ -214,6 +215,45 @@ export async function fetchHTML(url: string): Promise<string> {
     }
   });
   return response.text();
+}
+
+// Represents a synthetic DOM node parsed by the html-dom-parser package, which
+// could represent an element, text node, comment, etc. (these types are defined
+// in the domhandler package; right-click the `parse` function and choose "Go to
+// Definition" for more details)
+type ParsedHTMLNode = ReturnType<typeof parse>[number];
+
+export function walkTree(root: ParsedHTMLNode, callback: (node: ParsedHTMLNode) => boolean): ParsedHTMLNode[] {
+  const matchingNodes: ParsedHTMLNode[] = [];
+  const stack: ParsedHTMLNode[] = [root];
+
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node) {
+      continue;
+    }
+
+    if (callback(node)) {
+      matchingNodes.push(node);
+      // We don't care about nested matching nodes, so as an optimization, we
+      // can avoid traversing a matching node's children
+      continue;
+    }
+
+    if (!('children' in node)) {
+      continue;
+    }
+    // Children are added to the stack in reverse order so that the leftmost
+    // child is visited first
+    for (let i = node.children.length - 1; i >= 0; i--) {
+      const child = node.children[i];
+      if ('name' in child) {
+        stack.push(child);
+      }
+    }
+  }
+
+  return matchingNodes;
 }
 
 // See
