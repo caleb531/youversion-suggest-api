@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 import { fetchReferenceContent } from '../src';
+import { caches } from '../src/utilities';
 import { mockFetch, resetFetch } from './testUtilities';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -201,6 +202,7 @@ test('should fall back to node-fetch if native fetch() is unavailable', async ()
       writable: true,
       value: undefined
     });
+    delete caches._fetchInstance;
     const reference = await fetchReferenceContent('ps 23 esv');
     expect(reference.name).toEqual('Psalms 23');
     expect(reference.version.name).toEqual('ESV');
