@@ -1,4 +1,5 @@
 import test from 'ava';
+import { glob } from 'glob';
 import { getLanguages } from '../dist';
 
 test('should retrieve list of all languages', async (t) => {
@@ -9,5 +10,5 @@ test('should retrieve list of all languages', async (t) => {
     })?.name,
     'English'
   );
-  t.is(languages.length, 27);
+  t.is(languages.length, (await glob('src/data/bible/bible-*.json')).length);
 });
