@@ -92,15 +92,15 @@ You can then use this returned object to format the verse content however you'd 
 ```ts
 import { fetchReferenceContent } from 'youversion-suggest';
 
-const reference = await fetchReferenceContent('mat 11.28-30', {
+const reference = await fetchReferenceContent('mat 11.28-30 nlt', {
   language: 'eng', // Optional (default: 'eng')
   fallbackVersion: 'esv' // Optional (default: 'niv')
 });
 console.log(`${reference.name} (${reference.version.name})\n\n"${reference.content}"`);
 /*
-Matthew 11:28-30 (ESV)
+Matthew 11:28-30 (NLT)
 
-"Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light."
+"Then Jesus said, “Come to me, all of you who are weary and carry heavy burdens, and I will give you rest. Take my yoke upon you. Let me teach you, because I am humble and gentle at heart, and you will find rest for your souls. For my yoke is easy to bear, and the burden I give you is light.”"
 */
 ```
 
