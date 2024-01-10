@@ -1,4 +1,0 @@
-{
-  "reporter": ["json", "lcov", "html", "text", "text-summary"],
-  "include": ["dist/index.js"]
-}
