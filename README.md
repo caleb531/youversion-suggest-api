@@ -33,7 +33,7 @@ respective publishers.
 
 ## Usage
 
-This API thinks of Bible content in terms of Bible "references". A Bible
+This API thinks of Bible content in terms of Bible _references_. A Bible
 reference can be one of three things:
 
 - A chapter (e.g. "Genesis 1")
