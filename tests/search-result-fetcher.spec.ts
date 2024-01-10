@@ -1,4 +1,4 @@
-import fsPromises from 'fs/promises';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, expect, test } from 'vitest';
@@ -8,7 +8,7 @@ import { mockFetch, resetFetch } from './testUtilities';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 beforeEach(async () => {
-  mockFetch(await fsPromises.readFile(path.join(__dirname, 'html', 'search.html'), 'utf8'));
+  mockFetch(await fs.promises.readFile(path.join(__dirname, 'html', 'search.html'), 'utf8'));
 });
 
 afterEach(() => {
