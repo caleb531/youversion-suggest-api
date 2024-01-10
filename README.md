@@ -75,14 +75,15 @@ const reference = await fetchReferenceContent('mat 11.28-30', {
 console.log(reference);
 /*
 {
-  id: '59/MAT.11.28-30'
-  name: 'Matthew 11:28-30'
+  id: '59/MAT.11.28-30',
+  name: 'Matthew 11:28-30',
+  url: 'https://www.bible.com/bible/59/MAT.11.28-30',
   book: { id: 'mat', name: 'Matthew' },
   chapter: 11,
   verse: 28,
   endVerse: 30,
-  version: { id: 59, name: 'ESV', full_name: 'English Standard Version 2016' },
-  content: 'Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light.'
+  version: { full_name: 'English Standard Version 2016', id: 59, name: 'ESV' },
+  content: '28 Come to me, all who labor and are heavy laden, and I will give you rest. 29 Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. 30 For my yoke is easy, and my burden is light.”'
 }
 */
 ```
