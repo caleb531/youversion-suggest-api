@@ -50,25 +50,25 @@ test('should fetch reference content by query', async () => {
 test('should throw error for empty content', async () => {
   await expect(async () => {
     await fetchReferenceContent('59/psa.23.11');
-  }).rejects.toThrowError();
+  }).rejects.toThrowError('Fetched reference content is empty');
 });
 
 test('should throw error for query matching nonexistent reference', async () => {
   await expect(async () => {
     await fetchReferenceContent('xyz 23 esv');
-  }).rejects.toThrowError();
+  }).rejects.toThrowError('Reference does not exist');
 });
 
 test('should throw error for nonexistent book ID', async () => {
   await expect(async () => {
     await fetchReferenceContent('111/xyz.23.6');
-  }).rejects.toThrowError();
+  }).rejects.toThrowError('xyz is not a valid book ID');
 });
 
 test('should throw error for nonexistent version ID', async () => {
   await expect(async () => {
     await fetchReferenceContent('0/psa.23.6');
-  }).rejects.toThrowError();
+  }).rejects.toThrowError('0 is not a valid version ID');
 });
 
 test('should provide reference name in returned object', async () => {
