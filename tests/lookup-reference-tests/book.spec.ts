@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getReferencesMatchingName } from '../../dist';
+import { getReferencesMatchingName } from '../../src';
 
 test('should match books by partial name', async () => {
   const references = await getReferencesMatchingName('luk');

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getReferencesMatchingName } from '../../dist';
+import { getReferencesMatchingName } from '../../src';
 
 test('should match verses', async () => {
   const references = await getReferencesMatchingName('luke 4:8');

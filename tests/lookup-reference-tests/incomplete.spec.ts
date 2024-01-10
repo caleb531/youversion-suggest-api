@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getReferencesMatchingName } from '../../dist';
+import { getReferencesMatchingName } from '../../src';
 
 test('should treat incomplete verse reference as chapter reference', async () => {
   const references = await getReferencesMatchingName('Psalms 19:');

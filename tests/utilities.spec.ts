@@ -1,6 +1,6 @@
 import { glob } from 'glob';
 import { expect, test } from 'vitest';
-import { getLanguages } from '../dist';
+import { getLanguages } from '../src';
 
 test('should retrieve list of all languages', async () => {
   const languages = await getLanguages();

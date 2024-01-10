@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getReferencesMatchingName } from '../../dist';
+import { getReferencesMatchingName } from '../../src';
 
 test('should not match empty input', async () => {
   const references = await getReferencesMatchingName('');

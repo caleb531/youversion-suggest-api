@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, expect, test } from 'vitest';
-import { fetchReferenceContent } from '../dist';
+import { fetchReferenceContent } from '../src';
 import { mockFetch, resetFetch } from './testUtilities';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

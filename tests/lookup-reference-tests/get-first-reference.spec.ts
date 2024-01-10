@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getFirstReferenceMatchingName } from '../../dist';
+import { getFirstReferenceMatchingName } from '../../src';
 
 test('should match reference without options', async () => {
   const reference = await getFirstReferenceMatchingName('mat 11.28-30');

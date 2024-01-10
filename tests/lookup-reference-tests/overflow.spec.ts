@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getReferencesMatchingName } from '../../dist';
+import { getReferencesMatchingName } from '../../src';
 
 test('should constrain specified chapter to last chapter if too high', async () => {
   const references = await getReferencesMatchingName('a 25:2');

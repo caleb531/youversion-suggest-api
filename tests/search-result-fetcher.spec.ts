@@ -2,7 +2,7 @@ import fsPromises from 'fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, expect, test } from 'vitest';
-import { getReferencesMatchingPhrase } from '../dist';
+import { getReferencesMatchingPhrase } from '../src';
 import { mockFetch, resetFetch } from './testUtilities';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

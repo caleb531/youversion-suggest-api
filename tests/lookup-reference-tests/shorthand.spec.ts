@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getReferencesMatchingName } from '../../dist';
+import { getReferencesMatchingName } from '../../src';
 
 test('should recognize shorthand book syntax', async () => {
   const references = await getReferencesMatchingName('1co');
