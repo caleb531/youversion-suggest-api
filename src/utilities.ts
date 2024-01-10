@@ -176,7 +176,10 @@ export function buildBibleReferenceFromID(
 }
 
 export async function getBibleData(language = 'eng'): Promise<BibleData> {
-  return import(`./data/bible/bible-${language}.json`);
+  // Apparently, using string concatenation (instead of a template literal)
+  // fixes the ability for the coverage reporter to see this dynamic import as
+  // properly covered
+  return import('./data/bible/bible-' + language + '.json');
 }
 
 export async function getBibleBookMetadata(): Promise<Record<string, BibleBookMetadata>> {
