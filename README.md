@@ -1,6 +1,6 @@
 # YouVersion Suggest for Node
 
-_Copyright 2023 Caleb Evans_  
+_Copyright 2023-2024 Caleb Evans_  
 _Released under the MIT license_
 
 [![tests](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml)
