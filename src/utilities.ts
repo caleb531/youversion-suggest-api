@@ -199,7 +199,7 @@ export async function getFetch(): Promise<typeof fetch> {
   } else {
     // node-fetch is effectively standards-compliant with the Fetch API, so from
     // a type level, we can safely treat it like native fetch() (and this is
-    // preferable because cannot statically import node-fetch or any of its
+    // preferable because we cannot statically import node-fetch or any of its
     // included types)
     _fetchInstance = (await import('node-fetch')).default as unknown as typeof fetch;
     return _fetchInstance;
