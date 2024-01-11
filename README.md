@@ -248,19 +248,35 @@ If you call this function without arguments, the default language is `'eng'`.
 import { getBibleData } from 'youversion-suggest';
 
 const bible = await getBibleData('eng');
-console.log(bible.books.find((book) => book.id === 'mat')?.name);
-// "Matthew"
-console.log(bible.versions.find((book) => version.name === 'NLT')?.full_name);
-// "New Living Translation"
-console.log(bible.default_version);
-// 111
-console.log(bible.language);
-// { "id": "eng", "name": "English" }
+/*
+{
+  "books": [
+    {
+      "id": "gen",
+      "name": "Genesis"
+    },
+    // ...
+  ],
+  "versions": [
+    {
+      "id": 111,
+      "name": "NIV",
+      "full_name": "New International Version"
+    },
+    // ...
+  ],
+  "default_version": 111,
+  "language": {
+    "id": "eng",
+    "name": "English
+  }
+}
+*/
 ```
 
 Please see [`bible-eng.json`][bible-json-example] in the
-[youversion-suggest-data][yvs-data] repository for an example of how this
-returned object is structured.
+[youversion-suggest-data][yvs-data] repository for an example of what a complete
+Bible data object looks like.
 
 [bible-json-example]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/bible-eng.json
 
@@ -279,17 +295,25 @@ book (see the [USFM documentation][usfm-docs] for a full list).
 import { getBibleBookMetadata } from 'youversion-suggest';
 
 const bookMetadata = await getBibleBookMetadata();
-console.log(bookMetadata.psa.canon);
-// "ot"
-console.log(bookMetadata.psa.chapters);
-// 150
-console.log(bookMetadata.psa.verses[118]); // Psalm 119
-// 176
+/*
+{
+  "gen": {
+    "canon": "ot",
+    "chapters": 50,
+    "verses": [
+      31,
+      25,
+      24,
+      // ...
+    ],
+  },
+  // ...
+}
+*/
 ```
 
 Please see [book-metadata.json][bible-book-metadata-json] in the
-[youversion-suggest-data][yvs-data] repository for an example of how this
-returned object is structured.
+[youversion-suggest-data][yvs-data] repository for the full object.
 
 ### Retrieve list of all supported languages
 
