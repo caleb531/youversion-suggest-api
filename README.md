@@ -254,6 +254,8 @@ console.log(bible.versions.find((book) => version.name === 'NLT')?.full_name);
 // "New Living Translation"
 console.log(bible.default_version);
 // 111
+console.log(bible.language);
+// { "id": "eng", "name": "English" }
 ```
 
 Please see [`bible-eng.json`][bible-json-example] in the
