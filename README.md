@@ -316,7 +316,7 @@ Please see [book-metadata.json][bible-book-metadata-json] in the
 
 ### Retrieve list of all supported languages
 
-The async `getLanguages()` function returns a list of all languages that this
+The async `getLanguages()` function returns the list of all languages that this
 package currently supports. Each language object has two properties: `id` (the
 IETF language tag of the language) and `name` (the name of the language as
 written in said language).
