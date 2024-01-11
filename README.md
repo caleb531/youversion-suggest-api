@@ -40,10 +40,9 @@ reference can be one of three things:
 - A verse (e.g. "Psalm 23:1")
 - A range of verses (e.g. "Matthew 11:28-30")
 
-Please also keep in mind that most of the functions below are asynchronous and
-return promises instead of the direct values. These promise-returning functions
-are identified below as being 'async'; you can also follow each example and look
-for the use of the `await` syntax.
+Please also keep in mind that all API functions are asynchronous and return
+promises instead of the direct values. These async functions are indicated by
+use of the `await` syntax in the below examples.
 
 ### Installation
 
