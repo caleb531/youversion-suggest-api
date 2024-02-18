@@ -53,6 +53,13 @@ describe('version parser', () => {
     expect(references.length).toEqual(1);
   });
 
+  it('should match versions containing numbers (e.g. years)', async () => {
+    const references = await getReferencesMatchingName('luke 4:8 nasb2020');
+    expect(references[0].name).toEqual('Luke 4:8');
+    expect(references[0].version.name).toEqual('NASB2020');
+    expect(references.length).toEqual(1);
+  });
+
   it('should try to find closest match for nonexistent versions', async () => {
     const references = await getReferencesMatchingName('hosea 6:3 nlab');
     expect(references[0].name).toEqual('Hosea 6:3');
