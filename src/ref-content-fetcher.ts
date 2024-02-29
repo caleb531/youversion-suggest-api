@@ -22,14 +22,14 @@ const breakElems = new Set(['li1', 'q', 'q1', 'q2', 'qc']);
 // elements set)
 function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boolean {
   const elemsUnion = Array.from(elemsSet).join('|');
-  return new RegExp(`\\b(${elemsUnion})\\b`).test(
+  return new RegExp(`\\b(${elemsUnion})--`).test(
     // The normal regex word boundary (\b) considers underscores as part of the
     // definition of a "word"; this will not work for us since the class names
     // we are dealing with have underscore-delimited segments, and we need to
     // treat each of those segments as distinct "words"; fortunately, we can
     // simply replace underscores in the class name string with hyphens (or
     // spaces, for that matter) to appease the word boundaries
-    className.replace(/_/g, ' ')
+    className.replace(/_/g, '-')
   );
 }
 
