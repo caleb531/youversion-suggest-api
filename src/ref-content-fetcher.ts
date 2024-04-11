@@ -14,7 +14,7 @@ export interface BibleFetchOptions extends BibleLookupOptions {
 // Elements that should be surrounded by blank lines
 const blockElems = new Set(['b', 'p', 'm']);
 // Elements that should trigger a single line break
-const breakElems = new Set(['li1', 'q', 'q1', 'q2', 'qc', 'qr']);
+const breakElems = new Set(['li1', 'q', 'q1', 'q2', 'qc', 'qr', 'qm1', 'qm2']);
 
 // Return true if the given class name matches one of the patterns defined in
 // the supplied elements set; matching is done literally and on word boundaries
