@@ -29,18 +29,18 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.0",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-dynamic-import-vars": "^2.1.2",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/cheerio": "^0.22.35",
     "@types/node": "^20.14.10",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
     "@vitest/coverage-v8": "^2.0.1",
-    "eslint": "^8.57.0",
+    "eslint": "^9.9.0",
     "eslint-config-prettier": "^9.1.0",
     "glob": "^10.4.3",
+    "globals": "^15.9.0",
     "nock": "^13.5.4",
     "prettier": "^3.3.2",
     "rollup": "^4.18.1",
@@ -48,6 +48,7 @@
     "tslib": "^2.6.3",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
+    "typescript-eslint": "^8.1.0",
     "vitest": "^2.0.1",
     "vitest-fetch-mock": "^0.2.2"
   }
