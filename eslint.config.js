@@ -14,6 +14,9 @@ export default [
         ...globals.browser,
         ...globals.node
       }
+    },
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off'
     }
   },
   {
