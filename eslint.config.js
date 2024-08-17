@@ -11,11 +11,11 @@ export default [
   {
     languageOptions: {
       globals: {
-        ...globals.browser,
         ...globals.node
       }
     },
     rules: {
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off'
     }
   },
