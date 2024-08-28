@@ -1,4 +1,5 @@
-import cheerio from 'cheerio';
+import { HTMLRewriter } from 'htmlrewriter';
+import { Element as HTMLRewriterElement, TextChunk } from 'htmlrewriter/dist/types';
 import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError } from './errors';
 import { getFirstReferenceMatchingName } from './lookup-reference';
 import type { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
@@ -12,9 +13,9 @@ export interface BibleFetchOptions extends BibleLookupOptions {
 }
 
 // Elements that should be surrounded by blank lines
-const blockElems = new Set(['b', 'p', 'm']);
+const blockTags = new Set(['b', 'p', 'm']);
 // Elements that should trigger a single line break
-const breakElems = new Set(['li1', 'q', 'q1', 'q2', 'qc', 'qr', 'qm1', 'qm2']);
+const breakTags = new Set(['li1', 'q', 'q1', 'q2', 'qc', 'qr', 'qm1', 'qm2']);
 
 // Return true if the given class name matches one of the patterns defined in
 // the supplied elements set; matching is done literally and on word boundaries
@@ -42,9 +43,9 @@ function getSpacingBeforeElement(
   options: BibleFetchOptions
 ): string {
   const elementType = $element.prop('class');
-  if (classMatchesOneOf(elementType, blockElems)) {
+  if (classMatchesOneOf(elementType, blockTags)) {
     return options.includeLineBreaks ? '\n\n' : ' ';
-  } else if (classMatchesOneOf(elementType, breakElems)) {
+  } else if (classMatchesOneOf(elementType, breakTags)) {
     return options.includeLineBreaks ? '\n' : ' ';
   } else {
     return '';
@@ -53,8 +54,8 @@ function getSpacingBeforeElement(
 
 // Return an array of verse numbers assigned to a given verse (there can be
 // multiple verse numbers in the case of versions like The Message / MSG)
-function getVerseNumsFromVerse($verse: cheerio.Cheerio): number[] {
-  const usfmStr = $verse.attr('data-usfm');
+function getVerseNumsFromVerse(verseElem: HTMLRewriterElement): number[] {
+  const usfmStr = verseElem.getAttribute('data-usfm');
   if (usfmStr) {
     return Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
       return Number(verseNumMatch[3]);
@@ -65,7 +66,7 @@ function getVerseNumsFromVerse($verse: cheerio.Cheerio): number[] {
 }
 
 // Return true if the given verse element is within the designated verse range
-function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: cheerio.Cheerio): boolean {
+function isVerseWithinRange(reference: BibleReference, element: HTMLRewriterElement): boolean {
   // If reference represents an entire chapter, then all verses are within range
   if (!reference.verse) {
     return true;
@@ -74,27 +75,10 @@ function isVerseWithinRange(reference: BibleReference, $: cheerio.Root, $verse: 
   const endVerse = reference.endVerse ?? startVerse;
   // Get all verse numbers that this verse represents (e.g. for versions such as
   // MSG that consolidate multiple verses into one (e.g. "7-9"))
-  const verseNums = getVerseNumsFromVerse($verse);
+  const verseNums = getVerseNumsFromVerse(element);
   return verseNums.some((verseNum) => {
     return verseNum >= startVerse && verseNum <= endVerse;
   });
-}
-
-// Retrieve the contents for the given verse (including the verse number label,
-// if enabled)
-function getVerseContent(
-  reference: BibleReference,
-  $: cheerio.Root,
-  $verse: cheerio.Cheerio,
-  options: BibleFetchOptions
-): string {
-  if (!isVerseWithinRange(reference, $, $verse)) {
-    return '';
-  }
-  return [
-    options.includeVerseNumbers ? ` ${$verse.children("[class*='label']").text()} ` : '',
-    ` ${$verse.find("[class*='content']").text()} `
-  ].join('');
 }
 
 // Determine the spacing to insert after the given section of content
@@ -105,37 +89,11 @@ function getSpacingAfterElement(
   options: BibleFetchOptions
 ): string {
   const elementType = $element.prop('class');
-  if (classMatchesOneOf(elementType, blockElems)) {
+  if (classMatchesOneOf(elementType, blockTags)) {
     return options.includeLineBreaks ? '\n\n' : ' ';
   } else {
     return '';
   }
-}
-
-// Recursively retrieve all reference content within the given element
-function getElementContent(
-  reference: BibleReference,
-  $: cheerio.Root,
-  $element: cheerio.Cheerio,
-  options: BibleFetchOptions
-): string {
-  const blockOrBreakElems = new Set([...blockElems, ...breakElems]);
-  return [
-    getSpacingBeforeElement(reference, $, $element, options),
-    Array.from($element.children())
-      .map((child) => {
-        const $child = $(child);
-        if (classMatchesOneOf($child.prop('class'), ['verse'])) {
-          return getVerseContent(reference, $, $child, options);
-        } else if (classMatchesOneOf($child.prop('class'), blockOrBreakElems)) {
-          return getElementContent(reference, $, $child, options);
-        } else {
-          return '';
-        }
-      })
-      .join(''),
-    getSpacingAfterElement(reference, $, $element, options)
-  ].join('');
 }
 
 // Strip superfluous whitespace from throughout reference content
@@ -151,12 +109,81 @@ function normalizeRefContent(content: string): string {
   return content;
 }
 
-// Parse the given YouVersion HTML and return a string a reference content
-function parseContentFromHTML(reference: BibleReference, html: string, options: BibleFetchOptions): string {
-  const $ = cheerio.load(html);
-  const $chapter = $("[class*='chapter']");
-  const content = getElementContent(reference, $, $chapter, options);
-  return normalizeRefContent(content);
+// Parse content using Cloudflare's HTMLRewriter
+async function parseContentFromHTML(
+  reference: BibleReference,
+  html: string,
+  options: BibleFetchOptions
+): Promise<string> {
+  let currentBlockElem: HTMLRewriterElement | null;
+  let currentVerseElem: HTMLRewriterElement | null;
+  let currentVerseLabelElem: HTMLRewriterElement | null;
+  let currentVerseContentElem: HTMLRewriterElement | null;
+  let currentVerseNoteElem: HTMLRewriterElement | null;
+  let verseNums: number[] | null;
+  const contentParts: string[] = [];
+  const rewriter = new HTMLRewriter();
+  rewriter.on('[class*="chapter"] *', {
+    element: (element) => {
+      const className = element.getAttribute('class');
+      // It's perfectly valid for an HTML element to have a class attribute
+      // without a value, and if that's the case, we skip over that element
+      if (!className) {
+        return;
+      }
+      const isInVerse = Boolean(currentVerseElem && isVerseWithinRange(reference, element));
+      // Detect paragraph breaks between verses
+      if (classMatchesOneOf(className, blockTags)) {
+        contentParts.push(options.includeLineBreaks ? '\n\n' : ' ');
+      }
+      // Detect line breaks within a single verse
+      if (classMatchesOneOf(className, breakTags)) {
+        contentParts.push(options.includeLineBreaks ? '\n' : ' ');
+      }
+      // Detect beginning of a single verse (may include footnotes)
+      if (classMatchesOneOf(className, ['verse'])) {
+        currentVerseElem = element;
+        verseNums = getVerseNumsFromVerse(currentVerseElem);
+      }
+      // Detect label containing the associated verse number(s)
+      if (classMatchesOneOf(className, ['label'])) {
+        currentVerseLabelElem = element;
+      }
+      // Detect beginning of verse content (excludes footnotes)
+      if (classMatchesOneOf(className, ['content'])) {
+        currentVerseContentElem = element;
+      }
+      // Detect footnotes and cross-references
+      if (classMatchesOneOf(className, ['note'])) {
+        currentVerseNoteElem = element;
+      }
+      // Properly reset state when reaching the ends of elements
+      element.onEndTag(() => {
+        if (element === currentBlockElem) {
+          contentParts.push(options.includeLineBreaks ? '\n' : ' ');
+          currentBlockElem = null;
+        } else if (element === currentVerseElem) {
+          currentVerseElem = null;
+        } else if (element === currentVerseLabelElem) {
+          currentVerseLabelElem = null;
+        } else if (element === currentVerseContentElem) {
+          currentVerseContentElem = null;
+        } else if (element === currentVerseNoteElem) {
+          currentVerseNoteElem = null;
+        }
+      });
+    },
+    text(text: TextChunk) {
+      if (currentVerseElem && options.includeVerseNumbers && currentVerseLabelElem && !currentVerseNoteElem) {
+        contentParts.push(' ', text.text.trim(), ' ');
+      }
+      if (currentVerseContentElem) {
+        contentParts.push(text.text);
+      }
+    }
+  });
+  await rewriter.transform(new Response(html)).text();
+  return normalizeRefContent(contentParts.join(''));
 }
 
 // Retrieve the URL to the Bible chapter
@@ -190,7 +217,7 @@ export async function fetchReferenceContent(
     throw new BibleReferenceNotFoundError('Reference does not exist');
   }
   const html = await fetchHTML(getChapterURL(reference));
-  const content = parseContentFromHTML(reference, html, {
+  const content = await parseContentFromHTML(reference, html, {
     includeVerseNumbers: options.includeVerseNumbers ?? false,
     includeLineBreaks: options.includeLineBreaks ?? true
   });
