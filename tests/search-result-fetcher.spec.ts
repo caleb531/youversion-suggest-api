@@ -1,19 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { getReferencesMatchingPhrase } from '../src';
-import { mockFetch, resetFetch } from './testUtilities';
+import { resetRequestMocker, setupRequestMocker } from './testUtilities';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('search content fetcher', () => {
-  beforeEach(async () => {
-    mockFetch(await fs.promises.readFile(path.join(__dirname, 'html', 'search.html'), 'utf8'));
+  beforeAll(async () => {
+    setupRequestMocker(
+      /https:\/\/www\.bible\.com\/search/,
+      await fs.promises.readFile(path.join(__dirname, 'html', 'search.html'), 'utf8')
+    );
   });
 
-  afterEach(() => {
-    resetFetch();
+  afterAll(() => {
+    resetRequestMocker();
   });
 
   it('should correctly parse reference names from HTML', async () => {

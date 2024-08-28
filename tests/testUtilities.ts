@@ -1,26 +1,20 @@
-import nock from 'nock';
-import { vi } from 'vitest';
-import createFetchMock from 'vitest-fetch-mock';
+import { http, HttpResponse } from 'msw';
+import { setupServer, SetupServerApi } from 'msw/node';
 
-const fetchMock = createFetchMock(vi);
+let server: SetupServerApi;
 
-// A helper function used to mock the Fetch API, whether native fetch() is
-// available or node-fetch is being used instead
-export function mockFetch(html: string): void {
-  nock.disableNetConnect();
-  nock('https://www.bible.com')
-    .persist()
-    .get(/\/bible/)
-    .reply(200, html);
-  fetchMock.mockIf(/\/bible/, () => {
-    return html;
-  });
+// A helper function used to mock network requests via Mock Service Worker (MSW)
+export function setupRequestMocker(urlPattern: string | RegExp, html: string): void {
+  server = setupServer(
+    http.get(urlPattern, () => {
+      return HttpResponse.text(html);
+    })
+  );
+  server.listen();
 }
 
-// Completely reset all fetch() mocks (including node-fetch) to their original
-// implementation
-export function resetFetch(): void {
-  fetchMock.resetMocks();
-  nock.cleanAll();
-  nock.enableNetConnect();
+// Completely reset MSW  and reset all handlers
+export function resetRequestMocker(): void {
+  server.resetHandlers();
+  server.close();
 }
