@@ -1,7 +1,9 @@
 import commonjs from '@rollup/plugin-commonjs';
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 import json from '@rollup/plugin-json';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
+import { wasm } from '@rollup/plugin-wasm';
 import dts from 'rollup-plugin-dts';
 
 export default [
@@ -24,7 +26,7 @@ export default [
   },
   {
     input: 'src/index.ts',
-    external: ['htmlrewriter', 'cheerio', 'node-fetch'],
+    external: ['cheerio', 'node-fetch'],
     output: [
       {
         dir: 'dist',
@@ -32,6 +34,13 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [json(), commonjs(), typescript(), dynamicImportVars()]
+    plugins: [
+      json(),
+      commonjs(),
+      nodeResolve({ preferBuiltins: false }),
+      typescript(),
+      dynamicImportVars({ exclude: [/\.wasm/] }),
+      wasm()
+    ]
   }
 ];
