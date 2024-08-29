@@ -53,6 +53,14 @@ Using npm (or your preferred package manager):
 npm install youversion-suggest
 ```
 
+```sh
+yarn add youversion-suggest
+```
+
+```sh
+pnpm add youversion-suggest
+```
+
 ### Fetch content for a Bible reference matching the given query
 
 The async `fetchReferenceContent()` function fetches the textual content of a
