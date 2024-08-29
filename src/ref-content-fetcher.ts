@@ -1,3 +1,4 @@
+import { decode as decodeHTMLEntities } from 'html-entities';
 import { HTMLRewriter } from 'htmlrewriter';
 import { Element as HTMLRewriterElement, TextChunk } from 'htmlrewriter/dist/types';
 import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError } from './errors';
@@ -103,6 +104,8 @@ function normalizeRefContent(content: string): string {
   content = content.replace(/\n{3,}/gi, '\n\n');
   // Strip leading/trailing whitespace for each paragraph
   content = content.replace(/ ?\n ?/gi, '\n');
+  // Decode HTML entities into literal Unicode characters
+  content = decodeHTMLEntities(content);
   return content;
 }
 
@@ -131,6 +134,7 @@ async function parseContentFromHTML(
       const isInVerse = Boolean(currentVerseElem && verseNums && isVerseWithinRange(reference, verseNums));
       // Detect paragraph breaks between verses
       if (classMatchesOneOf(className, blockTags) && !isInVerse) {
+        currentBlockElem = element;
         contentParts.push(options.includeLineBreaks ? '\n\n' : ' ');
       }
       // Detect line breaks within a single verse
