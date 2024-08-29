@@ -1,4 +1,4 @@
-# YouVersion Suggest for Node
+# YouVersion Suggest API
 
 _Copyright 2023-2024 Caleb Evans_  
 _Released under the MIT license_
@@ -6,15 +6,16 @@ _Released under the MIT license_
 [![tests](https://github.com/caleb531/youversion-suggest-api/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/youversion-suggest-api/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/caleb531/youversion-suggest-api/badge.svg?branch=main)](https://coveralls.io/github/caleb531/youversion-suggest-api?branch=main)
 
-This NodeJS library allow you to search for and fetch Bible content from
+This JavaScript library allow you to search for and fetch Bible content from
 [YouVersion][youversion].
 
-This library is designed to run in a Node runtime, so it cannot be used in the
-browser or (for example) a Cloudflare Worker context. It is also ESM-only; there
-is no CommonJS bundle available.
+Although this library was originally written for Node, v3 of the library has
+been rearchitected to run on any JavaScript runtime that supports WebAssembly,
+including Cloudflare Workers, Bun, and even in a web browser.
 
 The API is fully typed, so you can easily drop this into your TypeScript
-project.
+project. However, please note that the library is ESM-only; there is no CommonJS
+bundle available.
 
 [youversion]: https://www.bible.com/
 
