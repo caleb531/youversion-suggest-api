@@ -1,9 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 import json from '@rollup/plugin-json';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import { wasm } from '@rollup/plugin-wasm';
 import dts from 'rollup-plugin-dts';
 
 export default [
@@ -26,7 +24,7 @@ export default [
   },
   {
     input: 'src/index.ts',
-    external: ['node-fetch'],
+    external: ['htmlrewriter', 'html-entities', 'node-fetch'],
     output: [
       {
         dir: 'dist',
@@ -34,17 +32,6 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [
-      json(),
-      commonjs(),
-      nodeResolve({ preferBuiltins: false }),
-      typescript(),
-      dynamicImportVars({ exclude: [/\.wasm/] }),
-      // htmlrewriter assumes that the name of the WASM file
-      // (html_rewriter_bg.wasm) hasn't changed, so we must ensure that the name
-      // is preserved when copied over to the dist/ directory (rather than
-      // changed to incorporate the chunk's hash)
-      wasm({ fileName: '[name][extname]' })
-    ]
+    plugins: [json(), commonjs(), typescript(), dynamicImportVars()]
   }
 ];
