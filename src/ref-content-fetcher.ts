@@ -91,7 +91,7 @@ async function parseContentFromHTML(
   const contentParts: string[] = [];
   const rewriter = new HTMLRewriter();
   rewriter.on('[class*="chapter"] *', {
-    element: (element) => {
+    element(element) {
       const className = element.getAttribute('class');
       // It's perfectly valid for an HTML element to have a class attribute
       // without a value, and if that's the case, we skip over that element
