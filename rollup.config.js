@@ -40,7 +40,11 @@ export default [
       nodeResolve({ preferBuiltins: false }),
       typescript(),
       dynamicImportVars({ exclude: [/\.wasm/] }),
-      wasm()
+      // htmlrewriter assumes that the name of the WASM file
+      // (html_rewriter_bg.wasm) hasn't changed, so we must ensure that the name
+      // is preserved when copied over to the dist/ directory (rather than
+      // changed to incorporate the chunk's hash)
+      wasm({ fileName: '[name][extname]' })
     ]
   }
 ];
