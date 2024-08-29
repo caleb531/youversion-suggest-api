@@ -35,24 +35,6 @@ function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boole
   );
 }
 
-// Determine the appropriate amount of spacing (e.g. line/paragraph breaks) to
-// insert before the given section of content
-function getSpacingBeforeElement(
-  _reference: BibleReference,
-  $: cheerio.Root,
-  $element: cheerio.Cheerio,
-  options: BibleFetchOptions
-): string {
-  const elementType = $element.prop('class');
-  if (classMatchesOneOf(elementType, blockTags)) {
-    return options.includeLineBreaks ? '\n\n' : ' ';
-  } else if (classMatchesOneOf(elementType, breakTags)) {
-    return options.includeLineBreaks ? '\n' : ' ';
-  } else {
-    return '';
-  }
-}
-
 // Construct an array of all verse numbers that this verse represents (e.g. for
 // versions such as MSG that consolidate multiple verses into one (e.g. "7-9"))
 function getVerseNumsFromVerse(verseElem: HTMLRewriterElement): number[] {
@@ -77,21 +59,6 @@ function isVerseWithinRange(reference: BibleReference, verseNums: number[]): boo
   return verseNums.some((verseNum) => {
     return verseNum >= startVerse && verseNum <= endVerse;
   });
-}
-
-// Determine the spacing to insert after the given section of content
-function getSpacingAfterElement(
-  _reference: BibleReference,
-  $: cheerio.Root,
-  $element: cheerio.Cheerio,
-  options: BibleFetchOptions
-): string {
-  const elementType = $element.prop('class');
-  if (classMatchesOneOf(elementType, blockTags)) {
-    return options.includeLineBreaks ? '\n\n' : ' ';
-  } else {
-    return '';
-  }
 }
 
 // Strip superfluous whitespace from throughout reference content
