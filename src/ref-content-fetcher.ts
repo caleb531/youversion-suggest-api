@@ -1,6 +1,6 @@
 import { decode as decodeHTMLEntities } from 'html-entities';
 import { HTMLRewriter } from 'htmlrewriter';
-import { Element as HTMLRewriterElement, TextChunk } from 'htmlrewriter/dist/types';
+import { Element as HTMLRewriterElement } from 'htmlrewriter/dist/types';
 import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError } from './errors';
 import { getFirstReferenceMatchingName } from './lookup-reference';
 import type { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
@@ -141,7 +141,7 @@ async function parseContentFromHTML(
         }
       });
     },
-    text(text: TextChunk) {
+    text(text) {
       if (currentVerseElem && options.includeVerseNumbers && currentVerseLabelElem && !currentVerseNoteElem) {
         contentParts.push(' ', text.text.trim(), ' ');
       }
