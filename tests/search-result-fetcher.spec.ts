@@ -30,6 +30,7 @@ describe('search content fetcher', () => {
   it('should correctly parse reference content from HTML', async () => {
     const references = await getReferencesMatchingPhrase('love others');
     expect(String(references[0].content)).toMatch(/Lorem/);
+    expect(String(references[0].content)).not.toMatch(/#/);
     expect(String(references[1].content)).toMatch(/consectetur/);
     expect(String(references[2].content)).toMatch(/Ut aliquam/);
     expect(references.length).toEqual(3);

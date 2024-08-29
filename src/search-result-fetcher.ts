@@ -1,4 +1,6 @@
-import cheerio from 'cheerio';
+import { decode as decodeHTMLEntities } from 'html-entities';
+import { HTMLRewriter } from 'htmlrewriter';
+import { Element as HTMLRewriterElement } from 'htmlrewriter/dist/types';
 import type { BibleReference, BibleSearchOptions, BibleSearchOptionsWithBibleData } from './types';
 import {
   baseSearchUrl,
@@ -6,26 +8,63 @@ import {
   fetchHTML,
   getBibleData,
   getDefaultVersion,
-  getReferenceIDFromURL,
-  isTruthy
+  getReferenceIDFromURL
 } from './utilities';
 
 async function parseContentFromHTML(html: string, options: BibleSearchOptionsWithBibleData): Promise<BibleReference[]> {
-  const $ = cheerio.load(html);
-  const $references = $("a[href*='/bible/']");
+  let currentReferenceID: string | null;
+  let currentReferenceContentElem: HTMLRewriterElement | null;
+  const currentReferenceContentParts: string[] = [];
+  const references: BibleReference[] = [];
+  const rewriter = new HTMLRewriter();
 
-  return Array.from($references)
-    .map((referenceElem) => {
-      const $reference = $(referenceElem);
-      const referenceId = getReferenceIDFromURL($reference.prop('href'));
-      return referenceId
-        ? {
-            ...buildBibleReferenceFromID(referenceId, options),
-            content: $reference.parent().next('p').text().trim()
-          }
-        : null;
+  rewriter
+    // Each anchor tag with a link to the Bible can be regarded as the hyperlink
+    // heading for a reference
+    .on("a[href*='/bible/']", {
+      element(element) {
+        const href = element.getAttribute('href');
+        // TypeScript isn't aware that the selector we are using guarantees a
+        // non-empty value, so we need to include a guard clause here
+        if (!href) {
+          return;
+        }
+        currentReferenceID = getReferenceIDFromURL(href);
+      }
     })
-    .filter(isTruthy);
+    // Handle the content of the reference result
+    .on('p', {
+      element(element) {
+        // Skip over any paragraph that doesn't belong to a search result
+        if (!currentReferenceID) {
+          return;
+        }
+        currentReferenceContentElem = element;
+        // Only when we reach the closing </p> tag do we want to take the
+        // collected text contents of the reference and add an entry to our
+        // results array
+        element.onEndTag(() => {
+          if (currentReferenceID) {
+            references.push({
+              ...buildBibleReferenceFromID(currentReferenceID, options),
+              content: decodeHTMLEntities(currentReferenceContentParts.join(''))
+            });
+            currentReferenceID = null;
+          }
+        });
+      },
+      // Collect textual contents of reference result as we encounter text nodes
+      // within the result's <p> tag
+      text(text) {
+        const content = text.text.trim();
+        if (currentReferenceID && currentReferenceContentElem) {
+          currentReferenceContentParts.push(content);
+        }
+      }
+    });
+
+  await rewriter.transform(new Response(html)).text();
+  return references;
 }
 
 // Fetch the textual content of the given Bible reference; returns a promise
