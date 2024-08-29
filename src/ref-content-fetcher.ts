@@ -52,8 +52,8 @@ function getSpacingBeforeElement(
   }
 }
 
-// Return an array of verse numbers assigned to a given verse (there can be
-// multiple verse numbers in the case of versions like The Message / MSG)
+// Construct an array of all verse numbers that this verse represents (e.g. for
+// versions such as MSG that consolidate multiple verses into one (e.g. "7-9"))
 function getVerseNumsFromVerse(verseElem: HTMLRewriterElement): number[] {
   const usfmStr = verseElem.getAttribute('data-usfm');
   if (usfmStr) {
@@ -66,16 +66,13 @@ function getVerseNumsFromVerse(verseElem: HTMLRewriterElement): number[] {
 }
 
 // Return true if the given verse element is within the designated verse range
-function isVerseWithinRange(reference: BibleReference, element: HTMLRewriterElement): boolean {
+function isVerseWithinRange(reference: BibleReference, verseNums: number[]): boolean {
   // If reference represents an entire chapter, then all verses are within range
   if (!reference.verse) {
     return true;
   }
   const startVerse = reference.verse;
   const endVerse = reference.endVerse ?? startVerse;
-  // Get all verse numbers that this verse represents (e.g. for versions such as
-  // MSG that consolidate multiple verses into one (e.g. "7-9"))
-  const verseNums = getVerseNumsFromVerse(element);
   return verseNums.some((verseNum) => {
     return verseNum >= startVerse && verseNum <= endVerse;
   });
@@ -131,13 +128,13 @@ async function parseContentFromHTML(
       if (!className) {
         return;
       }
-      const isInVerse = Boolean(currentVerseElem && isVerseWithinRange(reference, element));
+      const isInVerse = Boolean(currentVerseElem && verseNums && isVerseWithinRange(reference, verseNums));
       // Detect paragraph breaks between verses
-      if (classMatchesOneOf(className, blockTags)) {
+      if (classMatchesOneOf(className, blockTags) && !isInVerse) {
         contentParts.push(options.includeLineBreaks ? '\n\n' : ' ');
       }
       // Detect line breaks within a single verse
-      if (classMatchesOneOf(className, breakTags)) {
+      if (classMatchesOneOf(className, breakTags) && !isInVerse) {
         contentParts.push(options.includeLineBreaks ? '\n' : ' ');
       }
       // Detect beginning of a single verse (may include footnotes)
@@ -177,7 +174,13 @@ async function parseContentFromHTML(
       if (currentVerseElem && options.includeVerseNumbers && currentVerseLabelElem && !currentVerseNoteElem) {
         contentParts.push(' ', text.text.trim(), ' ');
       }
-      if (currentVerseContentElem) {
+      if (
+        currentVerseElem &&
+        currentVerseContentElem &&
+        !currentVerseNoteElem &&
+        verseNums &&
+        isVerseWithinRange(reference, verseNums)
+      ) {
         contentParts.push(text.text);
       }
     }
