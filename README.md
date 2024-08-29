@@ -3,8 +3,8 @@
 _Copyright 2023-2024 Caleb Evans_  
 _Released under the MIT license_
 
-[![tests](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/youversion-suggest-node/actions/workflows/tests.yml)
-[![Coverage Status](https://coveralls.io/repos/github/caleb531/youversion-suggest-node/badge.svg?branch=main)](https://coveralls.io/github/caleb531/youversion-suggest-node?branch=main)
+[![tests](https://github.com/caleb531/youversion-suggest-api/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/youversion-suggest-api/actions/workflows/tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/caleb531/youversion-suggest-api/badge.svg?branch=main)](https://coveralls.io/github/caleb531/youversion-suggest-api?branch=main)
 
 This NodeJS library allow you to search for and fetch Bible content from
 [YouVersion][youversion].

@@ -5,10 +5,10 @@
   "version": "2.2.0",
   "license": "MIT",
   "author": "Caleb Evans",
-  "homepage": "https://github.com/caleb531/youversion-suggest-node",
+  "homepage": "https://github.com/caleb531/youversion-suggest-api",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/caleb531/youversion-suggest-node.git"
+    "url": "git+https://github.com/caleb531/youversion-suggest-api.git"
   },
   "engines": {
     "node": ">=18.0.0"
