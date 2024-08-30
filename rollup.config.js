@@ -24,7 +24,7 @@ export default [
   },
   {
     input: 'src/index.ts',
-    external: ['htmlrewriter', 'html-entities', 'node-fetch'],
+    external: ['@worker-tools/html-rewriter/base64', 'html-entities', 'node-fetch'],
     output: [
       {
         dir: 'dist',

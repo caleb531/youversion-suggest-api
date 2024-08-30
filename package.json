@@ -25,8 +25,8 @@
     "lint": "tsc --noEmit; eslint 'src/**/*.ts' 'tests/**/*.ts'"
   },
   "dependencies": {
+    "@worker-tools/html-rewriter": "0.1.0-pre.19",
     "html-entities": "^2.5.2",
-    "htmlrewriter": "^0.0.9",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {

@@ -1,6 +1,5 @@
+import { HTMLRewriter, Element as HTMLRewriterElement, TextChunk } from '@worker-tools/html-rewriter/base64';
 import { decode as decodeHTMLEntities } from 'html-entities';
-import { HTMLRewriter } from 'htmlrewriter';
-import { Element as HTMLRewriterElement } from 'htmlrewriter/dist/types';
 import { BibleReferenceEmptyContentError, BibleReferenceNotFoundError } from './errors';
 import { getFirstReferenceMatchingName } from './lookup-reference';
 import type { BibleLookupOptions, BibleLookupOptionsWithBibleData, BibleReference } from './types';
@@ -38,7 +37,7 @@ function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boole
 // Construct an array of all verse numbers that this verse represents (e.g. for
 // versions such as MSG that consolidate multiple verses into one (e.g. "7-9"))
 function getVerseNumsFromVerse(verseElem: HTMLRewriterElement): number[] {
-  const usfmStr = verseElem.getAttribute('data-usfm');
+  const usfmStr: string = verseElem.getAttribute('data-usfm');
   if (usfmStr) {
     return Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
       return Number(verseNumMatch[3]);
@@ -91,7 +90,7 @@ async function parseContentFromHTML(
   const contentParts: string[] = [];
   const rewriter = new HTMLRewriter();
   rewriter.on('[class*="chapter"] *', {
-    element(element) {
+    element(element: HTMLRewriterElement) {
       const className = element.getAttribute('class');
       // It's perfectly valid for an HTML element to have a class attribute
       // without a value, and if that's the case, we skip over that element
@@ -141,7 +140,7 @@ async function parseContentFromHTML(
         }
       });
     },
-    text(text) {
+    text(text: TextChunk) {
       if (currentVerseElem && options.includeVerseNumbers && currentVerseLabelElem && !currentVerseNoteElem) {
         contentParts.push(' ', text.text.trim(), ' ');
       }

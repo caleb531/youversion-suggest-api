@@ -1,6 +1,5 @@
+import { HTMLRewriter, Element as HTMLRewriterElement, TextChunk } from '@worker-tools/html-rewriter/base64';
 import { decode as decodeHTMLEntities } from 'html-entities';
-import { HTMLRewriter } from 'htmlrewriter';
-import { Element as HTMLRewriterElement } from 'htmlrewriter/dist/types';
 import type { BibleReference, BibleSearchOptions, BibleSearchOptionsWithBibleData } from './types';
 import {
   baseSearchUrl,
@@ -22,7 +21,7 @@ async function parseContentFromHTML(html: string, options: BibleSearchOptionsWit
     // Each anchor tag with a link to the Bible can be regarded as the hyperlink
     // heading for a reference
     .on("a[href*='/bible/']", {
-      element(element) {
+      element(element: HTMLRewriterElement) {
         const href = element.getAttribute('href');
         // TypeScript isn't aware that the selector we are using guarantees a
         // non-empty value, so we need to include a guard clause here
@@ -34,7 +33,7 @@ async function parseContentFromHTML(html: string, options: BibleSearchOptionsWit
     })
     // Handle the content of the reference result
     .on('p', {
-      element(element) {
+      element(element: HTMLRewriterElement) {
         // Skip over any paragraph that doesn't belong to a search result
         if (!currentReferenceID) {
           return;
@@ -55,7 +54,7 @@ async function parseContentFromHTML(html: string, options: BibleSearchOptionsWit
       },
       // Collect textual contents of reference result as we encounter text nodes
       // within the result's <p> tag
-      text(text) {
+      text(text: TextChunk) {
         const content = text.text.trim();
         if (currentReferenceID && currentReferenceContentElem) {
           currentReferenceContentParts.push(content);
