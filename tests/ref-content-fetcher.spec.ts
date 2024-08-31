@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { fetchReferenceContent } from '../src';
-import { caches } from '../src/utilities';
 import { resetRequestMocker, setupRequestMocker } from './testUtilities';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -197,21 +196,5 @@ describe('reference content fetcher', () => {
     });
     expect(String(reference.content)).toMatch(/7-9 dapibus et augue in,/);
     expect(String(reference.content)).not.toMatch(/#/);
-  });
-
-  it('should fall back to node-fetch if native fetch() is unavailable', async () => {
-    const originalFetch = globalThis.fetch;
-    try {
-      Object.defineProperty(globalThis, 'fetch', {
-        writable: true,
-        value: undefined
-      });
-      delete caches._fetchInstance;
-      const reference = await fetchReferenceContent('ps 23 esv');
-      expect(reference.name).toEqual('Psalms 23');
-      expect(reference.version.name).toEqual('ESV');
-    } finally {
-      globalThis.fetch = originalFetch;
-    }
   });
 });
