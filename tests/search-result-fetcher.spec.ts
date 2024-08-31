@@ -32,7 +32,10 @@ describe('search content fetcher', () => {
     expect(String(references[0].content)).toMatch(/Lorem/);
     expect(String(references[0].content)).not.toMatch(/#/);
     expect(String(references[1].content)).toMatch(/consectetur/);
+    expect(String(references[1].content)).not.toMatch(/Lorem/);
     expect(String(references[2].content)).toMatch(/Ut aliquam/);
+    expect(String(references[2].content)).not.toMatch(/Lorem/);
+    expect(String(references[2].content)).not.toMatch(/consectetur/);
     expect(references.length).toEqual(3);
   });
 

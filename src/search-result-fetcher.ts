@@ -48,6 +48,7 @@ async function parseContentFromHTML(html: string, options: BibleSearchOptionsWit
               ...buildBibleReferenceFromID(currentReferenceID, options),
               content: decodeHTMLEntities(currentReferenceContentParts.join(''))
             });
+            currentReferenceContentParts.length = 0;
             currentReferenceID = null;
           }
         });
