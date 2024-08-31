@@ -14,12 +14,6 @@ import type {
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
 const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
 
-// Cache the resolved instance of fetch() (whether native fetch or node-fetch)
-// so that if node-fetch is used, it is not imported more than once
-export const caches: { _fetchInstance: typeof fetch | undefined } = {
-  _fetchInstance: undefined
-};
-
 export function normalizeSearchText(searchText: string): string {
   searchText = searchText.normalize('NFC');
   searchText = searchText.toLowerCase();
@@ -180,29 +174,7 @@ export async function getLanguages(): Promise<BibleLanguage[]> {
   return languages;
 }
 
-// To support JavaScript environments with/without native fetch support, the
-// library first checks if native fetch() is available, and if not, falls back
-// to the node-fetch library; this implies that if native fetch is not
-// available, the library can only be used in a Node context (since node-fetch
-// can only run in a Node context)
-export async function getFetch(): Promise<typeof fetch> {
-  if (caches._fetchInstance) {
-    return caches._fetchInstance;
-  } else if (typeof globalThis !== 'undefined' && globalThis.fetch) {
-    caches._fetchInstance = globalThis.fetch;
-    return caches._fetchInstance;
-  } else {
-    // node-fetch is effectively standards-compliant with the Fetch API, so from
-    // a type level, we can safely treat it like native fetch() (and this is
-    // preferable because we cannot statically import node-fetch or any of its
-    // included types)
-    caches._fetchInstance = (await import('node-fetch')).default as unknown as typeof fetch;
-    return caches._fetchInstance;
-  }
-}
-
 export async function fetchHTML(url: string): Promise<string> {
-  const fetch = await getFetch();
   const response = await fetch(url, {
     headers: {
       'User-Agent': 'YouVersion Suggest'

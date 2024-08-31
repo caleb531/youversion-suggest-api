@@ -374,3 +374,26 @@ the numeric ID of the version for exactness (e.g. `59`, for ESV).
 
 [yvs-data]: https://github.com/caleb531/youversion-suggest-data
 [bible-book-metadata-json]: https://github.com/caleb531/youversion-suggest-data/blob/main/bible/book-metadata.json
+
+## Polyfilling Fetch API
+
+This library assumes that your JavaScript environment has support for the native
+[Fetch API][fetch-api]. If not, we recommend installing the `@whatwg-node/fetch`
+package and exposing its primitives globally. Note that a Fetch API polyfill
+package like `node-fetch` or `cross-fetch` **_will not work_**, because those
+libraries use node streams instead of spec-compliant streams (this library is dependent on the latter to function properly).
+
+```ts
+// Run this in any file that uses youversion-suggest; feel free to extrapolate
+// it to a separate module, then import as a side-effect
+import { fetch, Headers, Request, Response } from '@whatwg-node/fetch';
+
+if (!globalThis.fetch) {
+  globalThis.fetch = fetch;
+  globalThis.Headers = Headers;
+  globalThis.Request = Request;
+  globalThis.Response = Response;
+}
+```
+
+[fetch-api]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API

@@ -26,8 +26,7 @@
   },
   "dependencies": {
     "@worker-tools/html-rewriter": "0.1.0-pre.19",
-    "html-entities": "^2.5.2",
-    "node-fetch": "^3.3.2"
+    "html-entities": "^2.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
