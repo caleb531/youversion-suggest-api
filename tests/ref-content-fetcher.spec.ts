@@ -169,6 +169,7 @@ describe('reference content fetcher', () => {
     });
     expect(String(reference.content)).toMatch(/7-9 dapibus et augue in,/);
     expect(String(reference.content)).not.toMatch(/#/);
+    expect(String(reference.content)).not.toMatch(/1|2|3|4|5|6|10/);
   });
 
   it('should handle range labels when verse at start of range is given', async () => {

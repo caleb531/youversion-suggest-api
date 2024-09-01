@@ -141,16 +141,13 @@ async function parseContentFromHTML(
       });
     },
     text(text: TextChunk) {
-      if (currentVerseElem && options.includeVerseNumbers && currentVerseLabelElem && !currentVerseNoteElem) {
+      if (!(currentVerseElem && verseNums && isVerseWithinRange(reference, verseNums) && !currentVerseNoteElem)) {
+        return;
+      }
+      if (options.includeVerseNumbers && currentVerseLabelElem) {
         contentParts.push(' ', text.text.trim(), ' ');
       }
-      if (
-        currentVerseElem &&
-        currentVerseContentElem &&
-        !currentVerseNoteElem &&
-        verseNums &&
-        isVerseWithinRange(reference, verseNums)
-      ) {
+      if (currentVerseContentElem) {
         contentParts.push(text.text);
       }
     }
