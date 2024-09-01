@@ -21,9 +21,9 @@ bundle available.
 
 ## Disclaimer
 
-**This library is not compliant with the Terms of Service of YouVersion. Use at your own risk.**
+This library is not compliant with the Terms of Service of YouVersion. Use at your own risk.
 
-**This project is not affiliated with YouVersion, and all Bible content is copyright of the respective publishers.**
+This project is not affiliated with YouVersion, and all Bible content is copyright of the respective publishers.
 
 ## Attribution
 
