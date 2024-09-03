@@ -81,11 +81,8 @@ async function parseContentFromHTML(
   html: string,
   options: BibleFetchOptions
 ): Promise<string> {
-  let currentBlockElem: HTMLRewriterElement | null;
-  let currentVerseElem: HTMLRewriterElement | null;
-  let currentVerseLabelElem: HTMLRewriterElement | null;
-  let currentVerseContentElem: HTMLRewriterElement | null;
-  let currentVerseNoteElem: HTMLRewriterElement | null;
+  type CurrentElemType = 'block' | 'verse' | 'verseLabel' | 'verseContent' | 'verseNote';
+  const currentElems: Partial<Record<CurrentElemType, HTMLRewriterElement>> = {};
   let verseNums: number[] | null;
   const contentParts: string[] = [];
   const rewriter = new HTMLRewriter();
@@ -97,10 +94,10 @@ async function parseContentFromHTML(
       if (!className) {
         return;
       }
-      const isInVerse = Boolean(currentVerseElem && verseNums && isVerseWithinRange(reference, verseNums));
+      const isInVerse = Boolean(currentElems.verse && verseNums && isVerseWithinRange(reference, verseNums));
       // Detect paragraph breaks between verses
       if (classMatchesOneOf(className, blockTags) && !isInVerse) {
-        currentBlockElem = element;
+        currentElems.block = element;
         contentParts.push(options.includeLineBreaks ? '\n\n' : ' ');
       }
       // Detect line breaks within a single verse
@@ -109,45 +106,45 @@ async function parseContentFromHTML(
       }
       // Detect beginning of a single verse (may include footnotes)
       if (classMatchesOneOf(className, ['verse'])) {
-        currentVerseElem = element;
-        verseNums = getVerseNumsFromVerse(currentVerseElem);
+        currentElems.verse = element;
+        verseNums = getVerseNumsFromVerse(currentElems.verse);
       }
       // Detect label containing the associated verse number(s)
       if (classMatchesOneOf(className, ['label'])) {
-        currentVerseLabelElem = element;
+        currentElems.verseLabel = element;
       }
       // Detect beginning of verse content (excludes footnotes)
       if (classMatchesOneOf(className, ['content'])) {
-        currentVerseContentElem = element;
+        currentElems.verseContent = element;
       }
       // Detect footnotes and cross-references
       if (classMatchesOneOf(className, ['note'])) {
-        currentVerseNoteElem = element;
+        currentElems.verseNote = element;
       }
       // Properly reset state when reaching the ends of elements
       element.onEndTag(() => {
-        if (element === currentBlockElem) {
+        if (element === currentElems.block) {
           contentParts.push(options.includeLineBreaks ? '\n' : ' ');
-          currentBlockElem = null;
-        } else if (element === currentVerseElem) {
-          currentVerseElem = null;
-        } else if (element === currentVerseLabelElem) {
-          currentVerseLabelElem = null;
-        } else if (element === currentVerseContentElem) {
-          currentVerseContentElem = null;
-        } else if (element === currentVerseNoteElem) {
-          currentVerseNoteElem = null;
+          currentElems.block = null;
+        } else if (element === currentElems.verse) {
+          currentElems.verse = null;
+        } else if (element === currentElems.verseLabel) {
+          currentElems.verseLabel = null;
+        } else if (element === currentElems.verseContent) {
+          currentElems.verseContent = null;
+        } else if (element === currentElems.verseNote) {
+          currentElems.verseNote = null;
         }
       });
     },
     text(text: TextChunk) {
-      if (!(currentVerseElem && verseNums && isVerseWithinRange(reference, verseNums) && !currentVerseNoteElem)) {
+      if (!(currentElems.verse && verseNums && isVerseWithinRange(reference, verseNums) && !currentElems.verseNote)) {
         return;
       }
-      if (options.includeVerseNumbers && currentVerseLabelElem) {
+      if (options.includeVerseNumbers && currentElems.verseLabel) {
         contentParts.push(' ', text.text.trim(), ' ');
       }
-      if (currentVerseContentElem) {
+      if (currentElems.verseContent) {
         contentParts.push(text.text);
       }
     }
