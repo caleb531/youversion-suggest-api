@@ -99,7 +99,8 @@ console.log(reference);
 */
 ```
 
-You can then use this returned object to format the verse content however you'd like. For example:
+You can then use this returned object to format the verse content however you'd
+like. For example:
 
 ```ts
 import { fetchReferenceContent } from 'youversion-suggest';
@@ -384,7 +385,8 @@ This library assumes that your JavaScript environment has support for the native
 [Fetch API][fetch-api]. If not, we recommend installing the `@whatwg-node/fetch`
 package and exposing its primitives globally. Note that a Fetch API polyfill
 package like `node-fetch` or `cross-fetch` **_will not work_**, because those
-libraries use node streams instead of spec-compliant streams (this library is dependent on the latter to function properly).
+libraries use node streams instead of spec-compliant streams (this library is
+dependent on the latter to function properly).
 
 ```ts
 // Run this in any file that uses youversion-suggest; feel free to extrapolate
