@@ -182,9 +182,3 @@ export async function fetchHTML(url: string): Promise<string> {
   });
   return response.text();
 }
-
-// See
-// <https://stackoverflow.com/questions/47632622/typescript-and-filter-boolean>
-export function isTruthy<T>(value: T | null | undefined | false): value is T {
-  return Boolean(value);
-}
