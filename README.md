@@ -1,6 +1,6 @@
 # YouVersion Suggest API
 
-_Copyright 2023-2025 Caleb Evans_  
+_Copyright 2023-2026 Caleb Evans_  
 _Released under the MIT license_
 
 [![tests](https://github.com/caleb531/youversion-suggest-api/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/youversion-suggest-api/actions/workflows/tests.yml)
