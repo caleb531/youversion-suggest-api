@@ -73,8 +73,8 @@ export async function getReferencesMatchingPhrase(searchText: string, options: B
   const bible = options.bible ?? (await getBibleData(options.language));
   const preferredVersion = getVersionByIdOrName(bible, options.version) || getDefaultVersion(bible);
   const searchParams = new URLSearchParams({
-    q: searchText,
-    version_id: String(preferredVersion)
+    query: searchText,
+    version_id: String(preferredVersion.id)
   });
   const html = await fetchHTML(`${baseSearchUrl}?${searchParams}`, {
     headers: {
