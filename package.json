@@ -36,28 +36,28 @@
     "html-entities": "^2.6.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.2",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-dynamic-import-vars": "^2.1.5",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-wasm": "^6.2.2",
-    "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "^4.0.15",
-    "eslint": "^9.39.1",
+    "@types/node": "^25.0.10",
+    "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "glob": "^13.0.0",
-    "globals": "^16.5.0",
-    "msw": "^2.12.4",
-    "prettier": "^3.7.4",
-    "rollup": "^4.53.3",
+    "globals": "^17.1.0",
+    "msw": "^2.12.7",
+    "prettier": "^3.8.1",
+    "rollup": "^4.56.0",
     "rollup-plugin-dts": "^6.3.0",
     "rollup-plugin-esbuild": "^6.2.1",
     "tslib": "^2.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.1",
-    "vitest": "^4.0.15"
+    "typescript-eslint": "^8.53.1",
+    "vitest": "^4.0.18"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
