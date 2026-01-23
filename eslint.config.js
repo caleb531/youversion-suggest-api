@@ -12,11 +12,16 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node
+      },
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname
       }
     },
     rules: {
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off'
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-base-to-string': 'error'
     }
   },
   {
