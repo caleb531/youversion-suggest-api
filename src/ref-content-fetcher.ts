@@ -39,7 +39,7 @@ function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boole
 function getVerseNumsFromVerse(verseElem: HTMLRewriterElement): number[] {
   const usfmStr: string = verseElem.getAttribute('data-usfm');
   if (usfmStr) {
-    return Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/g)).map((verseNumMatch) => {
+    return Array.from(usfmStr.matchAll(/(\w+)\.(\d+)\.(\d+)/gi)).map((verseNumMatch) => {
       return Number(verseNumMatch[3]);
     });
   } else {

@@ -7,7 +7,8 @@ import {
   fetchHTML,
   getBibleData,
   getDefaultVersion,
-  getReferenceIDFromURL
+  getReferenceIDFromURL,
+  getVersionByIdOrName
 } from './utilities';
 
 async function parseContentFromHTML(html: string, options: BibleSearchOptionsWithBibleData): Promise<BibleReference[]> {
@@ -70,7 +71,15 @@ async function parseContentFromHTML(html: string, options: BibleSearchOptionsWit
 // Fetch the textual content of the given Bible reference; returns a promise
 export async function getReferencesMatchingPhrase(searchText: string, options: BibleSearchOptions = {}) {
   const bible = options.bible ?? (await getBibleData(options.language));
-  const preferredVersionId = options.version || getDefaultVersion(bible);
-  const html = await fetchHTML(`${baseSearchUrl}?q=${encodeURIComponent(searchText)}&version_id=${preferredVersionId}`);
+  const preferredVersion = getVersionByIdOrName(bible, options.version) || getDefaultVersion(bible);
+  const searchParams = new URLSearchParams({
+    q: searchText,
+    version_id: String(preferredVersion)
+  });
+  const html = await fetchHTML(`${baseSearchUrl}?${searchParams}`, {
+    headers: {
+      Cookie: `version=${preferredVersion.id}`
+    }
+  });
   return parseContentFromHTML(html, { bible });
 }

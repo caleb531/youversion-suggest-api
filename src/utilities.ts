@@ -12,7 +12,7 @@ import type {
 } from './types';
 
 // A regular expression pattern that represents the generic form of a Bible Reference identifier (e.g. 59/psa.23.1)
-const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/i;
+const BIBLE_REFERENCE_ID_PATTERN = /^(\d+)\/([a-z0-9]{3})\.(\d+)(?:\.(\d+)(?:-(\d+))?)?/i;
 
 export function normalizeSearchText(searchText: string): string {
   searchText = searchText.normalize('NFC');
@@ -27,10 +27,14 @@ export function normalizeSearchText(searchText: string): string {
   return searchText;
 }
 
-// Retrieve the Bible verse object given the numeric ID of that version
-export function getVersionById(bible: BibleData, versionId: number): BibleVersion | undefined {
+// Retrieve the Bible verse object given the numeric ID or string name of that version
+export function getVersionByIdOrName(
+  bible: BibleData,
+  versionIdOrName: number | string | undefined
+): BibleVersion | undefined {
+  const versionName = String(versionIdOrName).toLowerCase();
   return bible.versions.find((version) => {
-    return version.id === versionId;
+    return version.id === versionIdOrName || version.name.toLowerCase() === versionName;
   });
 }
 
@@ -51,14 +55,14 @@ export function getVersion(bible: BibleData, versionIdOrName: string | number): 
     return getVersionByName(bible, versionName);
   } else {
     const versionId = versionIdOrName;
-    return getVersionById(bible, versionId);
+    return getVersionByIdOrName(bible, versionId);
   }
 }
 
 // Retrieve the Bible version object which represents the default version for
 // the given Bible data
 export function getDefaultVersion(bible: BibleData): BibleVersion {
-  return getVersionById(bible, bible.default_version) ?? bible.versions[0];
+  return getVersionByIdOrName(bible, bible.default_version) ?? bible.versions[0];
 }
 
 export function getReferenceID({
@@ -146,7 +150,7 @@ export function buildBibleReferenceFromID(
   const chapter = Number(matches[3]);
   const verse = Number(matches[4]) || null;
   const endVerse = Number(matches[5]) || null;
-  const version = getVersionById(options.bible, versionId);
+  const version = getVersionByIdOrName(options.bible, versionId);
   if (!version) {
     throw new BibleReferenceNotFoundError(`${versionId} is not a valid version ID`);
   }
@@ -174,10 +178,12 @@ export async function getLanguages(): Promise<BibleLanguage[]> {
   return languages;
 }
 
-export async function fetchHTML(url: string): Promise<string> {
+export async function fetchHTML(url: string, options: RequestInit = {}): Promise<string> {
   const response = await fetch(url, {
+    ...options,
     headers: {
-      'User-Agent': 'YouVersion Suggest'
+      'User-Agent': 'YouVersion Suggest',
+      ...(options.headers ?? {})
     }
   });
   return response.text();
