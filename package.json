@@ -2,7 +2,7 @@
   "name": "youversion-suggest",
   "title": "YouVersion Bible Suggest",
   "description": "An API for searching the YouVersion Bible and fetching Bible content",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "license": "MIT",
   "author": "Caleb Evans",
   "homepage": "https://github.com/caleb531/youversion-suggest-api",
