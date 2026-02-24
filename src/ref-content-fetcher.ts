@@ -23,7 +23,7 @@ const breakTags = new Set(['li1', 'q', 'q1', 'q2', 'qc', 'qr', 'qm1', 'qm2']);
 // elements set)
 function classMatchesOneOf(className: string, elemsSet: Iterable<string>): boolean {
   const elemsUnion = Array.from(elemsSet).join('|');
-  return new RegExp(`\\b(${elemsUnion})--`).test(
+  return new RegExp(`\\b(${elemsUnion})\\b`).test(
     // The normal regex word boundary (\b) considers underscores as part of the
     // definition of a "word"; this will not work for us since the class names
     // we are dealing with have underscore-delimited segments, and we need to
