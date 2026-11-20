@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
-import { setupServer, SetupServerApi } from 'msw/node';
+import { setupServer, SetupServer } from 'msw/node';
 
-let server: SetupServerApi;
+let server: SetupServer;
 
 // A helper function used to mock network requests via Mock Service Worker (MSW)
 export function setupRequestMocker(urlPattern: string | RegExp, html: string): void {
